@@ -1,5 +1,6 @@
 import os
 
+
 class GroupAllMixin():
     def group(self, root, config=None):
         groups = []
@@ -7,6 +8,7 @@ class GroupAllMixin():
             for f in files:
                 groups.append([os.path.join(path, f)])
         return groups
+
 
 class AttributionMixin():
     def citations(self):
