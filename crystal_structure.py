@@ -10,15 +10,13 @@ class ParseCrystalStructure(BaseParser):
     def parse(self, group, context=None):
         record = {}
 
-        records = []
         for data_file in group:
             material = {}
             crystal_structure = {}
-            pmg_s = ""
             # Attempt to read the file
             try:
                 # Read with ASE
-                ase_res = ase.io.read(data_file[0])
+                ase_res = ase.io.read(data_file)
                 # Check data read, validate crystal structure
                 if not ase_res or not all(ase_res.get_pbc()):
                     raise ValueError("No valid data")
@@ -29,10 +27,10 @@ class ParseCrystalStructure(BaseParser):
             except Exception:
                 try:
                     # Read with Pymatgen
-                    pmg_s = pymatgen.Structure.from_file(data_file[0])
+                    pmg_s = pymatgen.Structure.from_file(data_file)
                 except Exception:
                     # Can't read file
-                    pass
+                    continue
 
             # Parse material block
             material["composition"] = pmg_s.formula.replace(" ", "")
@@ -44,8 +42,7 @@ class ParseCrystalStructure(BaseParser):
 
             # Add to record
             record = toolbox.dict_merge(record, {
-                                                    "material": material,
-                                                    "crystal_structure": crystal_structure
-                                                })
-            records.append(record)
-        return records
+                                                "material": material,
+                                                "crystal_structure": crystal_structure
+                                            })
+        return record

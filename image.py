@@ -7,7 +7,7 @@ class ParseImage(BaseParser):
         records = []
         for file_path in group:
             try:
-                im = Image.open(file_path[0])
+                im = Image.open(file_path)
                 records.append({
                     "image": {
                         "width": im.width,
