@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from mixins import AttributionMixin, GroupAllMixin
+from materials_io.mixins import AttributionMixin, GroupAllMixin
 
 
 class BaseParser(ABC, GroupAllMixin, AttributionMixin):

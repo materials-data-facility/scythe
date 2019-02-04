@@ -5,6 +5,8 @@
 Untitled*.ipynb
 *.cache*
 
+*.DS_Store
+
 */build/*
 */dist/*
 *.egg*

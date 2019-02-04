@@ -1,4 +1,4 @@
-from base import BaseParser
+from materials_io.base import BaseParser
 from PIL import Image
 
 
