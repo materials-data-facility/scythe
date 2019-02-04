@@ -1,6 +1,6 @@
 from setuptools import setup
 
 setup(
-    name="materials-io",
-    packages=["materials-io"]
+    name="materials_io",
+    packages=["materials_io"]
 )
