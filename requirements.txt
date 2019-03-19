@@ -1,3 +1,4 @@
 sphinx_rtd_theme>=0.4.2
 hyperspy>=1.4.1
 pymatgen>=2018.11.30
+ase>=3.16.3b1

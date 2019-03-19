@@ -14,7 +14,7 @@ setup(
     extras_require={
         'electron_microscopy': ['hyperspy>=1.4.1'],
         'image': ['Pillow>=5.1.0'],
-        'crystal_structure': ['pymatgen>=2018.11.30']
+        'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3']
     },
     version=version
 )

@@ -1,9 +1,11 @@
 import hyperspy.api as hs
 
-from base import BaseParser
+from materials_io.base import BaseParser
 
 
 class ElectronMicroscopyParser(BaseParser):
+    """Parse metadata specific to electron microscopy"""
+
     def parse(self, group, context=None):
         records = []
         for file_path in group:

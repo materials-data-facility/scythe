@@ -1,5 +1,6 @@
-from materials_io.base import BaseParser
 from PIL import Image
+
+from materials_io.base import BaseParser
 
 
 class ParseImage(BaseParser):
