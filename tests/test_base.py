@@ -12,6 +12,9 @@ class FakeParser(BaseParser):
     def implementors(self):
         return ['Logan Ward']
 
+    def version(self):
+        return '0.0.0'
+
 
 @pytest.fixture
 def directory():

@@ -7,7 +7,8 @@ class BaseParser(ABC):
     """Abstract base class for a file parser
 
     This class defines the interface for all parsers in MaterialsIO.
-    Each new parser must implement the :meth:`parse` and :meth:`implementors` functions.
+    Each new parser must implement the :meth:`parse`, :meth:`version`,
+    and :meth:`implementors` functions.
     The :meth:`is_valid` method should be overrode if fast methods for assessing compatibility
     (e.g., checking headers) are possible.
     The :meth:`group` method should be overrode to generate smart groups of file (e.g., associating
@@ -83,6 +84,10 @@ class BaseParser(ABC):
                 keys like "email" or "institution" (e.g., {"name": "Anubhav
                 Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
         """
+        pass
+
+    @abstractmethod
+    def version(self):
         pass
 
 

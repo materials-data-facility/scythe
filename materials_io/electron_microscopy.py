@@ -42,3 +42,6 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
     def implementors(self):
         return ['Jonathon Gaff']
+
+    def version(self):
+        return '0.0.1'
