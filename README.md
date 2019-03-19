@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/materials-data-facility/MaterialsIO.svg?branch=master)](https://travis-ci.org/materials-data-facility/MaterialsIO)
 [![Documentation Status](https://readthedocs.org/projects/materialsio/badge/?version=latest)](https://materialsio.readthedocs.io/en/latest/?badge=latest)
+[![Coverage Status](https://coveralls.io/repos/github/materials-data-facility/MaterialsIO/badge.svg?branch=master)](https://coveralls.io/github/materials-data-facility/MaterialsIO?branch=master)
 
 MaterialsIO is a library of tools that generate summaries of the data contained in scientific data files.
 The goal of MaterialsIO is to provide a shared resources of these tool to avoid duplication of effort between the many emerging materials databases.
