@@ -1,0 +1,29 @@
+.. MaterialsIO documentation master file, created by
+   sphinx-quickstart on Tue Mar 19 10:49:01 2019.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to MaterialsIO's documentation!
+=======================================
+
+MaterialsIO is a library of tools that generate summaries of the data contained in scientific data files.
+The goal of MaterialsIO is to provide a shared resources of these tool to avoid duplication of effort between the many emerging materials databases.
+Each parser is designed to generate the sum of all data needed by each of these databases with a uniform API so that specific projects can write simple adaptors for their needs.
+
+
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   materials_io
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

@@ -3,6 +3,8 @@ from PIL import Image
 
 
 class ParseImage(BaseParser):
+    """Retrieves basic information about an image"""
+
     def parse(self, group, context=None):
         records = []
         for file_path in group:
