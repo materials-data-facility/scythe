@@ -9,3 +9,5 @@ install:
 script:
 - flake8 .
 - travis_wait 50 py.test
+after_success:
+- coveralls
