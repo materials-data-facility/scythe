@@ -18,6 +18,11 @@ cd MaterialsIO
 pip install -e .
 ```
 
+Each specific parser module has its own set of required libraries.
+Given that some modules have extensive dependencies, we do not install all of them automatically.
+You can install them either module-by-module using the pip "extras" installation (e.g., `pip install -e .['image']`),
+or install all requirements with the requirements file `pip install -r requirements.txt`.
+
 ## Documentation
 
 Complete documentation for MaterialsIO is on [Read the Docs](https://materialsio.readthedocs.io/en/latest/).
