@@ -61,7 +61,7 @@ class BaseParser(ABC):
 
         for path, dirs, files in os.walk(root):
             for f in files:
-                yield [os.path.join(path, f)]
+                yield (os.path.join(path, f),)
 
     def citations(self):
         """Citation(s) and reference(s) for this parser
