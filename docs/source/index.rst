@@ -20,6 +20,7 @@ Source Code: https://github.com/materials-data-facility/MaterialsIO
    :caption: Contents:
 
    goals
+   user-guide
    materials_io
 
 
