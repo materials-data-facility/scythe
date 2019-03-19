@@ -1,6 +1,7 @@
 # MaterialsIO
 
 [![Build Status](https://travis-ci.org/materials-data-facility/MaterialsIO.svg?branch=master)](https://travis-ci.org/materials-data-facility/MaterialsIO)
+[![Documentation Status](https://readthedocs.org/projects/materialsio/badge/?version=latest)](https://materialsio.readthedocs.io/en/latest/?badge=latest)
 
 MaterialsIO is a library of tools that generate summaries of the data contained in scientific data files.
 The goal of MaterialsIO is to provide a shared resources of these tool to avoid duplication of effort between the many emerging materials databases.
@@ -15,7 +16,11 @@ To use it, first clone this repository and then install the library with pip:
 git clone git@github.com:materials-data-facility/MaterialsIO.git
 cd MaterialsIO
 pip install -e .
-```  
+```
+
+## Documentation
+
+Complete documentation for MaterialsIO is on [Read the Docs](https://materialsio.readthedocs.io/en/latest/).
 
 ## Support 
 
