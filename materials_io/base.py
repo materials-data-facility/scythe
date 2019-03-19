@@ -1,25 +1,26 @@
 from abc import ABC, abstractmethod
 
-from materials_io.mixins import AttributionMixin, GroupAllMixin
+import os
 
 
-class BaseParser(ABC, GroupAllMixin, AttributionMixin):
-    """The BaseParser is the abstract base class for the unified parser project.
-    It is required that all parsers be subclasses of BaseParser and implement
-    the parse() method at minimum.
-    It is recommended that the is_valid() and group() methods also be overridden,
-    but this is not mandatory.
+class BaseParser(ABC):
+    """Abstract base class for a file parser
+
+    This class defines the interface for all parsers in MaterialsIO.
+    Each new parser must implement the :meth:`parse` and :meth:`implementors` functions.
+    The :meth:`is_valid` method should be overrode if fast methods for assessing compatibility
+    (e.g., checking headers) are possible.
+    The :meth:`group` method should be overrode to generate smart groups of file (e.g., associating
+    the inputs and outputs to the same calculation)
+    :meth:`citations` can be used if there are papers that should be cited if the parser is used
+    as part of a scientific publication.
+
+    See documentation for further details: TBD.
     """
 
     @abstractmethod
     def parse(self, group, context=None):
         """Extract metadata from a group of files
-
-        It must take a list of one or more files (group)
-        and optionally a dictionary of data context/configuration information (context).
-        Accepted context must be documented here. Other fields must be ignored.
-        It must return a dictionary or list of dictionaries containing parsed data,
-        in JSON-serializable format.
 
         Arguments:
             group (list of str):  A list of one or more files to parse as a unit.
@@ -31,17 +32,14 @@ class BaseParser(ABC, GroupAllMixin, AttributionMixin):
         pass
 
     def is_valid(self, group, context=None):
-        """is_valid() checks if a file can be used with parse(). It is recommended to include
-        for ease of use, but it not required.
-        This function must take the same arguments as parse(). It must return a boolean
-        to indicate if the group is valid for the parser.
+        """Determine whether a group of files is compatible with this parser
 
         Arguments:
             group (list of str):  A list of one or more files to parse as a unit.
             context (dict): An optional data context/configuration dictionary. Default None.
 
         Returns:
-            (bool): True when the group can be parsed by the parser. False otherwise.
+            (bool): Whether the group can be parsed by the parser
         """
         try:
             res = self.parse(group, context=context)
@@ -51,3 +49,38 @@ class BaseParser(ABC, GroupAllMixin, AttributionMixin):
             return False
         else:
             return True
+
+    def group(self, root, config=None):
+        """Identify sets files in a directory that are related to each other
+
+        Args:
+            root (str): Path to a direct
+        Yields:
+            (list of str): Groups of files
+        """
+
+        for path, dirs, files in os.walk(root):
+            for f in files:
+                yield [os.path.join(path, f)]
+
+    def citations(self):
+        """Citation(s) and reference(s) for this parser
+
+        Returns:
+            (list of str): each element should be a string citation in BibTeX format.
+        """
+        return []
+
+    @abstractmethod
+    def implementors(self):
+        """List of implementors of the parser
+
+        These people are the points-of-contact for addressing errors or modifying the parser
+
+        Returns:
+            (list) each element should either be a string with author name (e.g.,
+                "Anubhav Jain") or a dictionary  with required key "name" and other
+                keys like "email" or "institution" (e.g., {"name": "Anubhav
+                Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
+        """
+        pass
