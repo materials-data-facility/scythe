@@ -47,3 +47,6 @@ class ParseCrystalStructure(BaseParser):
             record = dict_merge(record, {"material": material,
                                          "crystal_structure": crystal_structure})
         return record
+
+    def implementors(self):
+        return ['Jonathon Gaff']

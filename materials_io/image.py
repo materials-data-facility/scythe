@@ -22,3 +22,6 @@ class ParseImage(BaseParser):
             except Exception:
                 pass
         return records
+
+    def implementors(self):
+        return ['Jonathon Gaff']
