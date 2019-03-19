@@ -27,7 +27,7 @@ class BaseParser(ABC):
             context (dict): An optional data context/configuration dictionary. Default None.
 
         Returns:
-            (dict or list of dict): The parsed results, in JSON-serializable format.
+            (list of dict): The parsed results, in JSON-serializable format.
         """
         pass
 
@@ -84,3 +84,22 @@ class BaseParser(ABC):
                 Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
         """
         pass
+
+
+class BaseSingleFileParser(BaseParser):
+    """Base class for parsers that only ever considers a single file at a time
+
+    Instead of implementing :meth:`parse`, implement :meth:`_parse_file`"""
+
+    @abstractmethod
+    def _parse_file(self, path, context=None):
+        """Generate the metadata for a single file
+
+        Args:
+            path (str): Path to the file
+            context (dict):
+        """
+        pass
+
+    def parse(self, group, context=None):
+        return [self._parse_file(f, context) for f in group]

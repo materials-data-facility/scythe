@@ -29,11 +29,11 @@ def parser():
 
 # TODO (lw): Our extractor does not actually get anything from these files
 def test_dm3(parser, dm3):
-    assert parser.parse([dm3]) == []
+    assert parser.parse([dm3]) == [{}]
 
 
 def test_dm4(parser, dm4):
-    assert parser.parse([dm4]) == []
+    assert parser.parse([dm4]) == [{}]
 
 
 def test_eds(parser, eds):
