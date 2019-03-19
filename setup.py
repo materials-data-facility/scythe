@@ -9,7 +9,7 @@ version = version_ns['__version__']
 
 setup(
     name="materials_io.rst",
-    packages=find_packages(include='materials_io'),
+    packages=find_packages(include=['materials_io']),
     install_requires=["Pillow>=5.1.0"],
     version=version
 )
