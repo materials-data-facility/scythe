@@ -36,7 +36,7 @@ We do not specify any particular schema for the output but we do recommend best 
 
 #. *Adhere closely to the original format.*
     If feasible, try to stay close to the original data format of a file or the output of a library used for parsing.
-    Deviating from already existing formats complicates later modifications to a parser.
+    Deviating from already existing formats complicates modifications to a parser.
 
 
 Beyond recommendations about the data type, we have a recommendations for the parser behavior:
@@ -91,7 +91,10 @@ The ``version`` operation should return the version of the parser.
 Step 2: Document the Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo:: Decide on how to to schema information
+The MaterialsIO project uses JSON documents as the output for all parsers and `JSON Schema <https://json-schema.org/>`_ to describe the content of the documents.
+The BaseParser class includes a property, ``schema``, that stores a description of the output format.
+We recommend writing your description as a separate file and having the ``schema`` property read and output the contents of this file.
+See the `GenericFileParser source code <https://github.com/materials-data-facility/MaterialsIO/blob/master/materials_io/file.py>`_ for a example.
 
 
 Step 3: Register the Parser

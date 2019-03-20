@@ -3,6 +3,14 @@ Materials IO Source Documentation
 
 These pages detail all of the parsers currently available in MaterialsIO.
 
+Generic File Parsers
+--------------------
+
+Parsers that work for any kind of file
+
+.. automodule:: materials_io.file
+    :members:
+
 Image Parsers
 -------------
 

@@ -3,3 +3,4 @@ hyperspy>=1.4.1
 pymatgen>=2018.11.30
 ase>=3.16.3b1
 mdf_toolbox>=0.4.0
+python-magic>=0.4.15

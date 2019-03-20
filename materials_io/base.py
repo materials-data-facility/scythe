@@ -88,7 +88,19 @@ class BaseParser(ABC):
 
     @abstractmethod
     def version(self):
+        """Return the version of the parser
+
+        Returns:
+            (str): Version of the parser
+        """
         pass
+
+    @property
+    def schema(self) -> dict:
+        """Schema for the output of the parser"""
+        return {
+            "$schema": "http://json-schema.org/schema#"
+        }
 
 
 class BaseSingleFileParser(BaseParser):

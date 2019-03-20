@@ -7,21 +7,23 @@ and discuss the full functionality of a parser.
 Example Usage
 ~~~~~~~~~~~~~
 
-As an example, we illustrate the use of ``FileParser``, a parser that returns status information about a file::
+As an example, we illustrate the use of ``GenericFileParser``, a parser that returns status information about a file::
 
-    parser = FileParser()
+    parser = GenericFileParser()
     parser.parse(['setup.py'])
 
-.. todo:: Actually implement ``FileParser``
 
 The above snippet creates the parser object and runs it on a file named ``setup.py``.
 Run in the root directory of the MaterialsIO it would produce output similar to:
 
 .. code:: json
 
-    {
-        "modification_time": 453
-    }
+    [{
+        'mime_type': 'text/x-python',
+        'length': 623,
+        'filename': 'setup.py',
+        'hash': '[...]'
+    }]
 
 
 The ``parse`` operation evaluates a file or group of files that describe a single logical object (e.g., a simulation).
