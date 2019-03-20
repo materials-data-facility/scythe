@@ -1,4 +1,3 @@
-"""Parsers that work for every type of file"""
 from materials_io.base import BaseSingleFileParser
 from hashlib import sha512
 import magic
