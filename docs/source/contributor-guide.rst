@@ -3,8 +3,8 @@ Contributor Guide
 
 This part of the MaterialsIO guide details how to add a new parser to the ecosystem.
 
-Step 1: Implement a Parser
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Step 1: Implement the Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Creating a new parser is accomplished by implementing the `BaseParser <user-guide.html#parser-api>`_ abstract class.
 If you are new to MaterailsIO, we recommend reviewing the `User Guide <user-guide.html#available-methods>`_ first to learn about the available methods of BaseParser.
@@ -56,7 +56,7 @@ Beyond recommendations about the data type, we have a recommendations for the pa
     Settings that are identical for each file could be better suited as configuration settings.
 
 Implementing ``is_valid``
-----------------------
+-------------------------
 
 The ``is_valid`` operation is used to determine whether a set of files are compatible with the parser.
 Implementing it is optional and recommended only when there are fast ways of testing file types.
@@ -86,3 +86,15 @@ Implementing ``version``
 We require using `semantic versioning <https://semver.org/>`_ for specifying the version of parsers.
 As the API of the parser should remain unchanged, use versioning to indicate changes in available options or the output schema.
 The ``version`` operation should return the version of the parser.
+
+
+Step 2: Document the Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo:: Decide on how to to schema information
+
+
+Step 3: Register the Parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo:: Implement stevedore-bsaed registry
