@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "description": "Output from the MaterialsIO File Parser",
+  "type": "object",
+  "properties": {
+    "mime_type": {
+      "type": "string",
+      "description": "MIME type of the file. See https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types"
+    },
+    "length": {
+      "type": "integer",
+      "description": "File size in bytes"
+    },
+    "filename": {
+      "type": "string",
+      "description": "Name of the file, without the path information"
+    },
+    "path": {
+      "type": "string",
+      "description": "Complete path of the file, including directory"
+    },
+    "hash": {
+      "type": "string",
+      "description": "SHA512 hash of the file contents"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["mime_type", "length", "filename"]
+}
