@@ -6,7 +6,7 @@ import os
 
 @pytest.fixture
 def cif():
-    return os.path.join(os.path.dirname(__file__), '..', 'data', 'cif', '1548397.cif')
+    return os.path.join(os.path.dirname(__file__), 'data', 'cif', '1548397.cif')
 
 
 @pytest.fixture

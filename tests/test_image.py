@@ -6,7 +6,7 @@ from materials_io.image import ParseImage
 
 @pytest.fixture
 def test_image():
-    return os.path.join(os.path.dirname(__file__), '..', 'data', 'image', 'dog2.jpeg')
+    return os.path.join(os.path.dirname(__file__), 'data', 'image', 'dog2.jpeg')
 
 
 def test_ParseImage(test_image):

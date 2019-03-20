@@ -4,7 +4,7 @@ import os
 from materials_io.electron_microscopy import ElectronMicroscopyParser
 
 
-data_file_loc = os.path.join(os.path.dirname(__file__), '..', 'data', 'electron_microscopy')
+data_file_loc = os.path.join(os.path.dirname(__file__), 'data', 'electron_microscopy')
 
 
 @pytest.fixture
