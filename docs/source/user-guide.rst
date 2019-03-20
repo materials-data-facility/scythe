@@ -120,3 +120,10 @@ The full API for the parsers are described as a Python abstract class:
 .. autoclass:: materials_io.base.BaseParser
     :members:
     :member-order: bysource
+
+Integrating MaterialsIO into Applications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. todo:: Write this section
+
+    Waiting to discuss with Tyler, Max, and Jonathon
