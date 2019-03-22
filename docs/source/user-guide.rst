@@ -4,6 +4,18 @@ User Guide
 In this part of the guide, we show a simple example of using a MaterialsIO parser
 and discuss the full functionality of a parser.
 
+Discovering a Parser
+~~~~~~~~~~~~~~~~~~~~
+
+MaterialsIO uses `stevedore <https://docs.openstack.org/stevedore/latest/index.html>`_ to manage a collection of parsers,
+and has a utility function for listing available parsers::
+
+    from materials_io.util import get_available_parsers
+    print(get_available_parsers())
+
+This snippet will print a dictionary of parsers installed on your system.
+Both parsers that are part of the MaterialsIO base package will be installed,
+
 Example Usage
 ~~~~~~~~~~~~~
 

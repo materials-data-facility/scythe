@@ -1,7 +1,18 @@
-Materials IO Source Documentation
-=================================
+Available Parsers
+=================
 
 These pages detail all of the parsers currently available in MaterialsIO.
+
+Quick Summary
+~~~~~~~~~~~~~
+
+The parsers that are configured to work with the stevedore plugin are:
+
+.. list-plugins:: materialsio.parser
+
+
+Detailed Listing
+~~~~~~~~~~~~~~~~
 
 Generic File Parsers
 --------------------

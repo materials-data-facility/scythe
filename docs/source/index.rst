@@ -22,7 +22,7 @@ Source Code: https://github.com/materials-data-facility/MaterialsIO
    goals
    user-guide
    contributor-guide
-   materials_io
+   parsers
 
 
 

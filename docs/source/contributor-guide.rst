@@ -91,6 +91,13 @@ The ``version`` operation should return the version of the parser.
 Step 2: Document the Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The docstring for a parser must start with a short, one sentence summary of the parser,
+which will be used by our autodocumentation tooling.
+The rest of the documentation should describe what types of files are compatible and
+summarize what types of metadata are generated.
+
+.. todo:: Actually write these descriptors for the available parsers
+
 The MaterialsIO project uses JSON documents as the output for all parsers and `JSON Schema <https://json-schema.org/>`_ to describe the content of the documents.
 The BaseParser class includes a property, ``schema``, that stores a description of the output format.
 We recommend writing your description as a separate file and having the ``schema`` property read and output the contents of this file.
@@ -100,4 +107,27 @@ See the `GenericFileParser source code <https://github.com/materials-data-facili
 Step 3: Register the Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo:: Implement stevedore-bsaed registry
+Preferred Route: Adding the Parser to MaterialsIO
+-------------------------------------------------
+
+If your parser has the same dependencies as existing parsers, add it to the existing module with the same dependencies.
+
+If your parser has new dependencies, create a new module for your parser in ``materials_io``, and then add the requirements as a new key in the ``extras_require`` dictionary of ``setup.py`` and the ``requirements.txt`` file.
+Next, add your parser to ``docs/source/parsers.rst`` by adding an ``.. automodule::`` statement that refers to your new module.
+
+MaterialsIO uses stevedore to simplify access to the parsers.
+After implementing and documenting the parser, add it to the ``entry_points`` section of the ``setup.py`` file for MaterialsIO.
+See `stevedore documentation for more information <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
+
+
+Alternative Route: Including Parsers from Other Libraries
+---------------------------------------------------------
+
+If a parser would be better suited as part of a different library, you can still register it as a parser with MaterialsIO by altering your ``setup.py`` file.
+Add an entry point with the namespace ``"materialsio.parser"`` and point to the class object following the
+`stevedore documentation <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
+Adding the entry point will let MaterialsIO use your parser if your librart is installed in the same Python environment as MaterialsIO.
+
+.. todo:: Provide a public listing of materials_io-compatible software.
+
+    So that people know where to find these external libraries
