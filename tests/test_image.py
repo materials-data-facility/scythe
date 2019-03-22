@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from materials_io.image import ParseImage
+from materials_io.image import ImageParser
 
 
 @pytest.fixture
@@ -10,6 +10,6 @@ def test_image():
 
 
 def test_ParseImage(test_image):
-    p = ParseImage()
+    p = ImageParser()
     assert (p.parse([test_image]) == [{'image': {'format': 'JPEG', 'height': 1000,
                                                  'megapixels': 1.91, 'width': 1910}}])

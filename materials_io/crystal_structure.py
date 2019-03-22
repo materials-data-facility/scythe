@@ -6,7 +6,7 @@ from ase.io import read
 from materials_io.base import BaseSingleFileParser
 
 
-class ParseCrystalStructure(BaseSingleFileParser):
+class CrystalStructureParser(BaseSingleFileParser):
     """Parse information about a crystal structure"""
 
     def _parse_file(self, path, context=None):

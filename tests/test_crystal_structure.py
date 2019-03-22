@@ -1,4 +1,4 @@
-from materials_io.crystal_structure import ParseCrystalStructure
+from materials_io.crystal_structure import CrystalStructureParser
 from math import isclose
 import pytest
 import os
@@ -11,7 +11,7 @@ def cif():
 
 @pytest.fixture
 def parser():
-    return ParseCrystalStructure()
+    return CrystalStructureParser()
 
 
 def test_cif(parser, cif):

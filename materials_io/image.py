@@ -3,7 +3,7 @@ from PIL import Image
 from materials_io.base import BaseSingleFileParser
 
 
-class ParseImage(BaseSingleFileParser):
+class ImageParser(BaseSingleFileParser):
     """Retrieves basic information about an image"""
 
     def _parse_file(self, file_path, context=None):
