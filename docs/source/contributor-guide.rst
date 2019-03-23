@@ -51,9 +51,8 @@ Beyond recommendations about the data type, we have a recommendations for the pa
     A bad use of configuration would be to change the output to match a different schema.
     Operations that significantly alter the form but not the content of a summary should be implemented as adaptors.
 
-#. *Context should not be required*
-    Parsers can use additional context about files to genreate summaries, but this information should not be required.
-    Settings that are identical for each file could be better suited as configuration settings.
+#. *Consider whether context should be configuration.
+    Settings that are identical for each file could be better suited as configuration settings than as context.
 
 Implementing ``is_valid``
 -------------------------
