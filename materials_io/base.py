@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
-
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 
 class BaseParser(ABC):
@@ -18,6 +20,31 @@ class BaseParser(ABC):
 
     See documentation for further details: TBD.
     """
+
+    def parse_directory(self, path, context=None):
+        """Run a parser on all appropriate files in a directory
+
+        Args:
+            path (str): Root of directory to parser
+            context (dict): An optional data context/configuration dictionary. Default None.
+        Yields:
+            ([str], [dict]): Tuple of the group identity and the string
+        """
+
+        # Check if is_valid function has been overloaded
+        is_overloaded = self.__class__.is_valid != BaseParser.is_valid
+        logger.debug('Using is_valid' if is_overloaded else 'Attempting to parse every file')
+
+        # Run the parsing
+        for group in self.group(path, context):
+            if is_overloaded and self.is_valid(group, context):
+                yield group, self.parse(group, context)
+            else:
+                # If is_valid, is base implementation, run fill parser anyway
+                try:
+                    yield group, self.parse(group, context)
+                except Exception:
+                    continue
 
     @abstractmethod
     def parse(self, group, context=None):
@@ -51,11 +78,12 @@ class BaseParser(ABC):
         else:
             return True
 
-    def group(self, root, config=None):
+    def group(self, root, context=None):
         """Identify sets files in a directory that are related to each other
 
         Args:
-            root (str): Path to a direct
+            root (str): Path to a directory
+            context (dict): An optional data context/configuration dictionary. Default None.
         Yields:
             (list of str): Groups of files
         """
