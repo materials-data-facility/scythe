@@ -27,17 +27,17 @@ def parser():
     return ElectronMicroscopyParser()
 
 
-# TODO (lw): Our extractor does not actually get anything from these files
+# TODO (lw): Our parser does not actually get anything from these files
 def test_dm3(parser, dm3):
-    assert parser.parse([dm3]) == [{}]
+    assert parser.parse([dm3]) == {}
 
 
 def test_dm4(parser, dm4):
-    assert parser.parse([dm4]) == [{}]
+    assert parser.parse([dm4]) == {}
 
 
 def test_eds(parser, eds):
-    assert parser.parse([eds]) == [{'electron_microscopy': {'beam_energy': 200.0,
-                                                            'magnification': 320000.0,
-                                                            'image_mode': 'STEM',
-                                                            'detector': 'EDS'}}]
+    assert parser.parse([eds]) == {'electron_microscopy': {'beam_energy': 200.0,
+                                                           'magnification': 320000.0,
+                                                           'image_mode': 'STEM',
+                                                           'detector': 'EDS'}}

@@ -11,5 +11,5 @@ def test_image():
 
 def test_parse(test_image):
     p = ImageParser()
-    assert (p.parse([test_image]) == [{'image': {'format': 'JPEG', 'height': 1000,
-                                                 'megapixels': 1.91, 'width': 1910}}])
+    assert (p.parse([test_image]) == {'image': {'format': 'JPEG', 'height': 1000,
+                                                'megapixels': 1.91, 'width': 1910}})

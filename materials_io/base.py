@@ -66,7 +66,7 @@ class BaseParser(ABC):
         return metadata
 
     @abstractmethod
-    def parse(self, group, context=None):
+    def parse(self, group, context=None) -> dict:
         """Extract metadata from a group of files
 
         A group of files is a set of 1 or more files that describe the same object, and will be
@@ -85,7 +85,7 @@ class BaseParser(ABC):
 
         Args:
             root (str): Path to a directory
-            context (dict): An optional data context/configuration dictionary. 
+            context (dict): An optional data context/configuration dictionary.
         Yields:
             ((str)): Groups of files
         """
@@ -116,7 +116,7 @@ class BaseParser(ABC):
         """
 
     @abstractmethod
-    def version(self):
+    def version(self) -> str:
         """Return the version of the parser
 
         Returns:
@@ -142,9 +142,18 @@ class BaseSingleFileParser(BaseParser):
 
         Args:
             path (str): Path to the file
-            context (dict):
+            context (dict): Optional context information about the file
+        Returns:
+            (dict): Metadata for the file
         """
-        pass
 
     def parse(self, group, context=None):
-        return [self._parse_file(f, context) for f in group]
+        # Error catching: allows for single files to passed not as list
+        if isinstance(group, str):
+            return self._parse_file(group, context)
+
+        # Assumes that the group must have exactly one file
+        if len(group) > 1:
+            raise ValueError('Parser only takes a single file at a time')
+
+        return self._parse_file(group[0], context)
