@@ -31,10 +31,10 @@ Run in the root directory of the MaterialsIO it would produce output similar to:
 .. code:: json
 
     [{
-        'mime_type': 'text/x-python',
-        'length': 623,
-        'filename': 'setup.py',
-        'hash': '[...]'
+        "mime_type": "text/x-python",
+        "length": 623,
+        "filename": "setup.py",
+        "hash": "[...]"
     }]
 
 
@@ -58,15 +58,11 @@ files is actually compatible with a parser::
 The above function returns a list of all metadata that is possible to extract from a directory.
 For convenience, we provide a utility operation to parse all the files in a directory::
 
-    metadata = parser.parse_directory('.')
+    metadata = list(parser.parse_directory('.'))
+
+`parse_directory` is a generator function, so we use `list` to turn the output into a list format.
 
 .. todo:: We need an example parser to evaluate grouping functionality
-
-.. todo:: Provide a utility operation for running on a whole directory.
-
-    That utility could even determine whether a parser has overloaded the default ``is_valid`` operation
-    and use that to assess whether it will actually use ``is_valid`` or just attempt parsing inside of
-    a try/except block.
 
 
 Available Methods
