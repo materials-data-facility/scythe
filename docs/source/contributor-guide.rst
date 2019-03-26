@@ -8,16 +8,20 @@ Step 1: Implement the Parser
 
 Creating a new parser is accomplished by implementing the `BaseParser <user-guide.html#parser-api>`_ abstract class.
 If you are new to MaterailsIO, we recommend reviewing the `User Guide <user-guide.html#available-methods>`_ first to learn about the available methods of BaseParser.
-Minimally, you need only implement the ``parse``, ``version``, and ``implementors`` operations of these
+Minimally, you need only implement the ``parse``, ``version``, and ``implementors`` operations for a new parser.
 Each of these methods (and any other methods you override) must be stateless, so that running the operation does not change the behavior of the parser.
 
-Class Attributes
-----------------
+Class Attributes and Initializer
+--------------------------------
 
 The ``BaseParser`` class supports configuration options as Python class attributes.
 These options are intended to define the behavior of a parser for a particular environment
 (e.g., paths of required executables) or for a particular application (e.g., turning off unneeded features).
 We recommend limiting these options to be only JSON-serializable data types and for all to be defined in the ``__init__`` function to simplify text-based configuration files.
+
+The initializer function should check if a parser has access to all required external tools, and throw exceptions if not.
+For example, a parser that relies on calling an external command-line tool should check whether the package is installed.
+In general, parsers should fail during initialization and not during the parsing operation if the system in misconfigured.
 
 Implementing ``parse``
 ----------------------
@@ -41,27 +45,14 @@ We do not specify any particular schema for the output but we do recommend best 
 
 Beyond recommendations about the data type, we have a recommendations for the parser behavior:
 
-#. *Fail loudly and as specifically as possible*
-    Parsers should return exceptions when provided incompatible data and not fail by returning data.
-    Provide an error message that indicates whether the file is incompatible, or the parser is misconfigured (e.g., missing a required library).
-
 #. *Avoid configuration options that change only output format*
     Parsers can take configuration options that alter the output format, but configurations should be used sparingly.
     A good use of configuration would be to disable complex parsing operations if unneeded.
     A bad use of configuration would be to change the output to match a different schema.
     Operations that significantly alter the form but not the content of a summary should be implemented as adaptors.
 
-#. *Consider whether context should be configuration.
+#. *Consider whether context should be configuration*
     Settings that are identical for each file could be better suited as configuration settings than as context.
-
-Implementing ``is_valid``
--------------------------
-
-The ``is_valid`` operation is used to determine whether a set of files are compatible with the parser.
-Implementing it is optional and recommended only when there are fast ways of testing file types.
-The default implementation is to call ``parse`` and see if the parser fails.
-``is_valid`` should return ``False`` for incompatible files and only throw Exceptions if the parser is misconfigured.
-
 
 Implementing ``group``
 ----------------------
@@ -71,7 +62,10 @@ Implementing ``group`` is optional.
 The default implementation is to return each file in the directory as its own group.
 New implementations of ``group`` need not return every file as part of a group (e.g., it can perform compatibility filtering)
 and files are allowed to appear in more than 1 group.
-In general, our recommendation is to return all possible groupings of files when in doubt and let the ``is_valid`` and ``parse`` operations sort out which groupings are valid.
+In general, our recommendation is to return all possible groupings of files when in doubt.
+
+Another appropriate use of the ``group`` operation is to filter out files which are very unlikely to parse correctly.
+For example, a PDF parser could identify only parsers with the correct file extensions.
 
 Implementing ``citations`` and ``implementors``
 -----------------------------------------------

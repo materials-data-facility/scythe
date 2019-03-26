@@ -38,29 +38,20 @@ Run in the root directory of the MaterialsIO it would produce output similar to:
     }]
 
 
-The ``parse`` operation evaluates a file or group of files that describe a single logical object (e.g., a simulation).
+The ``parse`` operation evaluates a file or group of files that describe a single object (e.g., a simulation).
 Running on the parser on every file in a directory is accomplished by the ``group`` method::
 
     metadata = [parser.parse(x) for x in parser.group('.')]
 
-The ``group`` operation evaluates every file in the listed directory and its subdirectories,
-and generates groupings of files that likely describe the same object.
-Grouping is unnecessary for ``FileParser``, which treats each file individually.
-Grouping is necessary in cases where an object is described by multiple objects (e.g., the inputs and output files for a simulation).
+The ``group`` operation generates a list of files in a certain directory that are likely to be compatible with a parser.
+Further, some implementations of ``group`` identify groupings of files that describe the same object (e.g., the input and output files of the same simulation).
+Both filtering files and grouping are unnecessary for ``FileParser``, which treats each file individually and works on any kind of file.
 
-
-Another potential problem with the script about is that some files may not be compatible with the parser.
-The MaterialsIO parsers provide a ``is_valid`` operation that determines whether a specific grouping of
-files is actually compatible with a parser::
-
-    metadata = [parser.parse(x) for x in parser.group('.') if parser.is_valid(x)]
-
-The above function returns a list of all metadata that is possible to extract from a directory.
 For convenience, we provide a utility operation to parse all the files in a directory::
 
     metadata = list(parser.parse_directory('.'))
 
-`parse_directory` is a generator function, so we use `list` to turn the output into a list format.
+``parse_directory`` is a generator function, so we use `list` to turn the output into a list format.
 
 .. todo:: We need an example parser to evaluate grouping functionality
 
@@ -103,15 +94,6 @@ Parsers also provide the ability to quickly find groups of associated files: ``g
 The ``group`` operation takes a directory as input and generates candidate groups of files::
 
     parser.group('/data/directory')
-
-Compatibility Checking
-----------------------
-
-Parsers also provide a method for checking whether a group of files is compatible with it:: `is_valid`.
-These ``is_valid`` method take a list of the files in a certain group as input and, optionally,
-context information about the files::
-
-    parser.is_valid(['/my/file'])
 
 Attribution Functions
 ---------------------
