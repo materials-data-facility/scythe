@@ -63,4 +63,3 @@ def test_single_file():
     assert parser.parse(['/fake/file']) == {}
     with pytest.raises(ValueError):
         parser.parse(['/fake/file.in', '/fake/file.out'])
-
