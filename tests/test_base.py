@@ -1,6 +1,5 @@
 from materials_io.base import BaseParser
 from glob import glob
-import logging
 import pytest
 import os
 

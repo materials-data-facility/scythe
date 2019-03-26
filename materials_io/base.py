@@ -77,7 +77,6 @@ class BaseParser(ABC):
         Returns:
             (dict): The parsed results, in JSON-serializable format.
         """
-        pass
 
     def group(self, root, context=None):
         """Identify sets files in a directory that are related to each other
@@ -113,7 +112,6 @@ class BaseParser(ABC):
                 keys like "email" or "institution" (e.g., {"name": "Anubhav
                 Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
         """
-        pass
 
     @abstractmethod
     def version(self):
@@ -122,7 +120,6 @@ class BaseParser(ABC):
         Returns:
             (str): Version of the parser
         """
-        pass
 
     @property
     def schema(self) -> dict:
