@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from mdf_toolbox import dict_merge
 import logging
 import os
 
@@ -16,7 +17,9 @@ class BaseParser(ABC):
     :meth:`citations` can be used if there are papers that should be cited if the parser is used
     as part of a scientific publication.
 
-    See documentation for further details: TBD.
+    See `MaterialsIO Contributor Guide
+    <https://materialsio.readthedocs.io/en/latest/contributor-guide.html>`_
+    for further details.
     """
 
     def parse_directory(self, path, context=None):
@@ -38,16 +41,41 @@ class BaseParser(ABC):
             except Exception:
                 continue
 
+    def parse_as_unit(self, files):
+        """Parse a group of files and merge their metadata
+
+        Used if each file in a group must be parsed separately, but should still only produce one
+        record. For example, if a directory contains separate files from
+        different imaging techniques.
+
+        Args:
+            files ([str]): List of files to parse
+        Returns:
+            (dict): Metadata summary from
+        """
+
+        metadata = {}
+
+        # TODO (lw): @jgaff Do we need grouping functionality, or just loop over each file?
+        for f in files:
+            try:
+                record = self.parse(f)
+            except Exception:
+                continue
+            else:
+                metadata = dict_merge(metadata, record)
+        return metadata
+
     @abstractmethod
     def parse(self, group, context=None):
         """Extract metadata from a group of files
 
         Arguments:
-            group (list of str):  A list of one or more files that describe the same object
+            group (list of str):  A list of one or more files that should be parsed together
             context (dict): An optional data context/configuration dictionary. Default None.
 
         Returns:
-            (list of dict): The parsed results, in JSON-serializable format.
+            (dict): The parsed results, in JSON-serializable format.
         """
         pass
 
