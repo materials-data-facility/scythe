@@ -134,8 +134,7 @@ class BaseSingleFileParser(BaseParser):
                 record = self.parse(f)
             except Exception:
                 continue
-            else:
-                metadata = dict_merge(metadata, record)
+            metadata = dict_merge(metadata, record)
         return metadata
 
     @abstractmethod

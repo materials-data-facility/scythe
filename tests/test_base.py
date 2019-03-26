@@ -19,7 +19,7 @@ class FakeParser(BaseParser):
 class FakeSingleParser(BaseSingleFileParser):
 
     def _parse_file(self, path, context=None):
-        return {}
+        return {'dirname': os.path.dirname(path)}
 
     def implementors(self):
         return ['Logan Ward']
@@ -59,7 +59,12 @@ def test_citations(parser):
 
 def test_single_file():
     parser = FakeSingleParser()
-    assert parser.parse('/fake/file') == {}  # Handle non-standard but sensible inputs
-    assert parser.parse(['/fake/file']) == {}
+    assert parser.parse('/fake/file') == {'dirname': '/fake'}  # Handle sensibly incorrect inputs
+    assert parser.parse(['/fake/file']) == {'dirname': '/fake'}
     with pytest.raises(ValueError):
         parser.parse(['/fake/file.in', '/fake/file.out'])
+
+
+def test_parse_as_unit():
+    parser = FakeSingleParser()
+    assert parser.parse_as_unit(['/fake/file', '/fake/file2']) == {'dirname': '/fake'}
