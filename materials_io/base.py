@@ -44,9 +44,8 @@ class BaseParser(ABC):
     def parse_as_unit(self, files):
         """Parse a group of files and merge their metadata
 
-        Used if each file in a group must be parsed separately, but should still only produce one
-        record. For example, if a directory contains separate files from
-        different imaging techniques.
+        Used if each file in a group are parsed separately, but the resultant metadata
+        should be combined after parsing.
 
         Args:
             files ([str]): List of files to parse
@@ -70,22 +69,25 @@ class BaseParser(ABC):
     def parse(self, group, context=None):
         """Extract metadata from a group of files
 
+        A group of files is a set of 1 or more files that describe the same object, and will be
+        be used together to create s single summary record.
+
         Arguments:
             group (list of str):  A list of one or more files that should be parsed together
-            context (dict): An optional data context/configuration dictionary. Default None.
+            context (dict): An optional data context/configuration dictionary
 
         Returns:
             (dict): The parsed results, in JSON-serializable format.
         """
 
     def group(self, root, context=None):
-        """Identify sets files in a directory that are related to each other
+        """Identify sets files in a directory that should be parsed together
 
         Args:
             root (str): Path to a directory
-            context (dict): An optional data context/configuration dictionary. Default None.
+            context (dict): An optional data context/configuration dictionary. 
         Yields:
-            ([str]): Groups of files
+            ((str)): Groups of files
         """
 
         for path, dirs, files in os.walk(root):

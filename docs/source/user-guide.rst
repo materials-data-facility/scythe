@@ -19,14 +19,14 @@ Both parsers that are part of the MaterialsIO base package will be installed,
 Example Usage
 ~~~~~~~~~~~~~
 
-As an example, we illustrate the use of ``GenericFileParser``, a parser that returns status information about a file::
+As an example, we illustrate the use of ``GenericFileParser``, a parser that returns basic status and type information about a file::
 
     parser = GenericFileParser()
     parser.parse(['setup.py'])
 
 
 The above snippet creates the parser object and runs it on a file named ``setup.py``.
-Run in the root directory of the MaterialsIO it would produce output similar to:
+Run in the root directory of the MaterialsIO, it would produce output similar to:
 
 .. code:: json
 
@@ -38,7 +38,7 @@ Run in the root directory of the MaterialsIO it would produce output similar to:
     }]
 
 
-The ``parse`` operation evaluates a file or group of files that describe a single object (e.g., a simulation).
+The ``parse`` operation generates a single summary from a file or, in advanced cases, a group of files that describe the same object (e.g., a simulation).
 Running on the parser on every file in a directory is accomplished by the ``group`` method::
 
     metadata = [parser.parse(x) for x in parser.group('.')]
@@ -51,15 +51,13 @@ For convenience, we provide a utility operation to parse all the files in a dire
 
     metadata = list(parser.parse_directory('.'))
 
-``parse_directory`` is a generator function, so we use `list` to turn the output into a list format.
+``parse_directory`` is a generator function, so we use ``list`` to turn the output into a list format.
 
 .. todo:: We need an example parser to evaluate grouping functionality
 
 
-Available Methods
-~~~~~~~~~~~~~~~~~
-
-.. todo:: Is having two separate descriptions helpful?
+Parser Interface
+~~~~~~~~~~~~~~~~
 
 The functionality of a parser is broken into several simple operations.
 
@@ -74,18 +72,28 @@ Most parsers do not have any options for the initializer, so you can create them
 Some parsers require configuration options that define how the parser runs,
 such as the location of a non-Python executable.
 
-Parsing Methods
----------------
+Parsing Method
+--------------
 
 The main operation for any parser is the data extraction operation: ``parse``.
-The ``parse`` operation takes a list of paths to files that collectively describe the same object (e.g., an experiment),
-and returns a summary of the data the files hold::
 
-    metadata = parser.parse_files(['/my/file1', '/my/file2'])
+In most cases, the ``parse`` operation takes the path to a file and
+and returns a summary of the data the file holds::
 
-In some cases, you can provide information that is not contained within the file themselves, which can be provided to the parser as a "context"::
+    metadata = parser.parse_files(['/my/file'])
+
+Some parsers take multiple files that describe the same object (e.g., the input and output files of a simulation)
+and use them to generate a single metadata record::
+
+    metadata = parser.parse_files(['/my/file.in', '/my/file.out'])
+
+The `grouping method <#grouping-files>`_ for these parsers provides logic to identify groups of related files.
+
+Some parsers also can use information that is not contained within the file themselves, which can be provided to the parser as a "context"::
 
     metadata = parser.parse_files(['/my/file1'], context={'headers': {'temp': 'temperature'}})
+
+The documentation for the parser should indicate valid types of context information.
 
 Grouping Files
 --------------
@@ -104,8 +112,8 @@ Two functions, ``citations`` and ``implementors``, are available to determine wh
 in scientific articles.
 
 
-Parser API
-----------
+Full Parser API
+---------------
 
 The full API for the parsers are described as a Python abstract class:
 

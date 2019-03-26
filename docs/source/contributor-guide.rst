@@ -11,6 +11,10 @@ If you are new to MaterailsIO, we recommend reviewing the `User Guide <user-guid
 Minimally, you need only implement the ``parse``, ``version``, and ``implementors`` operations for a new parser.
 Each of these methods (and any other methods you override) must be stateless, so that running the operation does not change the behavior of the parser.
 
+We also have subclasses of ``BaseParser`` that are useful for common types of parsers:
+
+- ``BaseSingleFileParser``: Parsers that only ever evaluate a single file at a time
+
 Class Attributes and Initializer
 --------------------------------
 
@@ -43,7 +47,7 @@ We do not specify any particular schema for the output but we do recommend best 
     Deviating from already existing formats complicates modifications to a parser.
 
 
-Beyond recommendations about the data type, we have a recommendations for the parser behavior:
+We also have a recommendations for the parser behavior:
 
 #. *Avoid configuration options that change only output format*
     Parsers can take configuration options that alter the output format, but configurations should be used sparingly.
@@ -57,15 +61,20 @@ Beyond recommendations about the data type, we have a recommendations for the pa
 Implementing ``group``
 ----------------------
 
-The ``group`` operation finds all groups of files in a directly that should be treated as related units.
+The ``group`` operation finds all groups of files in a directory that should be parsed together.
 Implementing ``group`` is optional.
 The default implementation is to return each file in the directory as its own group.
-New implementations of ``group`` need not return every file as part of a group (e.g., it can perform compatibility filtering)
-and files are allowed to appear in more than 1 group.
-In general, our recommendation is to return all possible groupings of files when in doubt.
+
+Files are allowed to appear in more than one group,
+and we recommend generating all possible groupings of files when in doubt.
+
+It is important to note that that file groups are specific to a parser.
+Groupings of files that are meaningful to one parser need not be meaningful to another.
+For that reason, limit the definition of groups to sets of files that can be parsed together
+without consideration to what other information makes the files related (e.g., being in the same directory).
 
 Another appropriate use of the ``group`` operation is to filter out files which are very unlikely to parse correctly.
-For example, a PDF parser could identify only parsers with the correct file extensions.
+For example, a PDF parser could identify only files with a ".pdf" extension.
 
 Implementing ``citations`` and ``implementors``
 -----------------------------------------------
