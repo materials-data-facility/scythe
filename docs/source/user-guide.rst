@@ -39,13 +39,13 @@ Run in the root directory of the MaterialsIO, it would produce output similar to
 
 
 The ``parse`` operation generates a single summary from a file or, in advanced cases, a group of files that describe the same object (e.g., a simulation).
-Running on the parser on every file in a directory is accomplished by the ``group`` method::
+The ``group`` operation identifies these sets of files files::
 
-    metadata = [parser.parse(x) for x in parser.group('.')]
+    metadata = [parser.parse(x) for x in parser.group(['setup.py', 'requirements.txt'])]
 
-The ``group`` operation generates a list of files in a certain directory that are likely to be compatible with a parser.
-Further, some implementations of ``group`` identify groupings of files that describe the same object (e.g., the input and output files of the same simulation).
-Both filtering files and grouping are unnecessary for ``FileParser``, which treats each file individually and works on any kind of file.
+The ``group`` operation for ``GenericFileParser`` places each file in its own group, because they are all treated separately.
+More advanced parsers identify groupings of files that describe the same object (e.g., the input and output files of the same simulation),
+and may only generate groups from files that are likely to be compatible with the parser.
 
 For convenience, we provide a utility operation to parse all the files in a directory::
 

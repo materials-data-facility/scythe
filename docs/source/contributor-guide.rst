@@ -61,12 +61,12 @@ We also have a recommendations for the parser behavior:
 Implementing ``group``
 ----------------------
 
-The ``group`` operation finds all groups of files in a directory that should be parsed together.
+The ``group`` operation finds all sets of files in a user-provided list that should be parsed together.
 Implementing ``group`` is optional.
 The default implementation is to return each file in the directory as its own group.
 
 Files are allowed to appear in more than one group,
-and we recommend generating all possible groupings of files when in doubt.
+but we recommend generating only the largest valid group of files to minimize the same metadata being parsed multiple times.
 
 It is important to note that that file groups are specific to a parser.
 Groupings of files that are meaningful to one parser need not be meaningful to another.

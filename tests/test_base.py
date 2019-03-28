@@ -45,7 +45,7 @@ def my_files(directory):
 
 
 def test_group(parser, directory, my_files):
-    groups = set(parser.group(directory))
+    groups = set(parser.group(my_files))
     assert set(groups) == set(zip(my_files))  # Each file own group
 
 

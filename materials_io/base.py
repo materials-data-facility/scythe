@@ -1,3 +1,4 @@
+from typing import List, Iterator, Tuple, Iterable
 from abc import ABC, abstractmethod
 from mdf_toolbox import dict_merge
 import logging
@@ -22,27 +23,29 @@ class BaseParser(ABC):
     for further details.
     """
 
-    def parse_directory(self, path, context=None):
+    def parse_directory(self, path: str, context: dict = None) -> Iterator[Tuple[Tuple[str], dict]]:
         """Run a parser on all appropriate files in a directory
 
         Skips files that throw exceptions while parsing
 
         Args:
             path (str): Root of directory to parser
-            context (dict): An optional data context/configuration dictionary. Default None.
+            context (dict): Context about the files
         Yields:
-            ([str], [dict]): Tuple of the group identity and the string
+            ([str], dict): Tuple of the group identity and the string
         """
 
-        # Run the parsing
-        for group in self.group(path, context):
-            try:
-                yield group, self.parse(group, context)
-            except Exception:
-                continue
+        # Iterate over all directories
+        for root, dirs, files in os.walk(path):
+            # Generate the full paths for all of the contents
+            full_paths = map(lambda x: os.path.join(root, x), files + dirs)
+
+            # Parse each identified group
+            for group in self.group(full_paths, context):
+                yield (group, self.parse(group, context))
 
     @abstractmethod
-    def parse(self, group, context=None) -> dict:
+    def parse(self, group: List[str], context: dict = None) -> dict:
         """Extract metadata from a group of files
 
         A group of files is a set of 1 or more files that describe the same object, and will be
@@ -50,27 +53,25 @@ class BaseParser(ABC):
 
         Arguments:
             group (list of str):  A list of one or more files that should be parsed together
-            context (dict): An optional data context/configuration dictionary
+            context (dict): Context about the files
 
         Returns:
             (dict): The parsed results, in JSON-serializable format.
         """
 
-    def group(self, root, context=None):
-        """Identify sets files in a directory that should be parsed together
+    def group(self, files: Iterable[str], context: dict = None) -> Iterator[Tuple[str, ...]]:
+        """Identify a groups of files that should be parsed together
 
         Args:
-            root (str): Path to a directory
-            context (dict): An optional data context/configuration dictionary.
+            files ([str]): List of paths, which could include both files and directories
+            context (dict): Context about the files
         Yields:
             ((str)): Groups of files
         """
 
-        for path, dirs, files in os.walk(root):
-            for f in files:
-                yield (os.path.join(path, f),)
+        return zip(f for f in files if not os.path.isdir(f))
 
-    def citations(self):
+    def citations(self) -> List[str]:
         """Citation(s) and reference(s) for this parser
 
         Returns:
@@ -79,7 +80,7 @@ class BaseParser(ABC):
         return []
 
     @abstractmethod
-    def implementors(self):
+    def implementors(self) -> List[str]:
         """List of implementors of the parser
 
         These people are the points-of-contact for addressing errors or modifying the parser
@@ -157,4 +158,4 @@ class BaseSingleFileParser(BaseParser):
         if len(group) > 1:
             raise ValueError('Parser only takes a single file at a time')
 
-        return self._parse_file(group[0], context)
+        return self._parse_file(group.pop(), context)
