@@ -32,20 +32,19 @@ class BaseParser(ABC):
             path (str): Root of directory to parser
             context (dict): Context about the files
         Yields:
-            ([str], dict): Tuple of the group identity and the string
+            ([str], dict): Tuple of the group identity and the metadata unit
         """
-
-        # Iterate over all directories
-        for root, dirs, files in os.walk(path):
-            # Generate the full paths for all of the contents
-            full_paths = map(lambda x: os.path.join(root, x), files + dirs)
-
-            # Parse each identified group
-            for group in self.group(full_paths, context):
-                yield (group, self.parse(group, context))
+        # Parse each identified group
+        for group in self.group(path, context):
+            try:
+                metadata_unit = self.parse(group, context)
+            except Exception:
+                continue
+            else:
+                yield (group, metadata_unit)
 
     @abstractmethod
-    def parse(self, group: List[str], context: dict = None) -> dict:
+    def parse(self, group: Iterable[str], context: dict = None) -> dict:
         """Extract metadata from a group of files
 
         A group of files is a set of 1 or more files that describe the same object, and will be
@@ -59,41 +58,57 @@ class BaseParser(ABC):
             (dict): The parsed results, in JSON-serializable format.
         """
 
-    def parse_as_unit(self, files: List[str]) -> dict:
+    def parse_as_unit(self, files, context: dict = None) -> dict:
         """Parse a group of files and merge their metadata
 
         Used if each file in a group are parsed separately, but the resultant metadata
         should be combined after parsing.
 
         Args:
-            files ([str]): List of files to parse
+            files (str or [str]): Path(s) to parse
+            context (dict): Context about the files
         Returns:
-            (dict): Metadata summary from
+            (dict): Metadata summary from the files
         """
-
         # Initialize output dictionary
         metadata = {}
 
         # Loop over all files
         for group in self.group(files):
             try:
-                record = self.parse(group)
-            except Exception as exc:
+                record = self.parse(group, context)
+            except Exception:
                 continue
-            metadata = dict_merge(metadata, record)
+            else:
+                metadata = dict_merge(metadata, record, append_lists=True)
         return metadata
 
-    def group(self, files: Iterable[str], context: dict = None) -> Iterator[Tuple[str, ...]]:
+    def group(self, files, context: dict = None) -> Iterator[Tuple[str, ...]]:
         """Identify a groups of files that should be parsed together
 
         Args:
-            files ([str]): List of paths, which could include both files and directories
+            files (str or [str]): Path(s), which could include both files and directories
             context (dict): Context about the files
         Yields:
             ((str)): Groups of files
         """
+        if isinstance(files, str):
+            files = [files]
+        # Clean paths
+        files = [os.path.abspath(os.path.expanduser(f)) for f in files]
 
-        return zip(f for f in files if not os.path.isdir(f))
+        # Default: Every file is in its own group, skipping symlinks
+        groups = []
+        for fn in files:
+            if os.path.isfile(fn):
+                groups.append((fn,))
+            # Recurse through directories (could also be done with os.walk(), especially
+            # for groups that may span directories)
+            elif os.path.isdir(fn):
+                for f in os.listdir(fn):
+                    groups.extend(self.group(os.path.join(fn, f)))
+
+        return groups
 
     def citations(self) -> List[str]:
         """Citation(s) and reference(s) for this parser
