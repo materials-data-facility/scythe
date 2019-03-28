@@ -59,6 +59,32 @@ class BaseParser(ABC):
             (dict): The parsed results, in JSON-serializable format.
         """
 
+    def parse_as_unit(self, files: List[str]) -> dict:
+        """Parse a group of files and merge their metadata
+
+        Used if each file in a group are parsed separately, but the resultant metadata
+        should be combined after parsing.
+
+        Args:
+            files ([str]): List of files to parse
+        Returns:
+            (dict): Metadata summary from
+        """
+
+        # Initialize output dictionary
+        metadata = {}
+
+        # Loop over all files
+        for group in self.group(files):
+            try:
+                record = self.parse(group)
+                print(record)
+            except Exception as exc:
+                raise exc
+                continue
+            metadata = dict_merge(metadata, record)
+        return metadata
+
     def group(self, files: Iterable[str], context: dict = None) -> Iterator[Tuple[str, ...]]:
         """Identify a groups of files that should be parsed together
 
@@ -113,31 +139,6 @@ class BaseSingleFileParser(BaseParser):
 
     Instead of implementing :meth:`parse`, implement :meth:`_parse_file`"""
 
-    def parse_as_unit(self, files):
-        """Parse a group of files and merge their metadata
-
-        Used if each file in a group are parsed separately, but the resultant metadata
-        should be combined after parsing.
-
-        Args:
-            files ([str]): List of files to parse
-        Returns:
-            (dict): Metadata summary from
-        """
-
-        metadata = {}
-
-        # TODO (lw): Decide whether this needs to work with parsers that operate on groups of files
-        #  At present, I do not yet see why you can just use the `parse` method for parsers that
-        #  operate on groups and return a single metadata record
-        for f in files:
-            try:
-                record = self.parse(f)
-            except Exception:
-                continue
-            metadata = dict_merge(metadata, record)
-        return metadata
-
     @abstractmethod
     def _parse_file(self, path, context=None):
         """Generate the metadata for a single file
@@ -158,4 +159,4 @@ class BaseSingleFileParser(BaseParser):
         if len(group) > 1:
             raise ValueError('Parser only takes a single file at a time')
 
-        return self._parse_file(group.pop(), context)
+        return self._parse_file(group[0], context)
