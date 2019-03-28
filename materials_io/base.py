@@ -78,7 +78,7 @@ class BaseParser(ABC):
         for group in self.group(files):
             try:
                 record = self.parse(group)
-            except Exception as exc:
+            except Exception:
                 continue
             metadata = dict_merge(metadata, record)
         return metadata
