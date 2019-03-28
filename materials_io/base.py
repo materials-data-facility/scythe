@@ -74,7 +74,7 @@ class BaseParser(ABC):
         metadata = {}
 
         # Loop over all files
-        for group in self.group(files):
+        for group in self.group(files, context):
             try:
                 record = self.parse(group, context)
             except Exception:
@@ -106,7 +106,7 @@ class BaseParser(ABC):
             # for groups that may span directories)
             elif os.path.isdir(fn):
                 for f in os.listdir(fn):
-                    groups.extend(self.group(os.path.join(fn, f)))
+                    groups.extend(self.group(os.path.join(fn, f), context))
 
         return groups
 
