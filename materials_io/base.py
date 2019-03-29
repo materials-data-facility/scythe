@@ -1,4 +1,4 @@
-from typing import List, Iterator, Tuple, Iterable
+from typing import List, Iterator, Tuple, Iterable, Union
 from abc import ABC, abstractmethod
 from mdf_toolbox import dict_merge
 import logging
@@ -58,7 +58,7 @@ class BaseParser(ABC):
             (dict): The parsed results, in JSON-serializable format.
         """
 
-    def parse_as_unit(self, files, context: dict = None) -> dict:
+    def parse_as_unit(self, files: Union[str, Iterable[str]], context: dict = None) -> dict:
         """Parse a group of files and merge their metadata
 
         Used if each file in a group are parsed separately, but the resultant metadata
@@ -83,7 +83,8 @@ class BaseParser(ABC):
                 metadata = dict_merge(metadata, record, append_lists=True)
         return metadata
 
-    def group(self, files, context: dict = None) -> Iterator[Tuple[str, ...]]:
+    def group(self, files: Union[str, Iterable[str]],
+              context: dict = None) -> Iterator[Tuple[str, ...]]:
         """Identify a groups of files that should be parsed together
 
         Args:
@@ -150,7 +151,7 @@ class BaseSingleFileParser(BaseParser):
     Instead of implementing :meth:`parse`, implement :meth:`_parse_file`"""
 
     @abstractmethod
-    def _parse_file(self, path, context=None):
+    def _parse_file(self, path: str, context=None):
         """Generate the metadata for a single file
 
         Args:
@@ -160,7 +161,7 @@ class BaseSingleFileParser(BaseParser):
             (dict): Metadata for the file
         """
 
-    def parse(self, group, context=None):
+    def parse(self, group: Union[str, Iterable[str]], context=None):
         # Error catching: allows for single files to passed not as list
         if isinstance(group, str):
             return self._parse_file(group, context)
