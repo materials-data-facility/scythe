@@ -83,23 +83,27 @@ class BaseParser(ABC):
                 metadata = dict_merge(metadata, record, append_lists=True)
         return metadata
 
-    def group(self, files: Union[str, Iterable[str]],
+    def group(self, paths: Union[str, Iterable[str]],
               context: dict = None) -> Iterator[Tuple[str, ...]]:
         """Identify a groups of files that should be parsed together
 
+        Will create groups using the files provided in ``paths``,
+         and any files contained within the directories of the directories provided to ``paths``
+         and subdirectories of those directories.
+
         Args:
-            files (str or [str]): Path(s), which could include both files and directories
+            paths (str or [str]): Path available for grouping, which could include both files and directories
             context (dict): Context about the files
         Yields:
             ((str)): Groups of files
         """
-        if isinstance(files, str):
-            files = [files]
+        if isinstance(paths, str):
+            paths = [paths]
         # Clean paths
-        files = [os.path.abspath(os.path.expanduser(f)) for f in files]
+        paths = [os.path.abspath(os.path.expanduser(f)) for f in paths]
 
         # Default: Every file is in its own group, skipping symlinks
-        for fn in files:
+        for fn in paths:
             if os.path.isfile(fn):
                 yield (fn,)
             # Recurse through directories (could also be done with os.walk(), especially
