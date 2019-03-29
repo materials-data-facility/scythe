@@ -92,7 +92,8 @@ class BaseParser(ABC):
          and subdirectories of those directories.
 
         Args:
-            paths (str or [str]): Path available for grouping, which could include both files and directories
+            paths (str or [str]): Path available for grouping,
+                which could include both files and directories
             context (dict): Context about the files
         Yields:
             ((str)): Groups of files
