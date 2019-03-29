@@ -74,7 +74,7 @@ class BaseParser(ABC):
         metadata = {}
 
         # Loop over all files
-        for group in self.group(files):
+        for group in self.group(files, context):
             try:
                 record = self.parse(group, context)
             except Exception:
