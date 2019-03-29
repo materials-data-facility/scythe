@@ -1,4 +1,6 @@
+from typing import List, Iterator, Tuple, Iterable, Union
 from abc import ABC, abstractmethod
+from mdf_toolbox import dict_merge
 import logging
 import os
 
@@ -11,88 +13,107 @@ class BaseParser(ABC):
     This class defines the interface for all parsers in MaterialsIO.
     Each new parser must implement the :meth:`parse`, :meth:`version`,
     and :meth:`implementors` functions.
-    The :meth:`is_valid` method should be overrode if fast methods for assessing compatibility
-    (e.g., checking headers) are possible.
     The :meth:`group` method should be overrode to generate smart groups of file (e.g., associating
     the inputs and outputs to the same calculation)
     :meth:`citations` can be used if there are papers that should be cited if the parser is used
     as part of a scientific publication.
 
-    See documentation for further details: TBD.
+    See `MaterialsIO Contributor Guide
+    <https://materialsio.readthedocs.io/en/latest/contributor-guide.html>`_
+    for further details.
     """
 
-    def parse_directory(self, path, context=None):
+    def parse_directory(self, path: str, context: dict = None) -> Iterator[Tuple[Tuple[str], dict]]:
         """Run a parser on all appropriate files in a directory
+
+        Skips files that throw exceptions while parsing
 
         Args:
             path (str): Root of directory to parser
-            context (dict): An optional data context/configuration dictionary. Default None.
+            context (dict): Context about the files
         Yields:
-            ([str], [dict]): Tuple of the group identity and the string
+            ([str], dict): Tuple of the group identity and the metadata unit
         """
-
-        # Check if is_valid function has been overloaded
-        is_overloaded = self.__class__.is_valid != BaseParser.is_valid
-        logger.debug('Using is_valid' if is_overloaded else 'Attempting to parse every file')
-
-        # Run the parsing
+        # Parse each identified group
         for group in self.group(path, context):
-            if is_overloaded and self.is_valid(group, context):
-                yield group, self.parse(group, context)
+            try:
+                metadata_unit = self.parse(group, context)
+            except Exception:
+                continue
             else:
-                # If is_valid, is base implementation, run fill parser anyway
-                try:
-                    yield group, self.parse(group, context)
-                except Exception:
-                    continue
+                yield (group, metadata_unit)
 
     @abstractmethod
-    def parse(self, group, context=None):
+    def parse(self, group: Iterable[str], context: dict = None) -> dict:
         """Extract metadata from a group of files
 
-        Arguments:
-            group (list of str):  A list of one or more files to parse as a unit.
-            context (dict): An optional data context/configuration dictionary. Default None.
-
-        Returns:
-            (list of dict): The parsed results, in JSON-serializable format.
-        """
-        pass
-
-    def is_valid(self, group, context=None):
-        """Determine whether a group of files is compatible with this parser
+        A group of files is a set of 1 or more files that describe the same object, and will be
+        be used together to create s single summary record.
 
         Arguments:
-            group (list of str):  A list of one or more files to parse as a unit.
-            context (dict): An optional data context/configuration dictionary. Default None.
+            group (list of str):  A list of one or more files that should be parsed together
+            context (dict): Context about the files
 
         Returns:
-            (bool): Whether the group can be parsed by the parser
+            (dict): The parsed results, in JSON-serializable format.
         """
-        try:
-            res = self.parse(group, context=context)
-            if not res:
-                raise ValueError
-        except Exception:
-            return False
-        else:
-            return True
 
-    def group(self, root, context=None):
-        """Identify sets files in a directory that are related to each other
+    def parse_as_unit(self, files: Union[str, Iterable[str]], context: dict = None) -> dict:
+        """Parse a group of files and merge their metadata
+
+        Used if each file in a group are parsed separately, but the resultant metadata
+        should be combined after parsing.
 
         Args:
-            root (str): Path to a directory
-            context (dict): An optional data context/configuration dictionary. Default None.
-        Yields:
-            (list of str): Groups of files
+            files (str or [str]): Path(s) to parse
+            context (dict): Context about the files
+        Returns:
+            (dict): Metadata summary from the files
         """
+        # Initialize output dictionary
+        metadata = {}
 
-        for path, dirs, files in os.walk(root):
-            for f in files:
-                yield (os.path.join(path, f),)
+        # Loop over all files
+        for group in self.group(files, context):
+            try:
+                record = self.parse(group, context)
+            except Exception:
+                continue
+            else:
+                metadata = dict_merge(metadata, record, append_lists=True)
+        return metadata
 
-    def citations(self):
+    def group(self, paths: Union[str, Iterable[str]],
+              context: dict = None) -> Iterator[Tuple[str, ...]]:
+        """Identify a groups of files that should be parsed together
+
+        Will create groups using the files provided in ``paths``,
+         and any files contained within the directories of the directories provided to ``paths``
+         and subdirectories of those directories.
+
+        Args:
+            paths (str or [str]): Path available for grouping,
+                which could include both files and directories
+            context (dict): Context about the files
+        Yields:
+            ((str)): Groups of files
+        """
+        if isinstance(paths, str):
+            paths = [paths]
+        # Clean paths
+        paths = [os.path.abspath(os.path.expanduser(f)) for f in paths]
+
+        # Default: Every file is in its own group, skipping symlinks
+        for fn in paths:
+            if os.path.isfile(fn):
+                yield (fn,)
+            # Recurse through directories (could also be done with os.walk(), especially
+            # for groups that may span directories)
+            elif os.path.isdir(fn):
+                for f in os.listdir(fn):
+                    yield from self.group(os.path.join(fn, f))
+
+    def citations(self) -> List[str]:
         """Citation(s) and reference(s) for this parser
 
         Returns:
@@ -101,7 +122,7 @@ class BaseParser(ABC):
         return []
 
     @abstractmethod
-    def implementors(self):
+    def implementors(self) -> List[str]:
         """List of implementors of the parser
 
         These people are the points-of-contact for addressing errors or modifying the parser
@@ -112,16 +133,14 @@ class BaseParser(ABC):
                 keys like "email" or "institution" (e.g., {"name": "Anubhav
                 Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
         """
-        pass
 
     @abstractmethod
-    def version(self):
+    def version(self) -> str:
         """Return the version of the parser
 
         Returns:
             (str): Version of the parser
         """
-        pass
 
     @property
     def schema(self) -> dict:
@@ -137,14 +156,23 @@ class BaseSingleFileParser(BaseParser):
     Instead of implementing :meth:`parse`, implement :meth:`_parse_file`"""
 
     @abstractmethod
-    def _parse_file(self, path, context=None):
+    def _parse_file(self, path: str, context=None):
         """Generate the metadata for a single file
 
         Args:
             path (str): Path to the file
-            context (dict):
+            context (dict): Optional context information about the file
+        Returns:
+            (dict): Metadata for the file
         """
-        pass
 
-    def parse(self, group, context=None):
-        return [self._parse_file(f, context) for f in group]
+    def parse(self, group: Union[str, Iterable[str]], context=None):
+        # Error catching: allows for single files to passed not as list
+        if isinstance(group, str):
+            return self._parse_file(group, context)
+
+        # Assumes that the group must have exactly one file
+        if len(group) > 1:
+            raise ValueError('Parser only takes a single file at a time')
+
+        return self._parse_file(group[0], context)

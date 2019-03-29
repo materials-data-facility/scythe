@@ -19,14 +19,14 @@ Both parsers that are part of the MaterialsIO base package will be installed,
 Example Usage
 ~~~~~~~~~~~~~
 
-As an example, we illustrate the use of ``GenericFileParser``, a parser that returns status information about a file::
+As an example, we illustrate the use of ``GenericFileParser``, a parser that returns basic status and type information about a file::
 
     parser = GenericFileParser()
     parser.parse(['setup.py'])
 
 
 The above snippet creates the parser object and runs it on a file named ``setup.py``.
-Run in the root directory of the MaterialsIO it would produce output similar to:
+Run in the root directory of the MaterialsIO, it would produce output similar to:
 
 .. code:: json
 
@@ -38,37 +38,26 @@ Run in the root directory of the MaterialsIO it would produce output similar to:
     }]
 
 
-The ``parse`` operation evaluates a file or group of files that describe a single logical object (e.g., a simulation).
-Running on the parser on every file in a directory is accomplished by the ``group`` method::
+The ``parse`` operation generates a single summary from a file or, in advanced cases, a group of files that describe the same object (e.g., a simulation).
+The ``group`` operation identifies these sets of files files::
 
-    metadata = [parser.parse(x) for x in parser.group('.')]
+    metadata = [parser.parse(x) for x in parser.group(['setup.py', 'requirements.txt'])]
 
-The ``group`` operation evaluates every file in the listed directory and its subdirectories,
-and generates groupings of files that likely describe the same object.
-Grouping is unnecessary for ``FileParser``, which treats each file individually.
-Grouping is necessary in cases where an object is described by multiple objects (e.g., the inputs and output files for a simulation).
+The ``group`` operation for ``GenericFileParser`` places each file in its own group, because they are all treated separately.
+More advanced parsers identify groupings of files that describe the same object (e.g., the input and output files of the same simulation),
+and may only generate groups from files that are likely to be compatible with the parser.
 
-
-Another potential problem with the script about is that some files may not be compatible with the parser.
-The MaterialsIO parsers provide a ``is_valid`` operation that determines whether a specific grouping of
-files is actually compatible with a parser::
-
-    metadata = [parser.parse(x) for x in parser.group('.') if parser.is_valid(x)]
-
-The above function returns a list of all metadata that is possible to extract from a directory.
 For convenience, we provide a utility operation to parse all the files in a directory::
 
     metadata = list(parser.parse_directory('.'))
 
-`parse_directory` is a generator function, so we use `list` to turn the output into a list format.
+``parse_directory`` is a generator function, so we use ``list`` to turn the output into a list format.
 
 .. todo:: We need an example parser to evaluate grouping functionality
 
 
-Available Methods
-~~~~~~~~~~~~~~~~~
-
-.. todo:: Is having two separate descriptions helpful?
+Parser Interface
+~~~~~~~~~~~~~~~~
 
 The functionality of a parser is broken into several simple operations.
 
@@ -83,18 +72,28 @@ Most parsers do not have any options for the initializer, so you can create them
 Some parsers require configuration options that define how the parser runs,
 such as the location of a non-Python executable.
 
-Parsing Methods
----------------
+Parsing Method
+--------------
 
 The main operation for any parser is the data extraction operation: ``parse``.
-The ``parse`` operation takes a list of paths to files that collectively describe the same object (e.g., an experiment),
-and returns a summary of the data the files hold::
 
-    metadata = parser.parse_files(['/my/file1', '/my/file2'])
+In most cases, the ``parse`` operation takes the path to a file and
+and returns a summary of the data the file holds::
 
-In some cases, you can provide information that is not contained within the file themselves, which can be provided to the parser as a "context"::
+    metadata = parser.parse_files(['/my/file'])
+
+Some parsers take multiple files that describe the same object (e.g., the input and output files of a simulation)
+and use them to generate a single metadata record::
+
+    metadata = parser.parse_files(['/my/file.in', '/my/file.out'])
+
+The `grouping method <#grouping-files>`_ for these parsers provides logic to identify groups of related files.
+
+Some parsers also can use information that is not contained within the file themselves, which can be provided to the parser as a "context"::
 
     metadata = parser.parse_files(['/my/file1'], context={'headers': {'temp': 'temperature'}})
+
+The documentation for the parser should indicate valid types of context information.
 
 Grouping Files
 --------------
@@ -103,15 +102,6 @@ Parsers also provide the ability to quickly find groups of associated files: ``g
 The ``group`` operation takes a directory as input and generates candidate groups of files::
 
     parser.group('/data/directory')
-
-Compatibility Checking
-----------------------
-
-Parsers also provide a method for checking whether a group of files is compatible with it:: `is_valid`.
-These ``is_valid`` method take a list of the files in a certain group as input and, optionally,
-context information about the files::
-
-    parser.is_valid(['/my/file'])
 
 Attribution Functions
 ---------------------
@@ -122,8 +112,8 @@ Two functions, ``citations`` and ``implementors``, are available to determine wh
 in scientific articles.
 
 
-Parser API
-----------
+Full Parser API
+---------------
 
 The full API for the parsers are described as a Python abstract class:
 

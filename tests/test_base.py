@@ -1,6 +1,5 @@
-from materials_io.base import BaseParser
+from materials_io.base import BaseParser, BaseSingleFileParser
 from glob import glob
-import logging
 import pytest
 import os
 
@@ -8,7 +7,7 @@ import os
 class FakeParser(BaseParser):
 
     def parse(self, group, context=None):
-        return [{}] * len(group)
+        return {'group': list(group)}
 
     def implementors(self):
         return ['Logan Ward']
@@ -17,10 +16,16 @@ class FakeParser(BaseParser):
         return '0.0.0'
 
 
-class FakeParserWithIsValid(FakeParser):
+class FakeSingleParser(BaseSingleFileParser):
 
-    def is_valid(self, group, context=None):
-        return True
+    def _parse_file(self, path, context=None):
+        return {'dirname': os.path.dirname(path)}
+
+    def implementors(self):
+        return ['Logan Ward']
+
+    def version(self):
+        return '0.0.0'
 
 
 @pytest.fixture
@@ -40,23 +45,31 @@ def my_files(directory):
 
 
 def test_group(parser, directory, my_files):
-    groups = set(parser.group(directory))
-    assert set(groups) == set(zip(my_files))  # Each file own group
+    groups = set(parser.group(my_files))
+    assert groups == set(zip(my_files))  # Each file own group
 
 
 def test_parse_dir(caplog, parser, directory, my_files):
-    with caplog.at_level(logging.DEBUG):
-        # Testing with the default is_valid
-        assert len(list(parser.parse_directory(directory))) == len(my_files)
-        assert 'Attempting to parse every file' in caplog.records[-1].msg
-
-        assert len(list(FakeParserWithIsValid().parse_directory(directory))) == len(my_files)
-        assert 'Using is_valid' in caplog.records[-1].msg
-
-
-def test_is_valid(parser, my_files):
-    assert parser.is_valid(my_files)  # By default
+    assert len(list(parser.parse_directory(directory))) == len(my_files)
 
 
 def test_citations(parser):
     assert parser.citations() == []
+
+
+def test_single_file(directory):
+    parser = FakeSingleParser()
+    assert parser.parse(__file__) == {'dirname': directory}  # Handle sensibly incorrect inputs
+    assert parser.parse([__file__]) == {'dirname': directory}
+    with pytest.raises(ValueError):
+        parser.parse(['/fake/file.in', '/fake/file.out'])
+
+
+def test_parse_as_unit(directory):
+    parser = FakeParser()
+    file_relation = [
+        os.path.join(directory, "data/electron_microscopy/test-EDS_spectrum.dm3"),
+        os.path.join(directory, "data/electron_microscopy/test-1.dm4")
+    ]
+    correct_unit = {"group": file_relation}
+    assert parser.parse_as_unit(file_relation) == correct_unit

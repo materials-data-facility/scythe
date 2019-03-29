@@ -15,11 +15,7 @@ def parser():
 
 
 def test_cif(parser, cif):
-    output = parser.parse([cif])
-
-    # Make sure the output has a single value
-    assert len(output) == 1
-    output = output[0]
+    output = parser.parse(cif)
 
     # Check the volume and number of atoms, which is a float
     assert isclose(output['crystal_structure']['volume'], 101836.44086588411)
