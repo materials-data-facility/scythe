@@ -98,17 +98,14 @@ class BaseParser(ABC):
         files = [os.path.abspath(os.path.expanduser(f)) for f in files]
 
         # Default: Every file is in its own group, skipping symlinks
-        groups = []
         for fn in files:
             if os.path.isfile(fn):
-                groups.append((fn,))
+                yield (fn,)
             # Recurse through directories (could also be done with os.walk(), especially
             # for groups that may span directories)
             elif os.path.isdir(fn):
                 for f in os.listdir(fn):
-                    groups.extend(self.group(os.path.join(fn, f)))
-
-        return groups
+                    yield from self.group(os.path.join(fn, f))
 
     def citations(self) -> List[str]:
         """Citation(s) and reference(s) for this parser
