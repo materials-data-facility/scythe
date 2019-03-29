@@ -7,7 +7,7 @@ import os
 class FakeParser(BaseParser):
 
     def parse(self, group, context=None):
-        return [{}] * len(group)
+        return {'group': list(group)}
 
     def implementors(self):
         return ['Logan Ward']
@@ -46,7 +46,7 @@ def my_files(directory):
 
 def test_group(parser, directory, my_files):
     groups = set(parser.group(my_files))
-    assert set(groups) == set(zip(my_files))  # Each file own group
+    assert groups == set(zip(my_files))  # Each file own group
 
 
 def test_parse_dir(caplog, parser, directory, my_files):
@@ -57,14 +57,19 @@ def test_citations(parser):
     assert parser.citations() == []
 
 
-def test_single_file():
+def test_single_file(directory):
     parser = FakeSingleParser()
-    assert parser.parse('/fake/file') == {'dirname': '/fake'}  # Handle sensibly incorrect inputs
-    assert parser.parse(['/fake/file']) == {'dirname': '/fake'}
+    assert parser.parse(__file__) == {'dirname': directory}  # Handle sensibly incorrect inputs
+    assert parser.parse([__file__]) == {'dirname': directory}
     with pytest.raises(ValueError):
         parser.parse(['/fake/file.in', '/fake/file.out'])
 
 
-def test_parse_as_unit():
-    parser = FakeSingleParser()
-    assert parser.parse_as_unit(['/fake/file', '/fake/file2']) == {'dirname': '/fake'}
+def test_parse_as_unit(directory):
+    parser = FakeParser()
+    file_relation = [
+        os.path.join(directory, "data/electron_microscopy/test-EDS_spectrum.dm3"),
+        os.path.join(directory, "data/electron_microscopy/test-1.dm4")
+    ]
+    correct_unit = {"group": file_relation}
+    assert parser.parse_as_unit(file_relation) == correct_unit
