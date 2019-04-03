@@ -18,7 +18,7 @@ setup(
         'file': ['python-magic>=0.4.15'],
         'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3'],
         # TODO (lw): Get newer pif-dft on pypi
-        'dft': ['git+https://github.com/CitrineInformatics/pif-dft.git@develop#egg=dfttopif']
+        'dft': ['dfttopif']
     },
     include_package_data=True,
     package_data={'materails_io.schemas': ['*.json']},
