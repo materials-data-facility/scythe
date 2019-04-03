@@ -6,7 +6,7 @@ import pytest
 import os
 
 vasp_tar = os.path.join(os.path.dirname(__file__), 'data',
-                        'vasp', 'ALNi_static_LDA.tar.gz')
+                        'vasp', 'AlNi_static_LDA.tar.gz')
 
 
 @pytest.fixture
