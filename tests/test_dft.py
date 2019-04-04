@@ -24,8 +24,8 @@ def parser():
 
 @pytest.fixture
 def multi_vasp_dir(vasp_dir):
-    """VASP directory with two calcualtions with different extensions"""
-    for f in glob(os.path.join(os.path.join(vasp_dir, 'ALNi_static_LDA'), '*')):
+    """VASP directory with two calculations with different extensions"""
+    for f in glob(os.path.join(os.path.join(vasp_dir, 'AlNi_static_LDA'), '*')):
         if os.path.isfile(f):
             copy(f, f + '.2')
     return str(vasp_dir)
