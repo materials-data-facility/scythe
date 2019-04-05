@@ -1,4 +1,5 @@
 from typing import List, Iterator, Tuple, Iterable, Union
+from materials_io.utils import preprocess_paths
 from abc import ABC, abstractmethod
 from mdf_toolbox import dict_merge
 import logging
@@ -98,10 +99,8 @@ class BaseParser(ABC):
         Yields:
             ((str)): Groups of files
         """
-        if isinstance(paths, str):
-            paths = [paths]
-        # Clean paths
-        paths = [os.path.abspath(os.path.expanduser(f)) for f in paths]
+
+        paths = preprocess_paths(paths)
 
         # Default: Every file is in its own group, skipping symlinks
         for fn in paths:

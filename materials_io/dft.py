@@ -1,4 +1,5 @@
 from typing import Union, Iterable, Tuple
+from materials_io.utils import preprocess_paths
 from materials_io.base import BaseParser
 from dfttopif import files_to_pif
 from operator import itemgetter
@@ -29,12 +30,8 @@ class DFTParser(BaseParser):
         self.quality_report = quality_report
 
     def group(self, paths: Union[str, Iterable[str]], context: dict = None):
-        # Check arguments
-        if isinstance(paths, (str,)):
-            paths = [paths]
-
-        # Clean paths
-        paths = [os.path.abspath(os.path.expanduser(f)) for f in paths]
+        # Convert paths into standardized form
+        paths = preprocess_paths(paths)
 
         # Find all of the files, and attempt to group them
         files = set(filter(os.path.isfile, paths))
