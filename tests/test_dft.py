@@ -7,6 +7,8 @@ import os
 
 vasp_tar = os.path.join(os.path.dirname(__file__), 'data',
                         'vasp', 'AlNi_static_LDA.tar.gz')
+pwscf_tar = os.path.join(os.path.dirname(__file__), 'data',
+                         'pwscf', 'NaF.scf.tar.gz')
 
 
 @pytest.fixture
@@ -31,25 +33,28 @@ def multi_vasp_dir(vasp_dir):
     return str(vasp_dir)
 
 
-def test_single_vasp_calc(parser, vasp_dir):
-    groups = list(parser.group(vasp_dir))
-    assert len(groups) == 1
-    assert len(groups[0]) == 8  # All the files
+@pytest.fixture
+def pwscf_dir(tmpdir):
+    with tarfile.open(pwscf_tar) as fp:
+        fp.extractall(tmpdir)
+    return str(tmpdir)
 
+
+def test_single_vasp_calc(parser, vasp_dir):
     metadata = list(parser.parse_directory(vasp_dir))
     assert len(metadata) == 1
-    print(metadata[0])
     assert isinstance(metadata[0], tuple)
     assert isinstance(metadata[0][0], list)
     assert isinstance(metadata[0][1], dict)
 
 
 def test_multivasp_calc(parser: DFTParser, multi_vasp_dir):
-    groups = list(parser.group(multi_vasp_dir))
-    assert len(groups) == 2
-    assert [len(g) for g in groups] == [8, 8]  # All the files, twice
-
     metadata = list(parser.parse_directory(multi_vasp_dir))
     assert len(metadata) == 2
     assert isinstance(metadata[0][0], list)
     assert isinstance(metadata[0][1], dict)
+
+
+def test_pwscf(parser: DFTParser, pwscf_dir):
+    metadata = list(parser.parse_directory(pwscf_dir))
+    assert len(metadata) == 1

@@ -37,9 +37,13 @@ class DFTParser(BaseParser):
         paths = [os.path.abspath(os.path.expanduser(f)) for f in paths]
 
         # Find all of the files, and attempt to group them
-        files = filter(os.path.isfile, paths)
-        for group in self._group_vasp(files):
+        files = set(filter(os.path.isfile, paths))
+        for group in self._group_vasp(files):  # VASP grouping logic
+            # Remove all files matched as VASP from the matchable files
+            files.difference_update(group)
             yield group
+        for group in self._group_pwscf(files):
+            yield group  # Do not remove, as the PWSCF group is not reliable
 
         # Recurse into directories
         for path in filter(os.path.isdir, paths):
@@ -61,9 +65,10 @@ class DFTParser(BaseParser):
 
         # Get the files that are likely VASP files, which we define as
         #  those which start with the name of a known vasp file.
-        vasplike_files = []  # List of (path, type, postfix)
+        vasplike_files = []  # List of (path, type, (dir, postfix))
         for file in files:
             # TODO (lw): This logic is likely useful elsewhere
+            # TODO (lw): We do not check if the files are from the same directory
             # Find if the filename matches a known type
             name = os.path.basename(file)
             name_lower = name.lower()
@@ -75,15 +80,32 @@ class DFTParser(BaseParser):
             match_id = matches.index(True)
             vtype = _vasp_file_names[match_id]
             ext = name[len(vtype):]
+            d = os.path.dirname(file)
 
             # Add to the list
-            vasplike_files.append((file, vtype, ext))
+            vasplike_files.append((file, vtype, (d, ext)))
 
-        # Group files by postfix type
+        # Group files by postfix type and directory
         sort_key = itemgetter(2)
         for k, group in itertools.groupby(sorted(vasplike_files, key=sort_key),
                                           key=sort_key):
             yield [x[0] for x in group]
+
+    def _group_pwscf(self, files: Iterable[str]) -> Iterable[Tuple[str, ...]]:
+        """Assemble groups of files that are potentially PWSCF calculations
+
+        Args:
+            files ([str]): List of files to be grouped
+        Yields:
+            ((str)): Groups of potential-pwscf files
+        """
+
+        # For now, we just group files by directory
+        #  TODO (lw): Find files that have PWSCF flags in them
+        #  TODO (lw): Read PWSCF input files to know the save directory
+        file_and_dir = [(os.path.dirname(f), f) for f in files]
+        for k, group in itertools.groupby(sorted(file_and_dir), key=itemgetter(0)):
+            yield [x[1] for x in group]
 
     def parse(self, group: Iterable[str], context: dict = None):
         return files_to_pif(group, quality_report=self.quality_report).as_dictionary()
