@@ -63,11 +63,11 @@ class DFTParser(BaseParser):
         # Get the files that are likely VASP files, which we define as
         #  those which start with the name of a known vasp file.
         vasplike_files = []  # List of (path, type, (dir, postfix))
-        for file in files:
+        for filename in files:
             # TODO (lw): This logic is likely useful elsewhere
             # TODO (lw): We do not check if the files are from the same directory
             # Find if the filename matches a known type
-            name = os.path.basename(file)
+            name = os.path.basename(filename)
             name_lower = name.lower()
             matches = [name_lower.startswith(n) for n in _vasp_file_names]
             if not any(matches):
@@ -77,10 +77,10 @@ class DFTParser(BaseParser):
             match_id = matches.index(True)
             vtype = _vasp_file_names[match_id]
             ext = name[len(vtype):]
-            d = os.path.dirname(file)
+            d = os.path.dirname(filename)
 
             # Add to the list
-            vasplike_files.append((file, vtype, (d, ext)))
+            vasplike_files.append((filename, vtype, (d, ext)))
 
         # Group files by postfix type and directory
         sort_key = itemgetter(2)
