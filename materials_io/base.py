@@ -1,5 +1,5 @@
 from typing import List, Iterator, Tuple, Iterable, Union
-from materials_io.utils import preprocess_paths
+from materials_io.utils.grouping import preprocess_paths
 from abc import ABC, abstractmethod
 from mdf_toolbox import dict_merge
 import logging

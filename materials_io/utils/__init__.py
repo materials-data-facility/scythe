@@ -2,9 +2,6 @@
 
 from stevedore.extension import ExtensionManager
 from stevedore.driver import DriverManager
-from typing import Union, List
-from pathlib import Path
-import os
 
 
 def get_available_parsers():
@@ -43,22 +40,3 @@ def execute_parser(name, group, context=None):
 
     # Execute it on the group
     return mgr.driver.parse(group, context)
-
-
-def preprocess_paths(paths: Union[str, Path, List[str], List[Path]]) -> List[str]:
-    """Transform paths to absolute paths
-
-    Designed to be used to simplify grouping logic
-
-    Args:
-        paths (Union[str, List[str]): Files and directories to be parsed
-    Returns:
-        (List[str]): List of paths in standardized form
-    """
-
-    # Make sure paths are strings or Path-like objects
-    if isinstance(paths, (str, Path)):
-        paths = [paths]
-
-    # Make paths absolute
-    return [os.path.abspath(os.path.expanduser(f)) for f in paths]
