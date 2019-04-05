@@ -4,4 +4,4 @@ pymatgen>=2018.11.30
 ase>=3.16.3b1
 mdf_toolbox>=0.4.2
 python-magic>=0.4.15
-git+https://github.com/CitrineInformatics/pif-dft.git@develop#egg=dfttopif
+dfttopif>=1.1.0
