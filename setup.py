@@ -16,7 +16,8 @@ setup(
         'electron_microscopy': ['hyperspy>=1.4.1'],
         'image': ['Pillow>=5.1.0'],
         'file': ['python-magic>=0.4.15'],
-        'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3']
+        'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3'],
+        'dft': ['dfttopif>=1.1.0']
     },
     include_package_data=True,
     package_data={'materails_io.schemas': ['*.json']},

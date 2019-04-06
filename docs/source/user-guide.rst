@@ -53,8 +53,6 @@ For convenience, we provide a utility operation to parse all the files in a dire
 
 ``parse_directory`` is a generator function, so we use ``list`` to turn the output into a list format.
 
-.. todo:: We need an example parser to evaluate grouping functionality
-
 
 Parser Interface
 ~~~~~~~~~~~~~~~~
@@ -99,7 +97,7 @@ Grouping Files
 --------------
 
 Parsers also provide the ability to quickly find groups of associated files: ``group``.
-The ``group`` operation takes a directory as input and generates candidate groups of files::
+The ``group`` operation takes path or list of paths as input and generates candidate groups of files::
 
     parser.group('/data/directory')
 
