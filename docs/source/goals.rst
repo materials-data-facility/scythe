@@ -13,3 +13,29 @@ For example, the :class:`ElectronMicroscopyParser` produces structured data from
 The parsers do not necessarily generate data in a format needed by any tool.
 Rather, the parsers are designed to produce *all* of the information needed by all projects that utilitize the libraries.
 In this way, the parsers can service every user without modification.
+
+What Does MaterialsIO *Do*?
+---------------------------
+
+MaterialsIO is designed to provide the answer to two limited questions:
+
+1. *Which files can I parse with a certain tool?*
+    MaterialsIO provides tools for quickly finding files of a certain type
+
+2. *What information does a set of files contain?*
+    MaterialsIO provides a library of tools that transform data into a simpler formats
+
+What Does MaterialsIO *Not Do*?
+-------------------------------
+
+There are several questions that are specifically out-of-scope for MaterialsIO:
+
+1. *How do I get access to files that I want to parse?*
+    MaterialsIO is not to solve the data transfer problem.
+2. *How can I parse large numbers of files reliably?*
+    MaterialsIO is designed to work in many systems for large-scale data extraction.
+3. *How can I translate data into the schema needed for my application?*
+    The goal of MaterialsIO is to go from opaque to well-documented formats.
+    Translation into more specific schemas is a
+
+See our `"how to use MaterialsIO" documentation <user-guide.html#integrating-materialsio-into-applications>`_ for more detail.
