@@ -31,11 +31,12 @@ What Does MaterialsIO *Not Do*?
 There are several questions that are specifically out-of-scope for MaterialsIO:
 
 1. *How do I get access to files that I want to parse?*
-    MaterialsIO is not to solve the data transfer problem.
+    MaterialsIO does not solve the data transfer problem
 2. *How can I parse large numbers of files reliably?*
-    MaterialsIO is designed to work in many systems for large-scale data extraction.
+    MaterialsIO is designed to work in many systems for large-scale data extraction
 3. *How can I translate data into the schema needed for my application?*
     The goal of MaterialsIO is to go from opaque to well-documented formats.
-    Translation into more specific schemas is a
+    We recommend implementing separate "adapter" classes to transform MaterialsIO metadata to your specific requirements.
 
-See our `"how to use MaterialsIO" documentation <user-guide.html#integrating-materialsio-into-applications>`_ for more detail.
+See our `"how to use MaterialsIO" documentation <user-guide.html#integrating-materialsio-into-applications>`_ for more detail
+on how to integrate MaterialsIO into an application that provides these intentionally-missing features.
