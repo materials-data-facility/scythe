@@ -20,7 +20,7 @@ setup(
         'dft': ['dfttopif>=1.1.0']
     },
     include_package_data=True,
-    package_data={'materails_io.schemas': ['*.json']},
+    package_data={'materials_io.schemas': ['*.json']},
     entry_points={
         'materialsio.parser': [
             'generic = materials_io.file:GenericFileParser',
