@@ -19,9 +19,7 @@ class BaseParser(ABC):
     :meth:`citations` can be used if there are papers that should be cited if the parser is used
     as part of a scientific publication.
 
-    See `MaterialsIO Contributor Guide
-    <https://materialsio.readthedocs.io/en/latest/contributor-guide.html>`_
-    for further details.
+    See `MaterialsIO Contributor Guide <contributor-guide.html>`_ for further details.
     """
 
     def parse_directory(self, path: str, context: dict = None) -> Iterator[Tuple[Tuple[str], dict]]:
@@ -88,9 +86,9 @@ class BaseParser(ABC):
               context: dict = None) -> Iterator[Tuple[str, ...]]:
         """Identify a groups of files that should be parsed together
 
-        Will create groups using the files provided in ``paths``,
-         and any files contained within the directories of the directories provided to ``paths``
-         and subdirectories of those directories.
+        Will create groups using the files provided in ``paths``, and
+        any files contained within the directories and subdirectories of
+        each directory listed in ``paths``
 
         Args:
             paths (str or [str]): Path available for grouping,
@@ -128,9 +126,9 @@ class BaseParser(ABC):
 
         Returns:
             (list) each element should either be a string with author name (e.g.,
-                "Anubhav Jain") or a dictionary  with required key "name" and other
-                keys like "email" or "institution" (e.g., {"name": "Anubhav
-                Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
+            "Anubhav Jain") or a dictionary  with required key "name" and other
+            keys like "email" or "institution" (e.g., {"name": "Anubhav
+            Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
         """
 
     @abstractmethod
