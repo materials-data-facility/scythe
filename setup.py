@@ -26,7 +26,8 @@ setup(
             'generic = materials_io.file:GenericFileParser',
             'em = materials_io.electron_microscopy:ElectronMicroscopyParser',
             'image = materials_io.image:ImageParser',
-            'crystal = materials_io.crystal_structure:CrystalStructureParser'
+            'crystal = materials_io.crystal_structure:CrystalStructureParser',
+            'dft = materials_io.dft:DFTParser'
         ]
     }
 )

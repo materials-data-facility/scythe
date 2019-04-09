@@ -40,3 +40,11 @@ Parsers related to data files that encode atom-level structure
 
 .. automodule:: materials_io.crystal_structure
     :members:
+
+Calculation Parsers
+-------------------
+
+Parsers that retrieve results from calculations
+
+.. automodule:: materials_io.dft
+    :members:
