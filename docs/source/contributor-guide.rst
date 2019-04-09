@@ -62,8 +62,9 @@ Implementing ``group``
 ----------------------
 
 The ``group`` operation finds all sets of files in a user-provided of paths list that should be parsed together.
-By default, ``group`` returns each file in the paths and any files in the directories passed to ``group`` as their own set.
-Implementing ``group`` is optional and all implementations must perform recursion into all subdirectories provided to ``group``.
+Implementing ``group`` is optional.
+Implementing a new ``group`` method is required only when the default behavior of "each file is its own group"
+(i.e., the parser only treats files individually) is incorrect.
 
 Files are allowed to appear in more than one group,
 but we recommend generating only the largest valid group of files to minimize the same metadata being generated multiple times.
