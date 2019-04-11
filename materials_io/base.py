@@ -114,7 +114,7 @@ class BaseParser(ABC):
         """Citation(s) and reference(s) for this parser
 
         Returns:
-            (list of str): each element should be a string citation in BibTeX format.
+            ([str]): each element should be a string citation in BibTeX format
         """
         return []
 
@@ -125,10 +125,7 @@ class BaseParser(ABC):
         These people are the points-of-contact for addressing errors or modifying the parser
 
         Returns:
-            (list) each element should either be a string with author name (e.g.,
-            "Anubhav Jain") or a dictionary  with required key "name" and other
-            keys like "email" or "institution" (e.g., {"name": "Anubhav
-            Jain", "email": "ajain@lbl.gov", "institution": "LBNL"}).
+            ([str]): List of implementors in the form "FirstName LastName <email@provider>"
         """
 
     @abstractmethod

@@ -45,6 +45,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
     'stevedore.sphinxext'
 ]
 
@@ -181,6 +182,8 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+
+autoclass_content = "both"
 
 # -- Options for intersphinx extension ---------------------------------------
 

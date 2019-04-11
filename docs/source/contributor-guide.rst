@@ -46,16 +46,21 @@ We do not specify any particular schema for the output but we do recommend best 
     If feasible, try to stay close to the original data format of a file or the output of a library used for parsing.
     Deviating from already existing formats complicates modifications to a parser.
 
+#. *Always return a dictionary.*
+    If a parser can return multiple records from a single file group, return the list as an element of the dictionary.
+    Any metadata that pertains to each of the sub-records should be stored as a distinct element
+    rather than being duplicated in each sub-record.
+
 
 We also have a recommendations for the parser behavior:
 
-#. *Avoid configuration options that change only output format*
+#. *Avoid configuration options that change only output format.*
     Parsers can take configuration options that alter the output format, but configurations should be used sparingly.
     A good use of configuration would be to disable complex parsing operations if unneeded.
     A bad use of configuration would be to change the output to match a different schema.
     Operations that significantly alter the form but not the content of a summary should be implemented as adaptors.
 
-#. *Consider whether context should be configuration*
+#. *Consider whether context should be configuration.*
     Settings that are identical for each file could be better suited as configuration settings than as context.
 
 Implementing ``group``
@@ -82,6 +87,11 @@ Implementing ``citations`` and ``implementors``
 
 The ``citation`` and ``implementors`` methods identify additional resources describing a parser and provide credit to contributors.
 ``implementors`` is required, as this operation is also used to identify points-of-contact for support requests.
+
+``citation`` should return a list of BibTeX-format references.
+
+``implementors`` should return a list of people and, optionally, their contract infomration
+in the form: "FirstName LastName <email@provider.com>".
 
 Implementing ``version``
 ------------------------
