@@ -17,7 +17,8 @@ setup(
         'image': ['Pillow>=5.1.0'],
         'file': ['python-magic>=0.4.15'],
         'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3'],
-        'dft': ['dfttopif>=1.1.0']
+        'dft': ['dfttopif>=1.1.0'],
+        'ase': ['ase>=3']
     },
     include_package_data=True,
     package_data={'materials_io.schemas': ['*.json']},
@@ -27,7 +28,8 @@ setup(
             'em = materials_io.electron_microscopy:ElectronMicroscopyParser',
             'image = materials_io.image:ImageParser',
             'crystal = materials_io.crystal_structure:CrystalStructureParser',
-            'dft = materials_io.dft:DFTParser'
+            'dft = materials_io.dft:DFTParser',
+            'ase = materials_io.ase:AseParser'
         ]
     }
 )
