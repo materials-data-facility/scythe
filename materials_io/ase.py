@@ -1,5 +1,5 @@
 import json
-import ase
+from ase.io import read, write
 from io import StringIO
 
 from materials_io.base import BaseSingleFileParser
@@ -22,8 +22,8 @@ class AseParser(BaseSingleFileParser):
 
         record = {}
         fobj = StringIO()
-        m = ase.io.read(path)
-        ase.io.write(images=m, format="json", filename=fobj)
+        m = read(path)
+        write(images=m, format="json", filename=fobj)
         js = json.loads(fobj.getvalue())
 
         # Select the first record.

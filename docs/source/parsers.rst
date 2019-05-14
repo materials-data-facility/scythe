@@ -45,11 +45,19 @@ Parsers related to data files that encode atom-level structure
     :members:
     :exclude-members: implementors, schema, version, group
 
+.. automodule:: materials_io.ase
+    :members:
+    :exclude-members: implementors, schema, version, group
+
 Calculation Parsers
 -------------------
 
 Parsers that retrieve results from calculations
 
 .. automodule:: materials_io.dft
+    :members:
+    :exclude-members: implementors, schema, version, group
+
+.. automodule:: materials_io.ase
     :members:
     :exclude-members: implementors, schema, version, group
