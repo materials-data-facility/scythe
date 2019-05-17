@@ -26,7 +26,8 @@ or install all requirements with the requirements file `pip install -r requireme
 
 ## Documentation
 
-Complete documentation for MaterialsIO is on [Read the Docs](https://materialsio.readthedocs.io/en/latest/).
+* Complete documentation for MaterialsIO is on [Read the Docs](https://materialsio.readthedocs.io/en/latest/).
+* [List of Available Parsers](https://materialsio.readthedocs.io/en/latest/parsers.html)
 
 ## Support 
 
