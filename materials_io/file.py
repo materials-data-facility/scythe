@@ -1,8 +1,20 @@
 from materials_io.base import BaseSingleFileParser
 from hashlib import sha512
-import magic
+from warnings import warn
 import json
 import os
+
+
+try:
+    import magic
+except ImportError as e:
+    if 'failed to find libmagic' in str(e):
+        warn('The libmagic library is not installed. '
+             'See: https://github.com/ahupp/python-magic#installation')
+    else:
+        warn('The python wrapper for libmagic is not installed. '
+             'If desired, call: https://github.com/ahupp/python-magic#installation')
+    magic = None
 
 
 class GenericFileParser(BaseSingleFileParser):
@@ -20,10 +32,14 @@ class GenericFileParser(BaseSingleFileParser):
 
     def _parse_file(self, path, context=None):
         output = {
-            "mime_type": magic.from_file(path, mime=True),
             "length": os.path.getsize(path),
             "filename": os.path.basename(path),
         }
+
+        # If magic imported properly, use it
+        if magic is not None:
+            output["mime_type"] = magic.from_file(path, mime=True)
+
         if self.store_path:
             output['path'] = path
         if self.compute_hash:
