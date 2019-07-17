@@ -78,18 +78,18 @@ The main operation for any parser is the data extraction operation: ``parse``.
 In most cases, the ``parse`` operation takes the path to a file and
 and returns a summary of the data the file holds::
 
-    metadata = parser.parse_files(['/my/file'])
+    metadata = parser.parse(['/my/file'])
 
 Some parsers take multiple files that describe the same object (e.g., the input and output files of a simulation)
 and use them to generate a single metadata record::
 
-    metadata = parser.parse_files(['/my/file.in', '/my/file.out'])
+    metadata = parser.parse(['/my/file.in', '/my/file.out'])
 
 The `grouping method <#grouping-files>`_ for these parsers provides logic to identify groups of related files.
 
 Some parsers also can use information that is not contained within the file themselves, which can be provided to the parser as a "context"::
 
-    metadata = parser.parse_files(['/my/file1'], context={'headers': {'temp': 'temperature'}})
+    metadata = parser.parse(['/my/file1'], context={'headers': {'temp': 'temperature'}})
 
 The documentation for the parser should indicate valid types of context information.
 
