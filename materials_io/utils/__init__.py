@@ -2,9 +2,12 @@
 
 from stevedore.extension import ExtensionManager
 from stevedore.driver import DriverManager
-from typing import Iterator, Tuple
+from collections import namedtuple
+from typing import Iterator
 
 from materials_io.base import BaseParser
+
+ParseResult = namedtuple('ParseResult', ['group', 'parser', 'metadata'])
 
 
 def get_available_parsers():
@@ -55,7 +58,7 @@ def execute_parser(name, group, context=None):
     return get_parser(name).parse(group, context)
 
 
-def run_all_parsers(directory: str, context=None) -> Iterator[Tuple[Tuple[str], str, dict]]:
+def run_all_parsers(directory: str, context=None) -> Iterator[ParseResult]:
     """Run all known files on a directory of files
 
     Args:
