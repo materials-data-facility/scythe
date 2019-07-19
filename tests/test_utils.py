@@ -1,4 +1,4 @@
-from materials_io.utils import get_available_parsers, execute_parser, run_all_parsers
+from materials_io.utils.interface import get_available_parsers, execute_parser, run_all_parsers
 from materials_io.image import ImageParser
 import os
 

@@ -68,8 +68,8 @@ def test_single_file(directory):
 def test_parse_as_unit(directory):
     parser = FakeParser()
     file_relation = [
-        os.path.join(directory, "data/electron_microscopy/test-EDS_spectrum.dm3"),
-        os.path.join(directory, "data/electron_microscopy/test-1.dm4")
+        os.path.join(directory, 'data', 'electron_microscopy', 'test-EDS_spectrum.dm3'),
+        os.path.join(directory, 'data', 'electron_microscopy', 'test-1.dm4')
     ]
     correct_unit = {"group": file_relation}
     assert parser.parse_as_unit(file_relation) == correct_unit
