@@ -1,4 +1,5 @@
-from materials_io.utils.interface import get_available_parsers, execute_parser, run_all_parsers
+from materials_io.utils.interface import (get_available_parsers, execute_parser,
+                                          get_available_adapters, run_all_parsers)
 from materials_io.image import ImageParser
 import os
 
@@ -13,6 +14,7 @@ def test_list_parsers():
 def test_execute_parser():
     image = os.path.join(cwd, 'data', 'image', 'dog2.jpeg')
     assert ImageParser().parse([image]) == execute_parser('image', [image])
+    assert execute_parser('image', [image], adapter='noop') == execute_parser('image', [image])
 
 
 def test_run_all_parsers():
@@ -23,3 +25,11 @@ def test_run_all_parsers():
     assert isinstance(output[0][0], tuple)
     assert isinstance(output[0][1], str)
     assert isinstance(output[0][2], dict)
+
+    # Re-run parsers with adapters
+    output_noop = list(run_all_parsers(path, default_adapter='noop'))
+    assert output == output_noop
+
+
+def test_list_adapters():
+    assert 'noop' in get_available_adapters()

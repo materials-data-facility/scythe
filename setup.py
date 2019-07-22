@@ -30,6 +30,10 @@ setup(
             'crystal = materials_io.crystal_structure:CrystalStructureParser',
             'dft = materials_io.dft:DFTParser',
             'ase = materials_io.ase:AseParser'
+        ],
+        'materialsio.adapter': [
+            'noop = materials_io.adapters.base:NOOPAdapter',
+            'json = materials_io.adapters.base:SerializeAdapter'
         ]
     }
 )
