@@ -1,8 +1,10 @@
 """Base classes for adapters"""
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Union
 import json
+
+from materials_io.base import BaseParser
 
 
 class BaseAdapter(ABC):
@@ -27,6 +29,26 @@ class BaseAdapter(ABC):
         Returns:
             Metadata in a new form, can be any type of object
         """
+
+    def check_compatibility(self, parser: BaseParser) -> bool:
+        """Evaluate whether an adapter is compatible with a certain parser
+
+        Args:
+            parser (BaseParser): Parser to evaluate
+        Returns:
+            (bool) Whether this parser is compatible
+        """
+
+        if self.version() is None:
+            return True
+        else:
+            my_version = tuple(int(x) for x in self.version().split('.'))
+            their_version = tuple(int(x) for x in parser.version().split('.'))
+            return my_version == their_version
+
+    def version(self) -> Union[None, str]:
+        """Version of the parser that an adapter was created for"""
+        return None
 
 
 class NOOPAdapter(BaseAdapter):
