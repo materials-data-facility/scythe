@@ -1,10 +1,11 @@
 """Base classes for adapters"""
 
+from abc import ABC, abstractmethod
 from typing import Any
 import json
 
 
-class BaseAdapter:
+class BaseAdapter(ABC):
     """Template for tools that transform metadata into a new form
 
     ## Implementing a New Adapter
@@ -17,6 +18,7 @@ class BaseAdapter:
 
     """
 
+    @abstractmethod
     def transform(self, metadata: dict) -> Any:
         """Process metadata into a new form
 
@@ -25,7 +27,6 @@ class BaseAdapter:
         Returns:
             Metadata in a new form, can be any type of object
         """
-        raise NotImplementedError()
 
 
 class NOOPAdapter(BaseAdapter):
