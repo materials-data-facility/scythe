@@ -56,6 +56,8 @@ def test_run_all_parsers():
     assert set([x.parser for x in output_limit]) == {'image'}
     with pytest.raises(ValueError):
         list(run_all_parsers(path, include_parsers=['image'], exclude_parsers=['image']))
+    with pytest.raises(ValueError):
+        list(run_all_parsers(path, include_parsers=['totally-not-a-parser']))
 
 
 def test_list_adapters():
