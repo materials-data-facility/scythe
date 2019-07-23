@@ -29,7 +29,7 @@ setup(
             'image = materials_io.image:ImageParser',
             'crystal = materials_io.crystal_structure:CrystalStructureParser',
             'dft = materials_io.dft:DFTParser',
-            'ase = materials_io.ase:AseParser'
+            'ase = materials_io.ase:AseParser',
             'noop = materials_io.testing:NOOPParser'
         ],
         'materialsio.adapter': [
