@@ -2,7 +2,7 @@
 
 from stevedore.extension import ExtensionManager
 from stevedore.driver import DriverManager
-from typing import Iterator, Union, Dict
+from typing import Iterator, Union, Dict, List
 from collections import namedtuple
 
 from materials_io.adapters.base import BaseAdapter
@@ -109,6 +109,8 @@ def execute_parser(name, group, context=None, adapter=None):
 
 
 def run_all_parsers(directory: str, context=None,
+                    include_parsers: Union[None, List[str]] = None,
+                    exclude_parsers: Union[None, List] = None,
                     adapter_map: Union[None, str, Dict[str, str]] = None,
                     default_adapter: Union[None, str] = None) -> Iterator[ParseResult]:
     """Run all known files on a directory of files
@@ -116,6 +118,10 @@ def run_all_parsers(directory: str, context=None,
     Args:
         directory (str): Path to directory to be parsed
         context (dict): Context of the files
+        include_parsers ([str]): Predefined list of parsers to run. Only these will be used.
+            Mutually exclusive with `exclude_parsers`.
+        exclude_parsers ([str]): List of parsers to exclude.
+            Mutually exclusive with `include_parsers`.
         adapter_map (str, dict): Map of parser name to the desired adapter.
             Use 'match' to find adapters with the same names
         default_adapter (str): Adapter to use if no other adapter is defined
@@ -125,6 +131,15 @@ def run_all_parsers(directory: str, context=None,
 
     # Get the list of parsers
     parsers = get_available_parsers()
+    if include_parsers is not None and exclude_parsers is not None:
+        raise ValueError('Including and excluding parsers are mutually exclusive')
+    elif include_parsers is not None:
+        missing_parsers = set(include_parsers).difference(parsers.keys())
+        if len(missing_parsers) > 0:
+            raise ValueError('Some parsers are missing: ' + ' '.join(missing_parsers))
+        parsers = include_parsers
+    elif exclude_parsers is not None:
+        parsers = list(set(parsers.keys()).difference(exclude_parsers))
 
     # Make the adapter map
     if adapter_map is None:

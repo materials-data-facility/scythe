@@ -48,6 +48,15 @@ def test_run_all_parsers():
     with pytest.raises(ValueError):
         list(run_all_parsers(path, adapter_map='matching', default_adapter='serialize'))
 
+    # Test specifying parsers
+    assert set([x.parser for x in output]).issuperset(['image', 'generic'])
+    output_limit = list(run_all_parsers(path, exclude_parsers=['image']))
+    assert 'image' not in [x.parser for x in output_limit]
+    output_limit = list(run_all_parsers(path, include_parsers=['image']))
+    assert set([x.parser for x in output_limit]) == {'image'}
+    with pytest.raises(ValueError):
+        list(run_all_parsers(path, include_parsers=['image'], exclude_parsers=['image']))
+
 
 def test_list_adapters():
     assert 'noop' in get_available_adapters()
