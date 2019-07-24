@@ -39,6 +39,7 @@ class GenericFileParser(BaseSingleFileParser):
         # If magic imported properly, use it
         if magic is not None:
             output["mime_type"] = magic.from_file(path, mime=True)
+            output["data_type"] = magic.from_file(path)
 
         if self.store_path:
             output['path'] = path
@@ -50,7 +51,7 @@ class GenericFileParser(BaseSingleFileParser):
                     if not data:
                         break
                     sha.update(data)
-            output['hash'] = sha.hexdigest()
+            output['sha512'] = sha.hexdigest()
         return output
 
     def implementors(self):
