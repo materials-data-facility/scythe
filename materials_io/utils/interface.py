@@ -25,9 +25,9 @@ def _output_plugin_info(mgr: ExtensionManager) -> dict:
         plugin = ext.plugin()
         output[name] = {
             'description': plugin.__doc__.split("\n")[0],
+            'version': plugin.version(),
+            'class': ext.entry_point_target
         }
-        if hasattr(plugin, 'version'):
-            output[name]['version'] = plugin.version()
     return output
 
 
