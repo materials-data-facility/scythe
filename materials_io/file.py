@@ -20,7 +20,7 @@ except ImportError as e:
 class GenericFileParser(BaseSingleFileParser):
     """Gathers basic file information"""
 
-    def __init__(self, store_path=False, compute_hash=True):
+    def __init__(self, store_path=True, compute_hash=True):
         """
         Args:
             store_path (bool): Whether to record the path of the file
