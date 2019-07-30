@@ -18,7 +18,8 @@ setup(
         'file': ['python-magic>=0.4.15'],
         'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3'],
         'dft': ['dfttopif>=1.1.0'],
-        'ase': ['ase>=3']
+        'ase': ['ase>=3'],
+        'csv': ['tableschema>=1<2']
     },
     include_package_data=True,
     package_data={'materials_io.schemas': ['*.json']},
@@ -29,7 +30,8 @@ setup(
             'image = materials_io.image:ImageParser',
             'crystal = materials_io.crystal_structure:CrystalStructureParser',
             'dft = materials_io.dft:DFTParser',
-            'ase = materials_io.ase:AseParser'
+            'ase = materials_io.ase:AseParser',
+            'csv = materials_io.csv:CSVParser'
         ]
     }
 )
