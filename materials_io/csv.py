@@ -11,7 +11,8 @@ class CSVParser(BaseSingleFileParser):
         Args:
              return_records (bool): Whether to return each row in the CSV file
         Keyword:
-            All kwargs as passed to `TableSchema's infer <https://github.com/frictionlessdata/tableschema-py#infer>`_
+            All kwargs as passed to
+            `TableSchema's infer <https://github.com/frictionlessdata/tableschema-py#infer>`_
             method
         """
         self.return_records = return_records

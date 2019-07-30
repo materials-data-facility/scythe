@@ -11,8 +11,10 @@ def test_csv():
     output = p.parse([csv_file])
     assert len(output['records']) == 3
     assert isinstance(output['records'][0], dict)
-    assert output['schema'] == {'fields': [{'name': 'city', 'type': 'string', 'format': 'default'},
-                                           {'name': 'location', 'type': 'geopoint', 'format': 'default'}],
+    assert output['schema'] == {'fields': [{'name': 'city', 'type': 'string',
+                                            'format': 'default'},
+                                           {'name': 'location', 'type': 'geopoint',
+                                            'format': 'default'}],
                                 'missingValues': ['']}
 
     # Test without records
