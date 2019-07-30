@@ -18,6 +18,7 @@ Source Code: https://github.com/materials-data-facility/MaterialsIO
    user-guide
    contributor-guide
    parsers
+   api/materials_io
 
 
 
