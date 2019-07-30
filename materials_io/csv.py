@@ -4,7 +4,7 @@ from typing import List
 
 
 class CSVParser(BaseSingleFileParser):
-    """Reads tabular data files, such as CSV"""
+    """Reads comma-separated value (CSV) files"""
 
     def __init__(self, return_records=True, **kwargs):
         """

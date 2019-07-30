@@ -61,3 +61,12 @@ Parsers that retrieve results from calculations
 .. automodule:: materials_io.ase
     :members:
     :exclude-members: implementors, schema, version, group
+
+Structured Data Files
+---------------------
+
+Parsers that read data from structured files
+
+.. automodule:: materials_io.csv
+    :members:
+    :exclude-members: implementors, schema, version, group
