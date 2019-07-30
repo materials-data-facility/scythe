@@ -7,18 +7,8 @@ import json
 from materials_io.base import BaseParser
 
 
-class BaseAdapter(ABC):
-    """Template for tools that transform metadata into a new form
-
-    ## Implementing a New Adapter
-
-    Adapters must fulfill a single operation, :meth:`transform`, which renders
-    metadata from one of the MaterialsIO parsers into a new form.
-
-    The `transform` function can return `None` or throw an Exception to reject
-    a particular entry.
-
-    """
+class BaseAdapter:
+    """Template for tools that transform metadata into a new form"""
 
     @abstractmethod
     def transform(self, metadata: dict) -> Any:
@@ -27,7 +17,8 @@ class BaseAdapter(ABC):
         Args:
             metadata (dict): Metadata to transform
         Returns:
-            Metadata in a new form, can be any type of object
+            Metadata in a new form, can be any type of object.
+            ``None`` corresponding
         """
 
     def check_compatibility(self, parser: BaseParser) -> bool:
@@ -47,7 +38,12 @@ class BaseAdapter(ABC):
             return my_version == their_version
 
     def version(self) -> Union[None, str]:
-        """Version of the parser that an adapter was created for"""
+        """Version of the parser that an adapter was created for
+
+        Returns:
+            (str) Version of parser this adapter was designed for,
+                or ``None`` if not applicable
+            """
         return None
 
 
