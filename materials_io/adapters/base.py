@@ -11,11 +11,12 @@ class BaseAdapter:
     """Template for tools that transform metadata into a new form"""
 
     @abstractmethod
-    def transform(self, metadata: dict) -> Any:
+    def transform(self, metadata: dict, context: Union[None, dict] = None) -> Any:
         """Process metadata into a new form
 
         Args:
             metadata (dict): Metadata to transform
+            context (dict): Any context information used during transformation
         Returns:
             Metadata in a new form, can be any type of object.
             ``None`` corresponding
