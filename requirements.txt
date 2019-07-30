@@ -5,3 +5,4 @@ ase>=3.17
 mdf_toolbox>=0.4.2
 python-magic>=0.4.15
 dfttopif>=1.1.0
+tableschema>=1,<2
