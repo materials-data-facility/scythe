@@ -53,12 +53,12 @@ class NOOPAdapter(BaseAdapter):
 
     Used for testing purposes"""
 
-    def transform(self, metadata: dict) -> dict:
+    def transform(self, metadata: dict, context=None) -> dict:
         return metadata
 
 
 class SerializeAdapter(BaseAdapter):
     """Converts the metadata to a string by serializing with JSON"""
 
-    def transform(self, metadata: dict) -> str:
+    def transform(self, metadata: dict, context=None) -> str:
         return json.dumps(metadata)
