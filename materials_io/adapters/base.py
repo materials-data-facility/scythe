@@ -1,6 +1,6 @@
 """Base classes for adapters"""
 
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import Any, Union
 import json
 
