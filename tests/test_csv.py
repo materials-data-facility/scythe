@@ -1,5 +1,4 @@
 from materials_io.csv import CSVParser
-from tableschema.types.geopoint import _geopoint
 import os
 
 csv_file = os.path.join(os.path.dirname(__file__), 'data', 'test.csv')

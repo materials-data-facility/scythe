@@ -124,10 +124,10 @@ def run_all_parsers(directory: str, global_context=None,
     Args:
         directory (str): Path to directory to be parsed
         global_context (dict): Context of the files, used for every parser and adapter
-        adapter_context (dict): Context used for adapters. Key is the name of the adapter, value is the context
-            The key ``@all`` is used to for context used for every adapter
-        parser_context (dict): Context used for adapters. Key is the name of the parser, value is the context
-            The key ``@all`` is used to for context used for every parser
+        adapter_context (dict): Context used for adapters. Key is the name of the adapter,
+            value is the context.  The key ``@all`` is used to for context used for every adapter
+        parser_context (dict): Context used for adapters. Key is the name of the parser,
+            value is the context. The key ``@all`` is used to for context used for every parser
         include_parsers ([str]): Predefined list of parsers to run. Only these will be used.
             Mutually exclusive with `exclude_parsers`.
         exclude_parsers ([str]): List of parsers to exclude.
@@ -192,8 +192,8 @@ def run_all_parsers(directory: str, global_context=None,
             if adapter is not None:
                 try:
                     metadata = adapter.transform(metadata, my_adapter_context)
-                except Exception as e:
-                    logger.warn(f'Adapter for {parser} failed')
+                except Exception:
+                    logger.warning(f'Adapter for {parser} failed')
                     continue
                 if metadata is None:
                     continue

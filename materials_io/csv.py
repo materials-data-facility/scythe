@@ -3,7 +3,6 @@ from tableschema.exceptions import CastError
 from tableschema import Table
 from typing import List
 import logging
-import json
 
 logger = logging.getLogger(__name__)
 
