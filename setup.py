@@ -31,7 +31,12 @@ setup(
             'crystal = materials_io.crystal_structure:CrystalStructureParser',
             'dft = materials_io.dft:DFTParser',
             'ase = materials_io.ase:AseParser',
+            'noop = materials_io.testing:NOOPParser',
             'csv = materials_io.csv:CSVParser'
+        ],
+        'materialsio.adapter': [
+            'noop = materials_io.adapters.base:NOOPAdapter',
+            'serialize = materials_io.adapters.base:SerializeAdapter'
         ]
     }
 )

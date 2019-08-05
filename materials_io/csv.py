@@ -1,10 +1,21 @@
 from materials_io.base import BaseSingleFileParser
+from tableschema.exceptions import CastError
 from tableschema import Table
-from typing import List
+from typing import List, Union, Tuple, Iterable, Iterator
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CSVParser(BaseSingleFileParser):
-    """Reads comma-separated value (CSV) files"""
+    """Reads comma-separated value (CSV) files
+
+    The context dictionary for the CSV parser includes several fields:
+        - ``schema``: Dictionary defining the schema for this dataset, following that of
+        FrictionlessIO
+        - ``na_values``: Any values that should be interpreted as missing
+
+    """
 
     def __init__(self, return_records=True, **kwargs):
         """
@@ -18,15 +29,50 @@ class CSVParser(BaseSingleFileParser):
         self.return_records = return_records
         self.infer_kwargs = kwargs
 
+    def group(self, paths: Union[str, Iterable[str]],
+              context: dict = None) -> Iterator[Tuple[str, ...]]:
+        for path in super().group(paths, context):
+            if path[0].lower().endswith('.csv'):
+                yield path
+
     def _parse_file(self, path: str, context=None):
-        table = Table(path)
+        # Set the default value
+        if context is None:
+            context = dict()
+
+        # Load in the table
+        table = Table(path, schema=context.get('schema', None))
 
         # Infer the table's schema
-        output = {'schema': table.infer(**self.infer_kwargs)}
+        table.infer(**self.infer_kwargs)
+
+        # Add missing values
+        if 'na_values' in context:
+            if not isinstance(context['na_values'], list):
+                raise ValueError('context["na_values"] must be a list')
+            table.schema.descriptor['missingValues'] = sorted(set([''] + context['na_values']))
+            table.schema.commit()
+
+        # Store the schema
+        output = {'schema': table.schema.descriptor}
 
         # If desired, store the data
         if self.return_records:
-            output['records'] = table.read(keyed=True)
+            headers = table.schema.headers
+            records = []
+            failed_records = 0
+            for row in table.iter(keyed=False, cast=False):
+                try:
+                    row = table.schema.cast_row(row)
+                except CastError:
+                    failed_records += 1
+
+                # TODO (wardlt): Use json output from tableschema once it's supported
+                #  https://github.com/frictionlessdata/tableschema-py/issues/213
+                records.append(eval(repr(dict(zip(headers, row)))))
+            if failed_records > 0:
+                logger.warning(f'{failed_records} records failed casting with schema')
+            output['records'] = records
 
         return output
 

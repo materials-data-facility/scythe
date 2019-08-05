@@ -56,6 +56,36 @@ parser, and then use its class interface (described below)::
         print(record)
 
 
+Advanced Usage: Adding Context
+++++++++++++++++++++++++++++++
+
+The function interface for MaterialsIO supports using "context" and "adapters" to provide additional infomration
+to a parser or change the output format, respectively.
+Adapters are described in `Integrating MaterialsIO into Applications <#id1>`_.
+Here, we describe the purpose of context and how to use it in our interface.
+
+Context is information about the data held in a file that is not contained within the file itself.
+Examples include human-friendly descriptions of columns names or which values actually
+represent a missing measurement in tabular data file (e.g., CSV files).
+A limited number of parsers support context and this information can be provided via the ``execute_parser`` function::
+
+    execute_parser('csv', 'tests/data/test.csv', context={'na_values': ['N/A']})
+
+
+The types of context information used by a parser, if any, is described in the
+`documentation for each parser <parsers.html>`_.
+
+The ``run_all_parsers`` function has several options for providing context to the parsers.
+These options include specifying "global context" to be passed to every parser or adapter
+and ways of limiting the metadata to specific parsers.
+See :meth:`materials_io.utils.interface.run_all_parsers` for further details on the
+syntax for this command.
+
+.. note::
+
+    *Context is still an experimental feature and APIs are subject to change*
+
+
 Class Interface
 ~~~~~~~~~~~~~~~
 
@@ -133,6 +163,64 @@ The full API for the parsers are described as a Python abstract class:
 Integrating MaterialsIO into Applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. todo:: Write this section
+MaterialsIO is designed to create a documented, JSON-format version of scientific files,
+but these files might not yet be in a form useful for your application.
+We recommend an "adapter" approach to post-process these "generic JSON" files that
+can actually be used for your application.
 
-    Waiting to discuss with Tyler, Max, and Jonathon
+BaseAdapter
++++++++++++
+
+The ``BaseAdapter`` class defines the interface for all adapters.
+
+.. autoclass:: materials_io.adapters.base.BaseAdapter
+    :member-order: bysource
+    :noindex:
+    :members:
+
+Adapters must fulfill a single operation, ``transform``, which renders metadata from one of
+the MaterialsIO parsers into a new form.
+There are no restrictions on the output for this function, except that ``None`` indicates
+that there is no valid transformation for an object.
+
+The ``check_compatibility`` and ``version`` method provide a route for marking which versions
+of a parser are compatible with an adapter.
+``materials_io`` uses the version in utility operations to provide warnings to users
+about when an adapter is out-of-date.
+
+Using Adapters
+++++++++++++++
+
+The same utility operations `described above <#simple-interface>`_ support using adapters.
+The ``execute_parser`` function has an argument, ``adapter``, that takes the name of the adapter
+as an input and causes the parsing operation to run the adapter after parsing.
+The ``run_all_parsers`` function also has arguments (e.g., ``adapter_map``) that associate
+each parser with the adapter needed to run after parsing.
+
+As an example, we will demonstrate an adapter that comes packaged with MaterialsIO:
+:class:`materials_io.adapters.base.SerializeAdapter`
+The serialize adapter is registered using ``stevedore`` as the name "serialize".
+To use it after all parsers::
+
+    from materials_io.utils.interface import run_all_parsers
+    gen = run_all_parsers('.', default_adapter='serialize')
+
+Implementing Adapters
++++++++++++++++++++++
+
+Any new adapters must inherit from the ``BaseAdapter`` class defined above.
+You only need implement the ``transform`` operation.
+
+Once the adapter is implemented, you need to put it in a project that is installable via pip.
+See [python docs](https://docs.python.org/3.7/distutils/setupscript.html) for a detailed tutorial
+or copy the structure used by the `MDF's adapter library <https://github.com/materials-data-facility/mdf-materialsio-adapters>`_.
+
+Then, register the adapter with stevedore by adding it as an entry point in your project's ``setup.py`` file.
+See `stevedore documentation for more detail <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
+We recommned using the same name for a adapter as the parser it is designed for
+so that ``materials_io`` can auto-detect the adapters associated with each parser.
+
+Examples of Tools Using MaterialsIO
++++++++++++++++++++++++++++++++++++
+
+Materials Data Facility: https://github.com/materials-data-facility/mdf-materialsio-adapters
