@@ -56,6 +56,36 @@ parser, and then use its class interface (described below)::
         print(record)
 
 
+Advanced Usage: Adding Context
+++++++++++++++++++++++++++++++
+
+The function interface for MaterialsIO supports using "context" and "adapters" to provide additional infomration
+to a parser or change the output format, respectively.
+Adapters are described in `Integrating MaterialsIO into Applications <#id1>`_.
+Here, we describe the purpose of context and how to use it in our interface.
+
+Context is information about the data held in a file that is not contained within the file itself.
+Examples include human-friendly descriptions of columns names or which values actually
+represent a missing measurement in tabular data file (e.g., CSV files).
+A limited number of parsers support context and this information can be provided via the ``execute_parser`` function::
+
+    execute_parser('csv', 'tests/data/test.csv', context={'na_values': ['N/A']})
+
+
+The types of context information used by a parser, if any, is described in the
+`documentation for each parser <parsers.html>`_.
+
+The ``run_all_parsers`` function has several options for providing context to the parsers.
+These options include specifying "global context" to be passed to every parser or adapter
+and ways of limiting the metadata to specific parsers.
+See :meth:`materials_io.utils.interface.run_all_parsers` for further details on the
+syntax for this command.
+
+.. note::
+
+    *Context is still an experimental feature and APIs are subject to change*
+
+
 Class Interface
 ~~~~~~~~~~~~~~~
 

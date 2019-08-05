@@ -106,7 +106,8 @@ Step 2: Document the Parser
 
 The docstring for a parser must start with a short, one sentence summary of the parser,
 which will be used by our autodocumentation tooling.
-The rest of the documentation should describe what types of files are compatible and
+The rest of the documentation should describe what types of files are compatible,
+what context infomration can be used, and
 summarize what types of metadata are generated.
 
 .. todo:: Actually write these descriptors for the available parsers
