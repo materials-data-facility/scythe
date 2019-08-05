@@ -14,6 +14,7 @@ class CSVParser(BaseSingleFileParser):
         - ``schema``: Dictionary defining the schema for this dataset, following that of
         FrictionlessIO
         - ``na_values``: Any values that should be interpreted as missing
+
     """
 
     def __init__(self, return_records=True, **kwargs):

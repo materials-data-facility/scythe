@@ -11,7 +11,7 @@ setup(
     name="materials_io",
     version=version,
     packages=find_packages(include=['materials_io*']) + ['materials_io.schemas'],
-    install_requires=['mdf_toolbox>=0.4.2', 'stevedore>=1.28.0'],
+    install_requires=['stevedore>=1.28.0'],
     extras_require={
         'electron_microscopy': ['hyperspy>=1.4.1'],
         'image': ['Pillow>=5.1.0'],

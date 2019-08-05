@@ -63,13 +63,3 @@ def test_single_file(directory):
     assert parser.parse([__file__]) == {'dirname': directory}
     with pytest.raises(ValueError):
         parser.parse(['/fake/file.in', '/fake/file.out'])
-
-
-def test_parse_as_unit(directory):
-    parser = FakeParser()
-    file_relation = [
-        os.path.join(directory, 'data', 'electron_microscopy', 'test-EDS_spectrum.dm3'),
-        os.path.join(directory, 'data', 'electron_microscopy', 'test-1.dm4')
-    ]
-    correct_unit = {"group": file_relation}
-    assert parser.parse_as_unit(file_relation) == correct_unit
