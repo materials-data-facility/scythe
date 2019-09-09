@@ -33,7 +33,7 @@ There are several questions that are specifically out-of-scope for MaterialsIO:
 1. *How do I get access to files that I want to parse?*
     MaterialsIO does not solve the data transfer problem
 2. *How can I parse large numbers of files reliably?*
-    MaterialsIO is not a distributed workflow engine, but is designed to intregrate
+    MaterialsIO is not a distributed workflow engine, but is designed to integrate
     with one for extracting metadata from large filesystems.
 3. *How can I translate data into the schema needed for my application?*
     The goal of MaterialsIO is to go from opaque to well-documented formats.

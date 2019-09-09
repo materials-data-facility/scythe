@@ -66,10 +66,16 @@ We also have a recommendations for the parser behavior:
 Implementing ``group``
 ----------------------
 
-The ``group`` operation finds all sets of files in a user-provided of paths list that should be parsed together.
+The ``group`` operation finds all sets of files in a user-provided list files and directories that should be parsed together.
 Implementing ``group`` is optional.
 Implementing a new ``group`` method is required only when the default behavior of "each file is its own group"
 (i.e., the parser only treats files individually) is incorrect.
+
+The ``group`` operation should not require access to the content of the files or directories
+to determine groupings.
+Being able to determine file groups via only file names improves performance
+and allows for determining groups of parsable files without needing to download
+them from remote systems.
 
 Files are allowed to appear in more than one group,
 but we recommend generating only the largest valid group of files to minimize the same metadata being generated multiple times.
@@ -81,6 +87,7 @@ without consideration to what other information makes the files related (e.g., b
 
 Another appropriate use of the ``group`` operation is to filter out files which are very unlikely to parse correctly.
 For example, a PDF parser could identify only files with a ".pdf" extension.
+However, we recommend using filtering sparing to ensure no files are missed.
 
 Implementing ``citations`` and ``implementors``
 -----------------------------------------------
