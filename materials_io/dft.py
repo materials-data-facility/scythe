@@ -3,7 +3,6 @@ from materials_io.utils.grouping import preprocess_paths, group_by_postfix
 from materials_io.base import BaseParser
 from dfttopif import files_to_pif
 from operator import itemgetter
-from glob import glob
 import itertools
 import os
 

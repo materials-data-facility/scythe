@@ -1,7 +1,7 @@
 from materials_io.base import BaseSingleFileParser
 from tableschema.exceptions import CastError
 from tableschema import Table
-from typing import List, Union, Tuple, Iterable, Iterator
+from typing import List
 import logging
 
 logger = logging.getLogger(__name__)
