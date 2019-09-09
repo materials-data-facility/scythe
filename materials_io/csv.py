@@ -29,12 +29,6 @@ class CSVParser(BaseSingleFileParser):
         self.return_records = return_records
         self.infer_kwargs = kwargs
 
-    def group(self, paths: Union[str, Iterable[str]],
-              context: dict = None) -> Iterator[Tuple[str, ...]]:
-        for path in super().group(paths, context):
-            if path[0].lower().endswith('.csv'):
-                yield path
-
     def _parse_file(self, path: str, context=None):
         # Set the default value
         if context is None:

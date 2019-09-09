@@ -40,9 +40,14 @@ def test_run_all_parsers():
     output_matching = list(run_all_parsers(path, adapter_map={'file': 'noop'},
                                            default_adapter='serialize'))
     assert all(isinstance(x.metadata, str if x.parser != 'file' else dict) for x in output_matching)
-    output_matching = list(run_all_parsers(path, adapter_map='match',
-                                           default_adapter='serialize'))
-    assert all(isinstance(x.metadata, str if x.parser != 'noop' else dict) for x in output_matching)
+
+    # This matching test fails if we have other packages with adapters on the system
+    adapters = set(get_available_adapters().keys())
+    if adapters == {'noop', 'serialize'}:
+        output_matching = list(run_all_parsers(path, adapter_map='match',
+                                               default_adapter='serialize'))
+        assert all(isinstance(x.metadata, str if x.parser != 'noop' else dict)
+                   for x in output_matching)
 
     # Test the error case
     with pytest.raises(ValueError):

@@ -1,4 +1,4 @@
-from typing import Union, Iterable, Tuple
+from typing import Union, Iterable, Tuple, List
 from materials_io.utils.grouping import preprocess_paths, group_by_postfix
 from materials_io.base import BaseParser
 from dfttopif import files_to_pif
@@ -29,23 +29,18 @@ class DFTParser(BaseParser):
         """
         self.quality_report = quality_report
 
-    def group(self, paths: Union[str, Iterable[str]], context: dict = None):
+    def group(self, files: Union[str, List[str]], directories: List[str] = None,
+              context: dict = None):
         # Convert paths into standardized form
-        paths = preprocess_paths(paths)
+        files = set(preprocess_paths(files))
 
         # Find all of the files, and attempt to group them
-        files = set(filter(os.path.isfile, paths))
         for group in self._group_vasp(files):  # VASP grouping logic
             # Remove all files matched as VASP from the matchable files
             files.difference_update(group)
             yield group
         for group in self._group_pwscf(files):
             yield group  # Do not remove, as the PWSCF group is not reliable
-
-        # Recurse into directories
-        for path in filter(os.path.isdir, paths):
-            for group in self.group(glob(os.path.join(path, '*'))):
-                yield group
 
     def _group_vasp(self, files: Iterable[str]) -> Iterable[Tuple[str, ...]]:
         """Find groupings of files associated with VASP calculations

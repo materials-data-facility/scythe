@@ -1,8 +1,10 @@
+from pathlib import Path
 from typing import List, Iterator, Tuple, Iterable, Union
-from materials_io.utils.grouping import preprocess_paths
 from abc import ABC, abstractmethod
 import logging
 import os
+
+from materials_io.utils.grouping import preprocess_paths
 
 logger = logging.getLogger(__name__)
 
@@ -32,14 +34,21 @@ class BaseParser(ABC):
         Yields:
             ([str], dict): Tuple of the group identity and the metadata unit
         """
-        # Parse each identified group
-        for group in self.group(path, context):
-            try:
-                metadata_unit = self.parse(group, context)
-            except Exception:
-                continue
-            else:
-                yield (group, metadata_unit)
+
+        # Walk through the directories
+        for root, dirs, files in os.walk(path):
+            # Generate the full paths
+            dirs = [os.path.join(root, d) for d in dirs]
+            files = [os.path.join(root, f) for f in files]
+
+            # Get any groups from this directory
+            for group in self.group(files, dirs, context):
+                try:
+                    metadata_unit = self.parse(group, context)
+                except Exception:
+                    continue
+                else:
+                    yield (group, metadata_unit)
 
     @abstractmethod
     def parse(self, group: Iterable[str], context: dict = None) -> dict:
@@ -56,33 +65,29 @@ class BaseParser(ABC):
             (dict): The parsed results, in JSON-serializable format.
         """
 
-    def group(self, paths: Union[str, Iterable[str]],
+    def group(self, files: Union[str, List[str]], directories: List[str] = None,
               context: dict = None) -> Iterator[Tuple[str, ...]]:
-        """Identify a groups of files that should be parsed together
+        """Identify a groups of files and directories that should be parsed together
 
-        Will create groups using the files provided in ``paths``, and
-        any files contained within the directories and subdirectories of
-        each directory listed in ``paths``
+        Will create groups using only the files and directories included as input.
+
+        The files of files are _all_ files that could be read by this parser,
+        which may include many false positives.
 
         Args:
-            paths (str or [str]): Path available for grouping,
-                which could include both files and directories
+            files (str or [str]): List of files to consider grouping
+            directories ([str]): Any directories to consider group as well
             context (dict): Context about the files
         Yields:
             ((str)): Groups of files
         """
 
-        paths = preprocess_paths(paths)
+        # Make sure file paths are strings or Path-like objects
+        files = preprocess_paths(files)
 
-        # Default: Every file is in its own group, skipping symlinks
-        for fn in paths:
-            if os.path.isfile(fn):
-                yield (fn,)
-            # Recurse through directories (could also be done with os.walk(), especially
-            # for groups that may span directories)
-            elif os.path.isdir(fn):
-                for f in os.listdir(fn):
-                    yield from self.group(os.path.join(fn, f))
+        # Default: Every file is in its own group
+        for f in files:
+            yield (f,)
 
     def citations(self) -> List[str]:
         """Citation(s) and reference(s) for this parser

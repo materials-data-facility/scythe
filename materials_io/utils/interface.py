@@ -164,6 +164,7 @@ def run_all_parsers(directory: str, global_context=None,
         adapter_map = {}
     elif adapter_map == 'match':
         adapters = get_available_adapters()
+        print(get_available_adapters())
         adapter_map = dict((x, x) for x in parsers if x in adapters)
     elif not isinstance(adapter_map, dict):
         raise ValueError('Adapter map must be a dict, None, or `matching`')
