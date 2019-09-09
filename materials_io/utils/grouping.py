@@ -25,7 +25,7 @@ def preprocess_paths(paths: Union[str, Path, List[str], List[Path]]) -> List[str
     return [os.path.abspath(os.path.expanduser(f)) for f in paths]
 
 
-def group_by_postfix(files: List[str], vocabulary: List[str]) -> Iterable[Tuple[str, ...]]:
+def group_by_postfix(files: Iterable[str], vocabulary: List[str]) -> Iterable[Tuple[str, ...]]:
     """Group files that have a common ending
 
     Finds all filenames that begin with a prefixes from a

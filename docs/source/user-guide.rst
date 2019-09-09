@@ -130,9 +130,10 @@ Grouping Files
 ++++++++++++++
 
 Parsers also provide the ability to quickly find groups of associated files: ``group``.
-The ``group`` operation takes path or list of paths as input and generates candidate groups of files::
+The ``group`` operation takes path or list of files and, optionally, directories and generates
+a list of files that should be treated together when parsing::
 
-    parser.group('/data/directory')
+    parser.group(['input.file', 'output.file', 'unrelated']) # -> [('input.file', 'output.file'), ('unrelated',)]
 
 Parsing Entire Directories
 ++++++++++++++++++++++++++
@@ -141,7 +142,7 @@ Parsing Entire Directories
 
     metadata = list(parser.parse_directory('.'))
 
-``parse_directory`` is a generator function, so we use ``list`` to turn the output into a list format.
+``parse_directory`` is a generator function, so we use ``list`` here to turn the output into a list format.
 
 Attribution Functions
 +++++++++++++++++++++
