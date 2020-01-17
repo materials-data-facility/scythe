@@ -21,7 +21,7 @@ class FilenameExtractor(BaseSingleFileParser):
 
         record = {}
         filename = os.path.basename(path)
-        for json_path, pattern in flatten_dict(context["mapping"]):
+        for json_path, pattern in flatten_dict(context["mapping"]).items():
             match = re.search(pattern, filename)
             if match:
                 fields = json_path.split(".")
