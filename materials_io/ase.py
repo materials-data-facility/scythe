@@ -1,8 +1,39 @@
 import json
+import datetime
+from ase.io.jsonio import create_ndarray
 from ase.io import read, write
 from io import StringIO
+import numpy as np
 
 from materials_io.base import BaseSingleFileParser
+
+
+def object_hook(dct):
+    """Custom decoder for ASE JSON objects
+
+    Does everything *except* reconstitute the JSON object and
+    also converts numpy arrays to lists
+
+    Adapted from ase.io.jsonio
+
+    Args:
+        dct (dict): Dictionary to reconstitute to an ASE object
+    """
+    if '__datetime__' in dct:
+        return datetime.datetime.strptime(dct['__datetime__'], '%Y-%m-%dT%H:%M:%S.%f')
+
+    if '__complex__' in dct:
+        return complex(*dct['__complex__'])
+
+    if '__ndarray__' in dct:
+        return create_ndarray(*dct['__ndarray__'])
+
+    # No longer used (only here for backwards compatibility):
+    if '__complex_ndarray__' in dct:
+        r, i = (np.array(x) for x in dct['__complex_ndarray__'])
+        return r + i * 1j
+
+    return dct
 
 
 class AseParser(BaseSingleFileParser):
@@ -20,11 +51,10 @@ class AseParser(BaseSingleFileParser):
         # To return ASE JSON DB requires writing to file.
         # Here we use StringIO instead of a file on disk.
 
-        record = {}
         fobj = StringIO()
         m = read(path)
         write(images=m, format="json", filename=fobj)
-        js = json.loads(fobj.getvalue())
+        js = json.loads(fobj.getvalue(), object_hook=object_hook)
 
         # Select the first record.
         # TODO: Test this against multiple records

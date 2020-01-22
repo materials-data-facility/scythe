@@ -14,7 +14,7 @@ extra_reqs = {
     'file': ['python-magic>=0.4.15'],
     'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3'],
     'dft': ['dfttopif>=1.1.0'],
-    'ase': ['ase>=3'],
+    'ase': ['ase>=3.19'],
     'csv': ['tableschema>=1<2']
 }
 extra_reqs['all'] = set(sum(extra_reqs.values(), []))
