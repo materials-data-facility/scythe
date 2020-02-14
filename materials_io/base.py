@@ -22,6 +22,29 @@ class BaseParser(ABC):
     See `MaterialsIO Contributor Guide <contributor-guide.html>`_ for further details.
     """
 
+    def identify_files(self, path: str, context: dict = None) -> Iterator[Tuple[str]]:
+        """Identify all groups of files likely to be compatible with this parser
+
+        Uses the :meth:`group` function to determine groups of files
+        that should be parsed together.
+
+        Args:
+            path (str): Root of directory to parser
+            context (dict): Context about the files
+        Yields:
+            ([str]) Groups of eligible files
+        """
+
+        # Walk through the directories
+        for root, dirs, files in os.walk(path):
+            # Generate the full paths
+            dirs = [os.path.join(root, d) for d in dirs]
+            files = [os.path.join(root, f) for f in files]
+
+            # Get any groups from this directory
+            for group in self.group(files, dirs, context):
+                yield group
+
     def parse_directory(self, path: str, context: dict = None) -> Iterator[Tuple[Tuple[str], dict]]:
         """Run a parser on all appropriate files in a directory
 
@@ -34,20 +57,13 @@ class BaseParser(ABC):
             ([str], dict): Tuple of the group identity and the metadata unit
         """
 
-        # Walk through the directories
-        for root, dirs, files in os.walk(path):
-            # Generate the full paths
-            dirs = [os.path.join(root, d) for d in dirs]
-            files = [os.path.join(root, f) for f in files]
-
-            # Get any groups from this directory
-            for group in self.group(files, dirs, context):
-                try:
-                    metadata_unit = self.parse(group, context)
-                except Exception:
-                    continue
-                else:
-                    yield (group, metadata_unit)
+        for group in self.identify_files(path, context):
+            try:
+                metadata_unit = self.parse(group, context)
+            except Exception:
+                continue
+            else:
+                yield (group, metadata_unit)
 
     @abstractmethod
     def parse(self, group: Iterable[str], context: dict = None) -> dict:

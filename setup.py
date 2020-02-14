@@ -9,7 +9,7 @@ version = version_ns['__version__']
 
 # Requirements for the extras
 extra_reqs = {
-    'ase': ['ase>=3'],
+    'ase': ['ase>=3.19'],
     'crystal_structure': ['pymatgen>=2018.11.30', 'ase>=3'],
     'csv': ['tableschema>=1<2'],
     'dft': ['dfttopif>=1.1.0'],
