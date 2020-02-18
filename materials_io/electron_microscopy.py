@@ -26,72 +26,72 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         # HS data
         try:
             inst_data = data['Acquisition_instrument'][inst]
-        except KeyError:
+        except Exception:
             pass
         else:
             try:
-                em['beam_energy'] = inst_data['beam_energy']
-            except KeyError:
+                em['beam_energy'] = float(inst_data['beam_energy'])
+            except Exception:
                 pass
             try:
-                em['magnification'] = inst_data['magnification']
-            except KeyError:
+                em['magnification'] = float(inst_data['magnification'])
+            except Exception:
                 pass
             try:
-                em['acquisition_mode'] = inst_data['acquisition_mode']
-            except KeyError:
+                em['acquisition_mode'] = str(inst_data['acquisition_mode'])
+            except Exception:
                 pass
             try:
                 detector = inst_data['Detector']
-            except KeyError:
+            except Exception:
                 pass
             else:
-                em['detector'] = next(iter(detector))
+                em['detector'] = str(next(iter(detector)))
 
         # Non-HS data (not pulled into standard HS metadata)
         # Pull out common dicts
         try:
             micro_info = raw_data["ImageList"]["TagGroup0"]["ImageTags"]["Microscope Info"]
-        except KeyError:
+        except Exception:
             micro_info = {}
         try:
             exp_desc = raw_data["ObjectInfo"]["ExperimentalDescription"]
-        except KeyError:
+        except Exception:
             exp_desc = {}
 
         # emission_current
         try:
-            em["emission_current"] = micro_info["Emission Current (µA)"]
-        except KeyError:
+            em["emission_current"] = float(micro_info["Emission Current (µA)"])
+        except Exception:
             try:
-                em["emission_current"] = exp_desc["Emission_uA"]
-            except KeyError:
+                em["emission_current"] = float(exp_desc["Emission_uA"])
+            except Exception:
                 pass
         # operation_mode
         try:
-            em["operation_mode"] = micro_info["Operation Mode"]
-        except KeyError:
+            em["operation_mode"] = str(micro_info["Operation Mode"])
+        except Exception:
             pass
         # microscope
         try:
-            em["microscope"] = (raw_data["ImageList"]["TagGroup0"]["ImageTags"]
-                                        ["Session Info"]["Microscope"])
-        except KeyError:
+            em["microscope"] = str(raw_data["ImageList"]["TagGroup0"]["ImageTags"]
+                                           ["Session Info"]["Microscope"])
+        except Exception:
             try:
-                em["microscope"] = micro_info["Name"]
-            except KeyError:
+                em["microscope"] = str(micro_info["Name"])
+            except Exception:
                 pass
         # spot_size
         try:
-            em["spot_size"] = exp_desc["Spot size"]
-        except KeyError:
+            em["spot_size"] = int(exp_desc["Spot size"])
+        except Exception:
             pass
 
         # Image metadata
         try:
             shape = []
-            base_shape = list(raw_data["ImageList"]["TagGroup0"]
-                                      ["ImageData"]["Dimensions"].values())
+            base_shape = [int(dim) for dim in raw_data["ImageList"]["TagGroup0"]
+                                                      ["ImageData"]["Dimensions"].values()]
             # Reverse X and Y order to match MDF schema (y, x, z, ..., channels)
             if len(base_shape) >= 2:
                 shape.append(base_shape[1])
@@ -103,7 +103,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
             if shape:
                 image["shape"] = shape
-        except KeyError:
+        except Exception as e:
+            print(e)
             pass
 
         # Remove None/empty values
