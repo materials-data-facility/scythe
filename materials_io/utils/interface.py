@@ -59,6 +59,10 @@ def get_available_adapters() -> dict:
     return _output_plugin_info(ExtensionManager(namespace='materialsio.adapter'))
 
 
+def get_adapter_map() -> dict:
+    """"""
+
+
 def get_parser(name: str) -> BaseParser:
     """Load a parser object
 
