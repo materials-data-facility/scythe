@@ -60,7 +60,8 @@ def get_available_adapters() -> dict:
 
 
 def _get_adapter_map(adapter_map: str, parsers: list) -> dict:
-    """ Helper function to generate adapter map (so different run_all_parsers functions can call it)
+    """ Helper function to generate adapter map
+            (so different run_all_parsers functions can call it)
     Args:
         adapter_map (str): string argument for adapters.
             - 'match' means just find adapters with same names as corresponding parsers.
@@ -82,7 +83,8 @@ def _get_adapter_map(adapter_map: str, parsers: list) -> dict:
 
 def _get_parser_and_adapter_contexts(name, global_context, parser_context, adapter_context):
     """
-    Helper function to update the helper and adapter contexts and the 'name' of a parser/adapter pair
+    Helper function to update the helper and adapter contexts and the 'name'
+        of a parser/adapter pair
     Args:
         name (str): adapter/parser name.
         global_context (dict): Context of the files, used for every parser and adapter
@@ -192,7 +194,8 @@ def run_all_parsers_on_directory(directory: str, global_context=None,
                                  include_parsers: Union[None, List[str]] = None,
                                  exclude_parsers: Union[None, List] = None,
                                  adapter_map: Union[None, str, Dict[str, str]] = None,
-                                 default_adapter: Union[None, str] = None) -> Iterator[ParseResult]:
+                                 default_adapter: Union[None, str] = None) \
+                                                    -> Iterator[ParseResult]:
     """Run all known files on a directory of files
 
     Args:
@@ -237,7 +240,8 @@ def run_all_parsers_on_directory(directory: str, global_context=None,
         else:
             adapter = None
 
-        my_parser_context, my_adapter_context = _get_parser_and_adapter_contexts(name, global_context,
+        my_parser_context, my_adapter_context = _get_parser_and_adapter_contexts(name,
+                                                                                 global_context,
                                                                                  parser_context,
                                                                                  adapter_context)
 
@@ -266,8 +270,8 @@ def run_all_parsers_on_group(group,
     """
     Parse metadata from a file-group and adapt its metadata per a user-supplied adapter_map.
 
-    This function is effectively a wrapper to execute_parser() that enables us to output metadata in the
-    same format as run_all_parsers_on_directory(), but just on a single file group.
+    This function is effectively a wrapper to execute_parser() that enables us to output metadata
+    in the same format as run_all_parsers_on_directory(), but just on a single file group.
 
     Args:
         group ([str]): Paths to group of files to be parsed

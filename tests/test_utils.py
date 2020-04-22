@@ -1,5 +1,6 @@
 from materials_io.utils.interface import (get_available_parsers, execute_parser,
-                                          get_available_adapters, run_all_parsers_on_directory, ParseResult)
+                                          get_available_adapters, run_all_parsers_on_directory,
+                                          ParseResult)
 from materials_io.image import ImageParser
 import pytest
 import json
@@ -36,22 +37,25 @@ def test_run_all_parsers():
 
     # Test the matching
     output_matching = list(run_all_parsers_on_directory(path, adapter_map={'file': 'serialize'}))
-    assert all(isinstance(x.metadata, str if x.parser == 'file' else dict) for x in output_matching)
+    assert all(isinstance(x.metadata, str if x.parser == 'file' else dict)
+               for x in output_matching)
     output_matching = list(run_all_parsers_on_directory(path, adapter_map={'file': 'noop'},
-                                           default_adapter='serialize'))
-    assert all(isinstance(x.metadata, str if x.parser != 'file' else dict) for x in output_matching)
+                                                        default_adapter='serialize'))
+    assert all(isinstance(x.metadata, str if x.parser != 'file' else dict)
+               for x in output_matching)
 
     # This matching test fails if we have other packages with adapters on the system
     adapters = set(get_available_adapters().keys())
     if adapters == {'noop', 'serialize'}:
         output_matching = list(run_all_parsers_on_directory(path, adapter_map='match',
-                                               default_adapter='serialize'))
+                                                            default_adapter='serialize'))
         assert all(isinstance(x.metadata, str if x.parser != 'noop' else dict)
                    for x in output_matching)
 
     # Test the error case
     with pytest.raises(ValueError):
-        list(run_all_parsers_on_directory(path, adapter_map='matching', default_adapter='serialize'))
+        list(run_all_parsers_on_directory(path, adapter_map='matching',
+                                          default_adapter='serialize'))
 
     # Test specifying parsers
     assert set([x.parser for x in output]).issuperset(['image', 'generic'])
@@ -60,7 +64,8 @@ def test_run_all_parsers():
     output_limit = list(run_all_parsers_on_directory(path, include_parsers=['image']))
     assert set([x.parser for x in output_limit]) == {'image'}
     with pytest.raises(ValueError):
-        list(run_all_parsers_on_directory(path, include_parsers=['image'], exclude_parsers=['image']))
+        list(run_all_parsers_on_directory(path, include_parsers=['image'],
+                                          exclude_parsers=['image']))
     with pytest.raises(ValueError):
         list(run_all_parsers_on_directory(path, include_parsers=['totally-not-a-parser']))
 
