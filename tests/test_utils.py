@@ -20,7 +20,6 @@ def test_execute_parser():
     assert execute_parser('image', [image], adapter='noop') == execute_parser('image', [image])
 
 
-
 def test_run_all_parsers():
     path = os.path.join(cwd, 'data', 'image')
     output = list(run_all_parsers_on_directory(path))
@@ -84,14 +83,16 @@ def test_run_all_parsers():
 #     output_noop = list(run_all_parsers_on_group(os.listdir(path), default_adapter='noop'))
 #     assert output == output_noop
 #     output_json = list(run_all_parsers_on_group(os.listdir(path), default_adapter='serialize'))
-#     assert output == [ParseResult(x.group, x.parser, json.loads(x.metadata)) for x in output_json]
+#     assert output == [ParseResult(x.group, x.parser,
+#     json.loads(x.metadata)) for x in output_json]
 #
 #     # Test the matching
 #     output_matching = list(run_all_parsers_on_group(os.listdir(path),
 #                                                     adapter_map={'file': 'serialize'}))
 #     assert all(isinstance(x.metadata, str if x.parser == 'file' else dict)
 #                for x in output_matching)
-#     output_matching = list(run_all_parsers_on_group(os.listdir(path), adapter_map={'file': 'noop'},
+#     output_matching = list(run_all_parsers_on_group(os.listdir(path),
+#     adapter_map={'file': 'noop'},
 #                                                     default_adapter='serialize'))
 #     assert all(isinstance(x.metadata, str if x.parser != 'file' else dict)
 #                for x in output_matching)
@@ -119,7 +120,8 @@ def test_run_all_parsers():
 #         list(run_all_parsers_on_group(os.listdir(path), include_parsers=['image'],
 #                                       exclude_parsers=['image']))
 #     with pytest.raises(ValueError):
-#         list(run_all_parsers_on_group(os.listdir(path), include_parsers=['totally-not-a-parser']))
+#         list(run_all_parsers_on_group(os.listdir(path),
+#         include_parsers=['totally-not-a-parser']))
 
 
 def test_list_adapters():
