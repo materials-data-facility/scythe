@@ -309,7 +309,8 @@ def run_all_parsers_on_group(group,
         # Get the parser and adapter
         adapter_name = adapter_map.get(name, default_adapter)
 
-        my_parser_context, my_adapter_context = _get_parser_and_adapter_contexts(name, global_context,
+        my_parser_context, my_adapter_context = _get_parser_and_adapter_contexts(name,
+                                                                                 global_context,
                                                                                  parser_context,
                                                                                  adapter_context)
 
