@@ -35,18 +35,6 @@ def _output_plugin_info(mgr: ExtensionManager) -> dict:
     return output
 
 
-def _get_adapter_parser_context(global_context, parser_context, adapter_context, name):
-    my_parser_context = deepcopy(global_context)
-    my_parser_context.update(parser_context.get('@all', {}))
-    my_parser_context.update(parser_context.get(name, {}))
-
-    my_adapter_context = deepcopy(global_context)
-    my_adapter_context.update(adapter_context.get('@all', {}))
-    my_adapter_context.update(adapter_context.get(name, {}))
-
-    return my_parser_context, my_adapter_context
-
-
 def get_available_parsers():
     """Get information about the available parsers
 
@@ -80,13 +68,65 @@ def get_adapter_map(adapter_map: str, parsers: list) -> dict:
         adapter_map = {}
     elif adapter_map == 'match':
         adapters = get_available_adapters()
-        # print(get_available_adapters())
         adapter_map = dict((x, x) for x in parsers if x in adapters)
     elif not isinstance(adapter_map, dict):
         raise ValueError('Adapter map must be a dict, None, or `matching`')
 
     # Give it to the user
     return adapter_map
+
+
+def _get_parser_and_adapter_contexts(name, global_context, parser_context, adapter_context):
+    """
+    Helper function to update the helper and adapter contexts and the 'name' of a parser/adapter pair
+    Args:
+        name (str): adapter/parser name.
+        global_context (dict): Context of the files, used for every parser and adapter
+        adapter_context (dict): Context used for adapters. Key is the name of the adapter,
+            value is the context.  The key ``@all`` is used to for context used for every adapter
+        parser_context (dict): Context used for adapters. Key is the name of the parser,
+            value is the context. The key ``@all`` is used to for context used for every parser
+    Returns:
+         (dict, dict): parser_context, my_adapter context tuple
+    """
+
+    # Get the context information for the parser and adapter
+    my_parser_context = deepcopy(global_context)
+    my_parser_context.update(parser_context.get('@all', {}))
+    my_parser_context.update(parser_context.get(name, {}))
+
+    my_adapter_context = deepcopy(global_context)
+    my_adapter_context.update(adapter_context.get('@all', {}))
+    my_adapter_context.update(adapter_context.get(name, {}))
+
+    return my_parser_context, my_adapter_context
+
+
+def _get_parser_list(include_parsers, exclude_parsers):
+    """ Helper function to get a list of parsers given lists of parsers to include/exclude
+
+    Args:
+        include_parsers ([str]): Predefined list of parsers to run. Only these will be used.
+            Mutually exclusive with `exclude_parsers`.
+        exclude_parsers ([str]): List of parsers to exclude.
+            Mutually exclusive with `include_parsers`.
+    Returns:
+        parsers (list): list of all applicable parsers.
+
+    """
+
+    parsers = get_available_parsers()
+    if include_parsers is not None and exclude_parsers is not None:
+        raise ValueError('Including and excluding parsers are mutually exclusive')
+    elif include_parsers is not None:
+        missing_parsers = set(include_parsers).difference(parsers.keys())
+        if len(missing_parsers) > 0:
+            raise ValueError('Some parsers are missing: ' + ' '.join(missing_parsers))
+        parsers = include_parsers
+    elif exclude_parsers is not None:
+        parsers = list(set(parsers.keys()).difference(exclude_parsers))
+
+    return parsers
 
 
 def get_parser(name: str) -> BaseParser:
@@ -124,11 +164,8 @@ def get_adapter(name: str) -> BaseAdapter:
     return mgr.driver
 
 
-# def parse_and_adapt(name, group, context=None, adapter=None):
-
-
-
-def execute_parser(name, group, context=None, adapter=None):
+def execute_parser(name, group, context=None,
+                   adapter=None):
     """Invoke a parser on a certain group of data
     Args:
         name (str): Name of the parser
@@ -145,13 +182,13 @@ def execute_parser(name, group, context=None, adapter=None):
     return metadata
 
 
-def run_all_parsers(directory: str, global_context=None,
-                    adapter_context: Union[None, dict] = None,
-                    parser_context: Union[None, dict] = None,
-                    include_parsers: Union[None, List[str]] = None,
-                    exclude_parsers: Union[None, List] = None,
-                    adapter_map: Union[None, str, Dict[str, str]] = None,
-                    default_adapter: Union[None, str] = None) -> Iterator[ParseResult]:
+def run_all_parsers_on_directory(directory: str, global_context=None,
+                                 adapter_context: Union[None, dict] = None,
+                                 parser_context: Union[None, dict] = None,
+                                 include_parsers: Union[None, List[str]] = None,
+                                 exclude_parsers: Union[None, List] = None,
+                                 adapter_map: Union[None, str, Dict[str, str]] = None,
+                                 default_adapter: Union[None, str] = None) -> Iterator[ParseResult]:
     """Run all known files on a directory of files
 
     Args:
@@ -181,16 +218,7 @@ def run_all_parsers(directory: str, global_context=None,
         parser_context = dict()
 
     # Get the list of parsers
-    parsers = get_available_parsers()
-    if include_parsers is not None and exclude_parsers is not None:
-        raise ValueError('Including and excluding parsers are mutually exclusive')
-    elif include_parsers is not None:
-        missing_parsers = set(include_parsers).difference(parsers.keys())
-        if len(missing_parsers) > 0:
-            raise ValueError('Some parsers are missing: ' + ' '.join(missing_parsers))
-        parsers = include_parsers
-    elif exclude_parsers is not None:
-        parsers = list(set(parsers.keys()).difference(exclude_parsers))
+    parsers = _get_parser_list(include_parsers, exclude_parsers)
 
     # Make the adapter map
     adapter_map = get_adapter_map(adapter_map=adapter_map, parsers=parsers)
@@ -205,21 +233,78 @@ def run_all_parsers(directory: str, global_context=None,
         else:
             adapter = None
 
-        # Get the context information for the parser and adapter
-        my_parser_context, my_adapter_context = _get_adapter_parser_context(global_context,
-                                                                            parser_context,
-                                                                            adapter_context,
-                                                                            name)
+        my_parser_context, my_adapter_context = _get_parser_and_adapter_contexts(name, global_context,
+                                                                                 parser_context,
+                                                                                 adapter_context)
 
         for group, metadata in parser.parse_directory(directory, context=my_parser_context):
             # Run the adapter, if defined
             if adapter is not None:
                 try:
                     metadata = adapter.transform(metadata, my_adapter_context)
-                except Exception:
-                    logger.warning(f'Adapter for {parser} failed')
+                except Exception as e:
+                    logger.warning(f'Adapter for {parser} failed with caught exception: {e}')
                     continue
                 if metadata is None:
                     continue
 
             yield ParseResult(group, name, metadata)
+
+
+def run_all_parsers_on_group(group,
+                             adapter_map=None,
+                             global_context=None,
+                             adapter_context: Union[None, dict] = None,
+                             parser_context: Union[None, dict] = None,
+                             include_parsers: Union[None, List[str]] = None,
+                             exclude_parsers: Union[None, List] = None,
+                             default_adapter: Union[None, str] = None):
+    """
+    Parse metadata from a file-group and adapt its metadata per a user-supplied adapter_map.
+
+    This function is effectively a wrapper to execute_parser() that enables us to output metadata in the
+    same format as run_all_parsers_on_directory(), but just on a single file group.
+
+    Args:
+        group ([str]): Paths to group of files to be parsed
+        global_context (dict): Context of the files, used for every parser and adapter
+        adapter_context (dict): Context used for adapters. Key is the name of the adapter,
+            value is the context.  The key ``@all`` is used to for context used for every adapter
+        parser_context (dict): Context used for adapters. Key is the name of the parser,
+            value is the context. The key ``@all`` is used to for context used for every parser
+        include_parsers ([str]): Predefined list of parsers to run. Only these will be used.
+            Mutually exclusive with `exclude_parsers`.
+        exclude_parsers ([str]): List of parsers to exclude.
+            Mutually exclusive with `include_parsers`.
+        adapter_map (str, dict): Map of parser name to the desired adapter.
+            Use 'match' to find adapters with the same names:
+        default_adapter:
+    Yields:
+        ParseResult(group, name, metadata)
+    """
+
+    # Load in default arguments
+    if global_context is None:
+        global_context = dict()
+    if adapter_context is None:
+        adapter_context = dict()
+    if parser_context is None:
+        parser_context = dict()
+
+    # Get the list of parsers
+    parsers = _get_parser_list(include_parsers, exclude_parsers)
+
+    # Make the adapter map
+    adapter_map = get_adapter_map(adapter_map=adapter_map, parsers=parsers)
+
+    for name in parsers:
+        # Get the parser and adapter
+        adapter_name = adapter_map.get(name, default_adapter)
+
+        my_parser_context, my_adapter_context = _get_parser_and_adapter_contexts(name, global_context,
+                                                                                 parser_context,
+                                                                                 adapter_context)
+
+        metadata = execute_parser(name, group, context=my_parser_context, adapter=adapter_name)
+
+        yield ParseResult(group, name, metadata)
