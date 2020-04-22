@@ -59,8 +59,12 @@ def get_available_adapters() -> dict:
     return _output_plugin_info(ExtensionManager(namespace='materialsio.adapter'))
 
 
-def get_adapter_map(adapter_map: str, parsers: list) -> dict:
-    """ Create reusable map of all available adapters.
+def _get_adapter_map(adapter_map: str, parsers: list) -> dict:
+    """ Helper function to generate adapter map (so different run_all_parsers functions can call it)
+    Args:
+        adapter_map (str): string argument for adapters.
+            - 'match' means just find adapters with same names as corresponding parsers.
+        parsers ([str]): list of parsers
     Returns:
         (dict) where keys are adapter names parser/adapter names and values are adapter objects.
         """
@@ -102,7 +106,7 @@ def _get_parser_and_adapter_contexts(name, global_context, parser_context, adapt
     return my_parser_context, my_adapter_context
 
 
-def _get_parser_list(include_parsers, exclude_parsers):
+def _get_parser_list(include_parsers: list, exclude_parsers: list) -> list:
     """ Helper function to get a list of parsers given lists of parsers to include/exclude
 
     Args:
@@ -221,7 +225,7 @@ def run_all_parsers_on_directory(directory: str, global_context=None,
     parsers = _get_parser_list(include_parsers, exclude_parsers)
 
     # Make the adapter map
-    adapter_map = get_adapter_map(adapter_map=adapter_map, parsers=parsers)
+    adapter_map = _get_adapter_map(adapter_map=adapter_map, parsers=parsers)
 
     # Get the list of known parsers
     for name in parsers:
@@ -295,7 +299,7 @@ def run_all_parsers_on_group(group,
     parsers = _get_parser_list(include_parsers, exclude_parsers)
 
     # Make the adapter map
-    adapter_map = get_adapter_map(adapter_map=adapter_map, parsers=parsers)
+    adapter_map = _get_adapter_map(adapter_map=adapter_map, parsers=parsers)
 
     for name in parsers:
         # Get the parser and adapter
