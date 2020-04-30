@@ -24,7 +24,7 @@ setup(
     name="materials_io",
     version=version,
     packages=find_packages(include=['materials_io*']) + ['materials_io.schemas'],
-    install_requires=['mdf_toolbox>=0.5.0', 'stevedore>=1.28.0', 'materials_io'],
+    install_requires=['mdf_toolbox>=0.5.3', 'stevedore>=1.28.0', 'materials_io'],
     extras_require=extra_reqs,
     include_package_data=True,
     package_data={'materials_io.schemas': ['*.json']},
