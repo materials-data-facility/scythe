@@ -14,7 +14,7 @@ install:
 - conda install -c pycalphad -c msys2 -c conda-forge pycalphad
 - pip install --upgrade pip
 - pip install -e .
-- pip install -r requirements.txt
+- pip install -r requirements.txt --src ~/pip_src/
 - pip install -r test_requirements.txt
 script:
 - flake8 . && travis_wait 50 py.test

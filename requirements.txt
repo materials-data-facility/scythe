@@ -1,7 +1,6 @@
 ase>=3.17
 dfttopif>=1.1.0
-hyperspy>=1.4.1
-mdf_toolbox>=0.4.2
+mdf_toolbox>=0.5.3
 pymatgen>=2018.11.30
 python-magic>=0.4.15
 sphinx_rtd_theme>=0.4.2
