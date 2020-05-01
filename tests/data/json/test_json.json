@@ -1,0 +1,14 @@
+{
+    "dict1": {
+        "field1": "value1",
+        "field2": 2
+    },
+    "dict2": {
+        "nested1": {
+            "field1": true,
+            "field3": "value3"
+        }
+    },
+    "compost": "CN25",
+    "na_val": "na"
+}

@@ -28,16 +28,21 @@ def parser():
 
 
 # TODO (lw): Our parser does not actually get anything from these files
+# Update 1/15/20 (JG): EM parser now parses image data (still no EM data though)
 def test_dm3(parser, dm3):
-    assert parser.parse([dm3]) == {}
+    assert parser.parse([dm3]) == {'image': {'shape': [2]}}
 
 
 def test_dm4(parser, dm4):
-    assert parser.parse([dm4]) == {}
+    assert parser.parse([dm4]) == {'image': {'shape': [2, 2]}}
 
 
 def test_eds(parser, eds):
-    assert parser.parse([eds]) == {'electron_microscopy': {'beam_energy': 200.0,
+    assert parser.parse([eds]) == {'electron_microscopy': {'acquisition_mode': 'STEM',
+                                                           'beam_energy': 200.0,
+                                                           'detector': 'EDS',
+                                                           'emission_current': 0.0,
                                                            'magnification': 320000.0,
-                                                           'image_mode': 'STEM',
-                                                           'detector': 'EDS'}}
+                                                           'microscope': 'FEI Titan',
+                                                           'operation_mode': 'SCANNING'},
+                                   'image': {'shape': [4096]}}

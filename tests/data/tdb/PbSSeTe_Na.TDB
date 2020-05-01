@@ -1,0 +1,298 @@
+$ Database file written 1900- 1-**
+$ From database: User data 1900.01.**
+ ELEMENT /-   ELECTRON_GAS              0.0000E+00  0.0000E+00  0.0000E+00!
+ ELEMENT VA   VACUUM                    0.0000E+00  0.0000E+00  0.0000E+00!
+ ELEMENT NA   BCC_A2                    2.2990E+01  6.4475E+03  5.1447E+01 !
+ ELEMENT PB   FCC_A1                    2.0720E+02  6.8785E+03  6.4785E+01!
+ ELEMENT S    ORTHORHOMBIC_S            3.2066E+01  0.0000E+00  0.0000E+00!
+ ELEMENT SE   HEXAGONAL_A8              7.8960E+01  5.5145E+03  4.1966E+01!
+ ELEMENT TE   HEXAGONAL_A8              1.2760E+02  6.1212E+03  4.9497E+01!
+
+ SPECIES PB2                         PB2!
+ SPECIES PBS                         PB1S1!
+ SPECIES PBSE                        PB1SE1!
+ SPECIES PBTE                        PB1TE1!
+ SPECIES TE+2                        TE1/+2!
+ SPECIES TE2                         TE2!
+ SPECIES TE3                         TE3!
+ SPECIES TE4                         TE4!
+ SPECIES TE5                         TE5!
+ SPECIES TE6                         TE6!
+ SPECIES TE7                         TE7!
+ SPECIES VA+1                        VA1/+1!
+ SPECIES VA+2                        VA1/+2!
+ SPECIES VA-1                        VA1/-1!
+ SPECIES VA-2                        VA1/-2!
+ SPECIES NA2TE                       NA2TE1!
+ SPECIES NATE3                       NA1TE3!
+
+
+ FUNCTION GHSERPB   298.15 -7650.085+101.700244*T-24.5242231*T*LN(T)
+     -.00365895*T**2-2.4395E-07*T**3; 600.61 Y
+      -10531.095+154.243182*T-32.4913959*T*LN(T)+.00154613*T**2
+     +8.05448E+25*T**(-9); 1200 Y
+      +4157.616+53.139072*T-18.9640637*T*LN(T)-.002882943*T**2
+     +9.8144E-08*T**3-2696755*T**(-1)+8.05448E+25*T**(-9); 2100 N !
+ FUNCTION GLIQPB    298.15 +GHSERPB#+4672.124-7.750683*T-6.019E-19*T**7;
+     600.61 Y
+      -5677.958+146.176046*T-32.4913959*T*LN(T)+.00154613*T**2; 1200 Y
+      +9010.753+45.071937*T-18.9640637*T*LN(T)-.002882943*T**2
+     +9.8144E-08*T**3-2696755*T**(-1); 2100 N !
+ FUNCTION GLIQTE    298.15 -17554.731+685.877639*T-126.318*T*LN(T)
+     +.2219435*T**2-9.42075E-05*T**3+827930*T**(-1); 626.49 Y
+      -3165763.48+46756.357*T-7196.41*T*LN(T)+7.09775*T**2-.00130692833*T**3
+     +2.58051E+08*T**(-1); 722.66 Y
+      +180326.959-1500.57909*T+202.743*T*LN(T)-.142016*T**2
+     +1.6129733E-05*T**3-24238450*T**(-1); 1150 Y
+      +6328.687+148.708299*T-32.5596*T*LN(T); 1600 N !
+ FUNCTION GBCCPB    298.15 +GHSERPB#+2400-1.1*T; 2100 N !
+ FUNCTION GHCPPB    298.15 +GHSERPB#+300+T; 2100 N !
+ FUNCTION GHSERTE   298.15 -10544.679+183.372894*T-35.6687*T*LN(T)
+     +.01583435*T**2-5.240417E-06*T**3+155015*T**(-1); 722.66 Y
+      +9160.595-129.265373*T+13.004*T*LN(T)-.0362361*T**2+5.006367E-06*T**3
+     -1286810*T**(-1); 1150 Y
+      -12781.349+174.901226*T-32.5596*T*LN(T); 1600 N !
+ FUNCTION GHSERS    298.15 -5198.294+53.913855*T-10.726*T*LN(T)
+     -.0273801*T**2+8.179537E-06*T**3; 368.30 Y
+      -6475.706+94.182332*T-17.8693298*T*LN(T)-.010936877*T**2
+     +1.406467E-06*T**3+36871*T**(-1); 1300 Y
+      -12485.546+188.304687*T-32*T*LN(T); 1301 N !
+ FUNCTION GLIQS     298.15 -4196.575+85.63027*T-17.413*T*LN(T)
+     -.00993935*T**2-7.0062E-08*T**3+1250*T**(-1); 335 Y
+      +1790361.98-44195.4514*T+7511.61943*T*LN(T)-13.9855175*T**2
+     +.0048387386*T**3-79880891*T**(-1); 388.36 Y
+      -876313.954+23366.873*T-4028.756*T*LN(T)+7.954595*T**2
+     -.00290851333*T**3+33980035*T**(-1); 432.25 Y
+      +454088.687-7814.67023*T+1237.001*T*LN(T)-1.5607295*T**2
+     +3.59883667E-04*T**3-31765395*T**(-1); 500 Y
+      +18554.561-144.895285*T+16.535*T*LN(T)-.0454119*T**2+8.327402E-06*T**3
+     -2705030*T**(-1); 700 Y
+      +21243.126-113.298877*T+9.944*T*LN(T)-.0288384*T**2+3.791365E-06*T**3
+     -3507570*T**(-1); 900 Y
+      +16117.849-32.79523*T-2.425*T*LN(T)-.01712545*T**2+1.84974E-06*T**3
+     -3215170*T**(-1); 1300 Y
+      -6461.814+175.590536*T-32*T*LN(T); 1301 N !
+ FUNCTION GBCCS     298.15 +105000+GHSERS#; 1301 N !
+ FUNCTION GFCCS     298.15 +105000+GHSERS#; 1301 N !
+ FUNCTION GHSERSE   298.15 -9376.371+174.205877*T-33.6527*T*LN(T)
+     +.02424314*T**2-1.5318461E-05*T**3+102249*T**(-1); 494 Y
+      -37546.134+507.111538*T-81.2006585*T*LN(T)+.037144892*T**2
+     -5.611026E-06*T**3+2614263*T**(-1); 800 Y
+      -12193.47+197.770166*T-35.1456*T*LN(T); 1000 N !
+ FUNCTION GLIQSE    298.15 +50533.347-1178.28824*T+194.107439*T*LN(T)
+     -.390268991*T**2+1.19219297E-04*T**3-2224398*T**(-1); 494 Y
+      -5228.304+183.72559*T-35.1456*T*LN(T); 1000 N !
+ FUNCTION GPBS      298.15 -98000+8.6*T+GHSERS#+GHSERPB#; 6000 N !
+ FUNCTION GPBTE     298.15 -128362.29+432.84959*T-52.848901*T*LN(T)+GHSERPB#
+     +GHSERTE#; 6000 N !
+ FUNCTION GPBSE     298.15 -99783.25+22.58*T+GHSERPB#+GHSERSE#; 6000 N !
+ FUNCTION GVA       298.15 +2.3*R#*T; 6000 N !
+ FUNCTION UN_ASS    298.15 +0.0; 300 N !
+
+$ Na
+$ -------------------------------------
+ FUNCTION GHSERNA  200.00
+ -11989.434+260.548732*T-51.0393608*T*LN(T)+72.306633E-3*T**2
+ -43.638283E-6*T**3+132154*T**(-1);   370.87 Y
+ -11009.884+199.619999*T-38.1198801*T*LN(T)+9.745854E-3*T**2-1.70664E-6*T**3
+ +34342*T**(-1)+165.071E21*T**(-9);  2300.00 N !
+
+ FUNCTION GLIQNA 200 2581.02-6.95218*T-276.132E-20*T**7+GHSERNA; 370.87 Y
+ -8400.44+192.587343*T-38.1198801*T*LN(T)+9.745854E-3*T**2-1.70664E-6*T**3
+ +34342*T**(-1);  2300.00 N !
+
+ FUNCTION GHCPNA 200 -104+2*T+GHSERNA; 2300 N !
+
+ FUNCTION GFCCNA 200 -50+1.3*T+GHSERNA; 2300 N !
+$ -------------------------------------
+
+ TYPE_DEFINITION % SEQ *!
+ DEFINE_SYSTEM_DEFAULT ELEMENT 2 !
+ DEFAULT_COMMAND DEF_SYS_ELEMENT VA /- !
+
+
+ PHASE LIQUID:L %  1  1.0  !
+    CONSTITUENT LIQUID:L :PB,PBS,PBSE,PBTE,S,SE,TE,NA,NA2TE,NATE3 :  !
+
+   PARAMETER G(LIQUID,PB;0)               298.15 +GLIQPB#; 2100 N REF0 !
+   PARAMETER G(LIQUID,PBS;0)              298.15 +GLIQPB#+GLIQS#-60000-6*T;
+  3000 N REF0 !
+   PARAMETER G(LIQUID,PBSE;0)             298.15 +GLIQPB#+GLIQSE#-91032.45
+  +29.88*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,PBTE;0)             298.15 +GLIQPB#+GLIQTE#-60870.273
+  +18.088152*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,S;0)                298.15 +GLIQS#; 1600 N REF0 !
+   PARAMETER G(LIQUID,SE;0)               298.15 +GLIQSE#; 1600 N REF0 !
+   PARAMETER G(LIQUID,TE;0)               298.15 +GLIQTE#; 1600 N REF0 !
+   PARAMETER G(LIQUID,PB,PBS;0)           298.15 +21000; 3000 N REF0 !
+   PARAMETER G(LIQUID,PB,PBS;1)           298.15 -2*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,PB,PBTE;0)          298.15 +20634.752-9.7324602*T;
+  3000 N REF0 !
+   PARAMETER G(LIQUID,PB,PBTE;1)          298.15 +7.858817; 3000 N REF0 !
+   PARAMETER G(LIQUID,PB,PBSE;0)          298.15 +19500.32; 3000 N REF0 !
+   PARAMETER G(LIQUID,PB,PBSE;1)          298.15 -1003.26+.58*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,PB,PBSE;2)          298.15 +8352.21-5.64*T; 3000 N
+  REF0 !
+   PARAMETER G(LIQUID,PBS,S;0)            298.15 +4500; 3000 N REF0 !
+   PARAMETER G(LIQUID,PBS,S;1)            298.15 -11000+2*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,PBS,S;2)            298.15 +8000+7*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,PBS,PBTE;0)         298.15 -7046.79603; 6000 N REF0 !
+   PARAMETER G(LIQUID,PBS,PBTE;1)         298.15 -12692.7833; 6000 N REF0 !
+   PARAMETER G(LIQUID,PBS,PBSE;0)         298.15 -17214.314+13.5254896*T;
+  6000 N REF0 !
+   PARAMETER G(LIQUID,PBSE,SE;0)          298.15 +17503.24-7.95*T; 3000 N
+  REF0 !
+   PARAMETER G(LIQUID,PBSE,SE;1)          298.15 -4201.24+1.42*T; 3000 N
+  REF0 !
+   PARAMETER G(LIQUID,PBSE,SE;2)          298.15 +16498.24-3.61*T; 3000 N
+  REF0 !
+   PARAMETER G(LIQUID,PBSE,PBTE;0)        298.15 +9090.74243; 6000 N REF0 !
+   PARAMETER G(LIQUID,PBTE,TE;0)          298.15 -4167.4859-2.660869*T; 3000
+  N REF0 !
+   PARAMETER G(LIQUID,PBTE,TE;1)          298.15 +3500.9393; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA;0)               298.15 +GLIQNA#; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA2TE;0)            298.15 +2*GLIQNA#+GLIQTE#-320000
+  +52*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,NATE3;0)            298.15 +GLIQNA#+3*GLIQTE#-185000
+  +49*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA,NA2TE;0)         298.15 +14000+4*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA,NA2TE;1)         298.15 +16000-12*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA,NA2TE;2)         298.15 +4000; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA2TE,TE;0)         298.15 -40000-4*T; 3000 N REF0 !
+   PARAMETER G(LIQUID,NA2TE,TE;1)         298.15 +2000+4*T; 3000 N REF0 !
+
+
+ TYPE_DEFINITION & GES A_P_D FCC_A1 MAGNETIC  -3.0    2.80000E-01 !
+ PHASE FCC_A1  %&  2 1   1 !
+    CONSTITUENT FCC_A1  :PB : VA :  !
+
+   PARAMETER G(FCC_A1,PB:VA;0)            298.15 +GHSERPB#; 2100 N REF0 !
+
+
+ PHASE HALITE  %  2 1   1 !
+    CONSTITUENT HALITE  :PB,NA,VA : S,SE,TE,VA :  !
+
+   PARAMETER G(HALITE,PB:S;0)             298.15 +GPBS#; 6000 N REF0 !
+   PARAMETER G(HALITE,VA:S;0)             298.15 +GHSERS#+GVA#; 6000 N REF0 !
+   PARAMETER G(HALITE,PB:SE;0)            298.15 +GPBSE#; 6000 N REF0 !
+   PARAMETER G(HALITE,VA:SE;0)            298.15 +GHSERSE#+GVA#; 6000 N REF0 !
+   PARAMETER G(HALITE,PB:TE;0)            298.15 +GPBTE#; 6000 N REF0 !
+   PARAMETER G(HALITE,VA:TE;0)            298.15 +GHSERTE#+GVA#; 6000 N REF0 !
+   PARAMETER G(HALITE,PB:VA;0)            298.15 +GHSERPB#+GVA#; 6000 N REF0 !
+   PARAMETER G(HALITE,VA:VA;0)            298.15 +2*GVA#; 6000 N REF0 !
+   PARAMETER G(HALITE,PB,VA:S;0)          298.15 +38570.1008+4.42495068*T;
+  6000 N REF0 !
+   PARAMETER G(HALITE,PB:S,TE;0)          298.15 +38232.7229-20.9138489*T;
+  3600 N REF0 !
+   PARAMETER G(HALITE,PB:S,TE;1)          298.15 +4372.80543; 3600 N REF0 !
+   PARAMETER G(HALITE,PB:S,SE;0)          298.15 +3206.19881; 3600 N REF0 !
+   PARAMETER G(HALITE,PB:S,SE;1)          298.15 +590.16994; 6000 N REF0 !
+   PARAMETER G(HALITE,PB:S,SE,TE;0)       298.15 -4.5249796E+03; 3000 N REF0 !
+   PARAMETER G(HALITE,PB:S,SE,TE;1)       298.15 3.0769838E+04; 3000 N REF0 !
+   PARAMETER G(HALITE,PB:S,SE,TE;2)       298.15 -2.3660755E+04; 3000 N REF0 !
+   PARAMETER G(HALITE,PB:S,VA;0)          298.15 +38944.7237+4.62924619*T;
+  6000 N REF0 !
+   PARAMETER G(HALITE,PB,VA:SE;0)         298.15 +37953.5572; 6000 N REF0 !
+   PARAMETER G(HALITE,PB:SE,TE;0)         298.15 +10250.9638; 3600 N REF0 !
+   PARAMETER G(HALITE,PB:SE,TE;1)         298.15 +1348.60571; 3600 N REF0 !
+   PARAMETER G(HALITE,PB:SE,VA;0)         298.15 +45585.0811; 6000 N REF0 !
+   PARAMETER G(HALITE,PB,VA:TE;0)         298.15 +38070.478+2.39964988*T;
+  6000 N REF0 !
+   PARAMETER G(HALITE,PB:TE,VA;0)         298.15 +72780.5624-10.7972522*T;
+  6000 N REF0 !
+   PARAMETER G(HALITE,NA,PB:TE;0)         298.15 -8.2090710E+04
++3.1004837E+01*T; 6000 N REF0 !
+   PARAMETER G(HALITE,NA:VA;0)            298.15 +GHSERNA#+GVA#; 6000 N REF0 !
+   PARAMETER G(HALITE,NA:TE;0)            298.15 +GHSERNA#+GHSERTE#
+  -74873.8344; 6000 N REF0 !
+   PARAMETER G(HALITE,NA,PB:SE;0)         298.15 -7.84156946E+04; 6000 N REF0 !
+   PARAMETER G(HALITE,NA,PB:S;0)          298.15 -1.3192696E+05; 6000 N REF0 !
+   PARAMETER G(HALITE,NA:S;0)             298.15 -61729.2889+GHSERNA#
+  +GHSERS#; 6000 N REF0 !
+   PARAMETER G(HALITE,NA:SE;0)            298.15 -82803.3063+GHSERNA#
+  +GHSERSE#; 6000 N REF0 !
+
+ PHASE HEXAGONAL_A8  %  1  1.0  !
+    CONSTITUENT HEXAGONAL_A8  :SE,TE :  !
+
+   PARAMETER G(HEXAGONAL_A8,SE;0)         298.15 +GHSERSE#; 1600 N REF0 !
+   PARAMETER G(HEXAGONAL_A8,TE;0)         298.15 +GHSERTE#; 1600 N REF0 !
+
+
+ PHASE ORTHORHOMBIC_S  %  1  1.0  !
+    CONSTITUENT ORTHORHOMBIC_S  :S :  !
+
+   PARAMETER G(ORTHORHOMBIC_S,S;0)        298.15 +GHSERS#; 1301 N REF0 !
+
+ TYPE_DEFINITION & GES A_P_D BCC_A2 MAGNETIC  -1.0    4.00000E-01 !
+ PHASE BCC_A2  %&  2 1   3 !
+    CONSTITUENT BCC_A2  :NA%,PB : VA% :  !
+
+   PARAMETER G(BCC_A2,NA:VA;0)            298.15 +GHSERNA#; 6000 N REF0 !
+   PARAMETER G(BCC_A2,PB:VA;0)            298.15 +GBCCPB#; 2100 N REF0 !
+
+ PHASE NA2TE  %  2 2   1 !
+    CONSTITUENT NA2TE  :NA : TE :  !
+
+   PARAMETER G(NA2TE,NA:TE;0)             298.15 +2*GHSERNA#+GHSERTE#-330000
+  +39.5*T; 6000 N REF0 !
+
+
+ PHASE NATE  %  2 1   1 !
+    CONSTITUENT NATE  :NA : TE :  !
+
+   PARAMETER G(NATE,NA:TE;0)              298.15 +GHSERNA#+GHSERTE#-175000
+  +25.6*T; 6000 N REF0 !
+
+
+ PHASE NATE3  %  2 1   3 !
+    CONSTITUENT NATE3  :NA : TE :  !
+
+   PARAMETER G(NATE3,NA:TE;0)             298.15 +GHSERNA#+3*GHSERTE#-180000
+  +7.9*T; 6000 N REF0 !
+
+ PHASE NA2SE  %  2 2   1 !
+    CONSTITUENT NA2SE  :NA : SE :  !
+
+   PARAMETER G(NA2SE,NA:SE;0)             298.15 -332011.423+2*GHSERNA#
+  +GHSERSE#; 6000 N REF0 !
+
+
+ PHASE NASE  %  2 1   1 !
+    CONSTITUENT NASE  :NA : SE :  !
+
+   PARAMETER G(NASE,NA:SE;0)              298.15 -171553.708+GHSERSE#
+  +GHSERNA#; 6000 N REF0 !
+
+
+ PHASE NASE2  %  2 1   2 !
+    CONSTITUENT NASE2  :NA : SE :  !
+
+   PARAMETER G(NASE2,NA:SE;0)             298.15 -177728.87+2*GHSERSE#
+  +GHSERNA#; 6000 N REF0 !
+
+ PHASE NA2S  %  2 2   1 !
+    CONSTITUENT NA2S  :NA : S :  !
+
+   PARAMETER G(NA2S,NA:S;0)               298.15 -360957.493+2*GHSERNA#
+  +GHSERS#; 6000 N REF0 !
+
+
+ PHASE NAS  %  2 1   1 !
+    CONSTITUENT NAS  :NA : S :  !
+
+   PARAMETER G(NAS,NA:S;0)                298.15 -199727.883+GHSERS#
+  +GHSERNA#; 6000 N REF0 !
+
+
+ PHASE NAS2  %  2 1   2 !
+    CONSTITUENT NAS2  :NA : S :  !
+
+   PARAMETER G(NAS2,NA:S;0)               298.15 -235910.47+2*GHSERS#
+  +GHSERNA#; 6000 N REF0 !
+
+
+ LIST_OF_REFERENCES
+ NUMBER  SOURCE
+  !
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           

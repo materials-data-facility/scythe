@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root><dict1><field1>value1</field1><field2>2</field2></dict1><dict2><nested1><field1>baz</field1><field3>value3</field3></nested1></dict2><compost>CN25</compost><na_val>na</na_val></root>

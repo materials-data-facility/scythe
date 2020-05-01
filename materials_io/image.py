@@ -13,7 +13,12 @@ class ImageParser(BaseSingleFileParser):
                 "width": im.width,
                 "height": im.height,
                 "format": im.format,
-                "megapixels": (im.width * im.height) / 1000000
+                "megapixels": (im.width * im.height) / 1000000,
+                "shape": [
+                    im.height,
+                    im.width,
+                    len(im.getbands())
+                ]
             }
         }
 
@@ -21,4 +26,4 @@ class ImageParser(BaseSingleFileParser):
         return ['Jonathon Gaff']
 
     def version(self):
-        return '0.0.1'
+        return '0.0.2'

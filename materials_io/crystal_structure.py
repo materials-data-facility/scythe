@@ -1,6 +1,5 @@
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.core import Structure
-from mdf_toolbox import dict_merge
 from ase.io import read
 
 from materials_io.base import BaseSingleFileParser
@@ -10,7 +9,6 @@ class CrystalStructureParser(BaseSingleFileParser):
     """Parse information about a crystal structure"""
 
     def _parse_file(self, path, context=None):
-        record = {}
         material = {}
         crystal_structure = {}
         # Attempt to read the file
@@ -41,9 +39,11 @@ class CrystalStructureParser(BaseSingleFileParser):
         crystal_structure["volume"] = float(pmg_s.volume)
         crystal_structure["stoichiometry"] = pmg_s.composition.anonymized_formula
 
-        # Add to record
-        record = dict_merge(record, {"material": material,
-                                     "crystal_structure": crystal_structure})
+        record = {}
+        if material:
+            record["material"] = material
+        if crystal_structure:
+            record["crystal_structure"] = crystal_structure
         return record
 
     def implementors(self):
