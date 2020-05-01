@@ -35,6 +35,7 @@ class TDBExtractor(BaseSingleFileParser):
             record["material"] = material
         if calphad:
             record["calphad"] = calphad
+        return record
 
     def implementors(self):
         return ['Jonathon Gaff']
