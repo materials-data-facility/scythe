@@ -35,7 +35,7 @@ def test_tdb(extractor, test_files, fail_file):
     assert eqi(output1["calphad"]["phases"], ['LIQUID', 'BCC_A2', 'CBCC_A12', 'CUB_A13',
                                               'DIAMOND_A4', 'FCC_A1', 'HCP_A3', 'HCP_ZN'])
     output2 = extractor.parse(test_files[2])
-    assert eqi(output1["material"]["composition"], "TeVaPb", string_insensitive=True)
+    assert eqi(output2["material"]["composition"], "TeVaPb", string_insensitive=True)
     assert eqi(output2["calphad"]["phases"], ['LIQUID', 'PBTE', 'HEXAGONAL_A8', 'RHOMBOHEDRAL_A7'])
 
     # Test failure modes
