@@ -1,7 +1,7 @@
 import os
 import re
 
-from mdf_toolbox import flatten_dict
+from mdf_toolbox import flatten_json
 
 from materials_io.base import BaseSingleFileParser
 
