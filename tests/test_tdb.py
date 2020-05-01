@@ -1,5 +1,6 @@
 import os
 
+from mdf_toolbox import insensitive_comparison as eqi
 import pytest
 
 from materials_io.tdb import TDBExtractor
@@ -25,17 +26,17 @@ def extractor():
 def test_tdb(extractor, test_files, fail_file):
     # Run test extractions
     output0 = extractor.parse(test_files[0])
-    assert output0["material"]["composition"] == "SeVaTeNaSPb"
-    assert output0["calphad"]["phases"] == ['LIQUID', 'FCC_A1', 'HALITE', 'HEXAGONAL_A8',
-                                            'ORTHORHOMBIC_S', 'BCC_A2', 'NA2TE', 'NATE', 'NATE3',
-                                            'NA2SE', 'NASE', 'NASE2', 'NA2S', 'NAS', 'NAS2']
+    assert eqi(output0["material"]["composition"], "VaPbSNaTeSe", string_insensitive=True)
+    assert eqi(output0["calphad"]["phases"], ['LIQUID', 'FCC_A1', 'HALITE', 'HEXAGONAL_A8',
+                                              'ORTHORHOMBIC_S', 'BCC_A2', 'NA2TE', 'NATE', 'NATE3',
+                                              'NA2SE', 'NASE', 'NASE2', 'NA2S', 'NAS', 'NAS2'])
     output1 = extractor.parse(test_files[1])
-    assert output1["material"]["composition"] == "SiVaAu"
-    assert output1["calphad"]["phases"] == ['LIQUID', 'BCC_A2', 'CBCC_A12', 'CUB_A13',
-                                            'DIAMOND_A4', 'FCC_A1', 'HCP_A3', 'HCP_ZN']
+    assert eqi(output1["material"]["composition"], "SiVaAu", string_insensitive=True)
+    assert eqi(output1["calphad"]["phases"], ['LIQUID', 'BCC_A2', 'CBCC_A12', 'CUB_A13',
+                                              'DIAMOND_A4', 'FCC_A1', 'HCP_A3', 'HCP_ZN'])
     output2 = extractor.parse(test_files[2])
-    assert output1["material"]["composition"] == "TeVaPb"
-    assert output2["calphad"]["phases"] == ['LIQUID', 'PBTE', 'HEXAGONAL_A8', 'RHOMBOHEDRAL_A7']
+    assert eqi(output1["material"]["composition"], "TeVaPb", string_insensitive=True)
+    assert eqi(output2["calphad"]["phases"], ['LIQUID', 'PBTE', 'HEXAGONAL_A8', 'RHOMBOHEDRAL_A7'])
 
     # Test failure modes
     with pytest.raises(Exception):
