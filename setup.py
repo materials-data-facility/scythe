@@ -32,7 +32,7 @@ setup(
         'materialsio.parser': [
             'ase = materials_io.ase:AseParser',
             'crystal = materials_io.crystal_structure:CrystalStructureParser',
-            'csv = materials_io.csv:CSVParser'
+            'csv = materials_io.csv:CSVParser',
             'dft = materials_io.dft:DFTParser',
             'em = materials_io.electron_microscopy:ElectronMicroscopyParser',
             'filename = materials_io.filename:FilenameExtractor',
