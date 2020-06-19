@@ -60,8 +60,11 @@ def get_available_adapters() -> dict:
 
 
 def _get_adapter_map(adapter_map: str, parsers: list) -> dict:
-    """ Helper function to generate adapter map
+    """ Helper function to generate 'adapter map'
             (so different run_all_parsers functions can call it)
+
+    Adapter map is a list of parsers and names of the appropriate adapters to use to format their output.
+
     Args:
         adapter_map (str): string argument for adapters.
             - 'match' means just find adapters with same names as corresponding parsers.
