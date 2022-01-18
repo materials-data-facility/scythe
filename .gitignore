@@ -16,3 +16,4 @@ src/*
 *.pytest_cache*
 .vscode
 .venv
+.idea
