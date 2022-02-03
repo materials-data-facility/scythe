@@ -1,4 +1,5 @@
-from typing import Dict, Union, Tuple, Any, Callable, Optional
+from typing import Dict, Union, Tuple, Any, Callable, Optional, List
+from typing_extensions import TypedDict
 
 
 def get_nested_dict_value_by_path(nest_dict: Dict,
@@ -44,7 +45,7 @@ def get_nested_dict_value_by_path(nest_dict: Dict,
 
 
 def set_nested_dict_value(nest_dict: Dict, path: Tuple,
-                          value: Any, override: bool = False):
+                          value: Any, override: Optional[bool] = False,):
     """
     Set a value within a nested dictionary structure by traversing into
     the dictionary as deep as that path found and changing it to ``value``.
@@ -77,14 +78,60 @@ def set_nested_dict_value(nest_dict: Dict, path: Tuple,
 
 def set_nested_dict_value_with_units(nest_dict: Dict, path: Tuple,
                                      value: Any, units: Optional[str] = None,
-                                     override: bool = False):
+                                     override: bool = False,
+                                     fn: Optional[Callable] = None):
     """
     Same as :func:`~materials_io.utils.set_nested_dict_value`, but sets the
     value in the format of a dictionary with keys ``'value'`` and ``'units'``
-    according to the specified units.
+    according to the specified units. If ``fn`` is supplied, it will be
+    applied to the value prior to setting it.
     """
     if value is not None:
+        if fn is not None:
+            value = fn(value)
         to_set = {'value': value}
         if units is not None:
             to_set['units'] = units
         set_nested_dict_value(nest_dict, path, to_set, override)
+
+
+MappingElements = TypedDict('MappingElements',
+                            {'source_dict': Dict,
+                             'source_path': Union[str, Tuple[str, ...]],
+                             'dest_dict': Dict,
+                             'dest_path': Union[str, Tuple[str, ...]],
+                             'cast_fn': Optional[Callable],
+                             'units': Optional[Union[None, str]],
+                             'conv_fn': Optional[Union[None, Callable]]})
+
+
+def map_dict_values(mapping: List[MappingElements]):
+    """
+    Helper method to apply map values from one dictionary into another.
+    Inspired by the implementation in :func:`hyperspy.io.dict2signal`
+
+    For each mapping we need a source dict and destination dict, then for
+    eaqch term, the source path, the destination path, the cast function,
+    the units to set, and potentially a conversion function
+
+    So, ``mapping`` should be a list of dicts:
+    [
+        {'source_path': ('source', 'path',),
+         'dest_path': ('dest', 'path',),
+         'cast_fn': float,
+         'units': str,
+         'conv_fn': lambda x: x}
+    ]
+    """
+    for m in mapping:
+        m.setdefault('cast_fn', None)
+        m.setdefault('units', None)
+        m.setdefault('conv_fn', None)
+
+        value = get_nested_dict_value_by_path(
+            nest_dict=m['source_dict'],
+            path=m['source_path'],
+            cast=m['cast_fn'])
+        set_nested_dict_value_with_units(
+            nest_dict=m['dest_dict'], path=m['dest_path'], value=value,
+            units=m['units'], fn=m['conv_fn'])

@@ -2,8 +2,10 @@ from hyperspy.io import load as hs_load
 
 from materials_io.base import BaseSingleFileParser
 from materials_io.utils import get_nested_dict_value_by_path as get_val
-from materials_io.utils import set_nested_dict_value as set_val
+from materials_io.utils import map_dict_values, MappingElements
 from materials_io.utils import set_nested_dict_value_with_units as set_val_units
+
+from typing import Tuple, Dict, List
 
 
 class ElectronMicroscopyParser(BaseSingleFileParser):
@@ -16,11 +18,11 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       {
         "value": numeric/str value,
         "unit": unit name from http://qudt.org/vocab/unit/ (see 
-        http://www.qudt.org/doc/DOC_VOCAB-UNITS.html for details)
+                http://www.qudt.org/doc/DOC_VOCAB-UNITS.html for details)
       }
     
     For base EM, return the following under "General_EM"
-      - accelerating_voltage
+      - X accelerating_voltage
       - X acquisition_mode
       - acquisition_software_name
       - acquisition_software_version
@@ -32,35 +34,44 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - emission_current
       - X exposure_time (for non-STEM modes)
       - X elements (list of str - as detected from spectroscopy signal)
-      - magnification_actual
+      - X magnification_actual
       - X magnification_indicated
       - X microscope_name
       - X probe_area
       - X stage_position (dict with X, Y, Z, R, etc. as required)
 
-    For all, return the following under "General" (if known, from HyperSpy, following
-    their metadata defintions: http://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html)
+    For all, return the following under "General" (if known, from HyperSpy,
+      following their metadata definitions:
+      http://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure
+      .html)
      - authors : str 
-       - The authors of the data, in Latex format: Surname1, Name1 and Surname2, Name2, etc.
-     - date : str - The acquisition or creation date in ISO 8601 date format, e.g. ‘2018-01-28’
+       - The authors of the data, in Latex format: Surname1, Name1 and
+         Surname2, Name2, etc.
+     - date : str
+       - The acquisition or creation date in ISO 8601 date format,
+         e.g. ‘2018-01-28’
      - doi : str
-       - Digital object identifier of the data, e. g. doi:10.5281/zenodo.58841
+       - Digital object identifier of the data, e.g. doi:10.5281/zenodo.58841
      - original_filename : str
-       - If the signal was loaded from a file this key stores the name of the original file
+       - If the signal was loaded from a file this key stores the name of the
+         original file
      - notes : str
        - Notes about the data
      - time : str
-       - The acquisition or creation time in ISO 8601 time format, e.g. ‘13:29:10’
+       - The acquisition or creation time in ISO 8601 time format,
+         e.g. ‘13:29:10’
      - time_zone : str
-       - The time zone in either tzdata form, e.g. “UTC”, “Europe/London”, etc., or 
-         a time offset, e.g. “+03:00” or “-05:00”
+       - The time zone in either tzdata form, e.g. “UTC”, “America/New_York”,
+         etc., or a time offset, e.g. “+03:00” or “-05:00”
      - title : str
        - A title for the signal, e.g. “Sample overview”
 
     For TEM:
       - acquisition_device
-      - operation_mode
-      - spherical_aberration_coefficient
+      - X illumination_mode
+      - X imaging_mode
+      - X operation_mode
+      - X spherical_aberration_coefficient
       - defocus
       - spot_size
       - X camera_length
@@ -100,7 +111,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         the original file
     """
 
-    def _parse_file(self, file_path, context=None):
+    def _parse_file(self, file_path: str, context: Dict = None) -> Dict:
         self.em = {}
         self.image = {}
         self.inst_data = None
@@ -119,12 +130,22 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         for s in ['General', 'General_EM', 'TEM', 'SEM', 'EDS', 'EELS']:
             self.em[s] = {}
 
+        # call each individual processor
         self._process_hs_data()
+        self._dm3_microscope_info()
+        self._dm3_session_info()
+        self._dm3_meta_data_info()
+        self._dm3_eels_info()
+        self._dm3_eds_info()
+        self._dm3_spectrum_image_info()
+        self._tia_info()  # ...and so on
+        self._tiff_info()  # ...and so on
 
         # Non-HS data (not pulled into standard HS metadata)
         # Pull out common dicts
         try:
-            micro_info = self.raw_meta["ImageList"]["TagGroup0"]["ImageTags"]["Microscope Info"]
+            micro_info = self.raw_meta["ImageList"]["TagGroup0"]["ImageTags"][
+                "Microscope Info"]
         except Exception:
             micro_info = {}
         try:
@@ -193,7 +214,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
         return record
 
-    def _process_hs_data(self):
+    def _process_hs_data(self) -> None:
         # Image mode is SEM, TEM, or STEM
         # STEM is a subset of TEM
         if "SEM" in self.meta.get('Acquisition_instrument', {}).keys():
@@ -207,53 +228,91 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self.inst_data = get_val(self.meta, ('Acquisition_instrument',
                                              self.inst))
         if self.inst_data is not None:
-            set_val_units(self.em, ('General_EM', 'acquisition_mode'),
-                          get_val(self.inst_data, 'acquisition_mode', str))
-            set_val_units(self.em, ('General_EM', 'beam_current'),
-                          get_val(self.inst_data, 'beam_current', float),
-                          'NanoA')
-            set_val_units(self.em, ('General_EM', 'beam_energy', ),
-                          get_val(self.inst_data, 'beam_energy', float),
-                          'KiloEV')
-            set_val_units(self.em, ('General_EM', 'convergence_angle'),
-                          get_val(self.inst_data, 'collection_angle', float), 
-                          'MilliRAD')
-            set_val_units(self.em, ('General_EM', 'magnification_indicated',),
-                          get_val(self.inst_data, 'magnification', float),
-                          'UNITLESS')
-            set_val_units(self.em, ('General_EM', 'microscope_name',),
-                          get_val(self.inst_data, 'microscope', str))
-            set_val_units(self.em, ('General_EM', 'probe_area',),
-                          get_val(self.inst_data, 'probe_area', float),
-                          'NanoM2')
+            mapping = [
+                MappingElements(
+                    source_dict=self.inst_data, source_path='acquisition_mode',
+                    dest_dict=self.em, dest_path=('General_EM',
+                                                  'acquisition_mode'),
+                    cast_fn=str, units=None, conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='beam_current',
+                    dest_dict=self.em, dest_path=('General_EM', 'beam_current'),
+                    cast_fn=float, units='NanoA', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='beam_energy',
+                    dest_dict=self.em, dest_path=('General_EM', 'beam_energy'),
+                    cast_fn=float, units='KiloEV', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='convergence_angle',
+                    dest_dict=self.em, dest_path=('General_EM',
+                                                  'convergence_angle'),
+                    cast_fn=float, units='MilliRAD', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='magnification',
+                    dest_dict=self.em, dest_path=('General_EM',
+                                                  'magnification_indicated'),
+                    cast_fn=float, units='UNITLESS', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='microscope',
+                    dest_dict=self.em, dest_path=('General_EM',
+                                                  'microscope_name'),
+                    cast_fn=str, units=None, conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='probe_area',
+                    dest_dict=self.em, dest_path=('General_EM', 'probe_area'),
+                    cast_fn=float, units='NanoM2', conv_fn=None),
 
-            # stage position
-            set_val_units(self.em, ('General_EM', 'stage_position', 'rotation'),
-                          get_val(self.inst_data, ('Stage', 'rotation'),
-                                  float), 'DEG')
-            set_val_units(self.em, ('General_EM', 'stage_position', 'tilt_alpha'),
-                          get_val(self.inst_data, ('Stage', 'tilt_alpha'),
-                                  float), 'DEG')
-            set_val_units(self.em, ('General_EM', 'stage_position', 'tilt_beta'),
-                          get_val(self.inst_data, ('Stage', 'tilt_beta'),
-                                  float), 'DEG')
-            set_val_units(self.em, ('General_EM', 'stage_position', 'x'),
-                          get_val(self.inst_data, ('Stage', 'x'), float), 
-                          'MilliM')
-            set_val_units(self.em, ('General_EM', 'stage_position', 'y'),
-                          get_val(self.inst_data, ('Stage', 'y'), float),
-                          'MilliM')
-            set_val_units(self.em, ('General_EM', 'stage_position', 'z'),
-                          get_val(self.inst_data, ('Stage', 'z'), float),
-                          'MilliM')
+                # stage positions
+                MappingElements(
+                    source_dict=self.inst_data,
+                    source_path=('Stage', 'rotation'),
+                    dest_dict=self.em,
+                    dest_path=('General_EM', 'stage_position', 'rotation'),
+                    cast_fn=float, units='DEG', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data,
+                    source_path=('Stage', 'tilt_alpha'),
+                    dest_dict=self.em,
+                    dest_path=('General_EM', 'stage_position', 'tilt_alpha'),
+                    cast_fn=float, units='DEG', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data,
+                    source_path=('Stage', 'tilt_beta'),
+                    dest_dict=self.em,
+                    dest_path=('General_EM', 'stage_position', 'tilt_beta'),
+                    cast_fn=float, units='DEG', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data,
+                    dest_dict=self.em,
+                    source_path=('Stage', 'x'),
+                    dest_path=('General_EM', 'stage_position', 'x'),
+                    cast_fn=float, units='MilliM', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data,
+                    source_path=('Stage', 'y'),
+                    dest_dict=self.em,
+                    dest_path=('General_EM', 'stage_position', 'y'),
+                    cast_fn=float, units='MilliM', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data,
+                    source_path=('Stage', 'z'),
+                    dest_dict=self.em,
+                    dest_path=('General_EM', 'stage_position', 'z'),
+                    cast_fn=float, units='MilliM', conv_fn=None),
 
-            # camera length/working distance
-            set_val_units(self.em, ('TEM', 'camera_length',),
-                          get_val(self.inst_data, 'camera_length', float),
-                          'MilliM')
-            set_val_units(self.em, ('SEM', 'working_distance',),
-                          get_val(self.inst_data, 'working_distance', float),
-                          'MilliM')
+                # camera length/working distance
+                MappingElements(
+                    source_dict=self.inst_data, source_path='camera_length',
+                    dest_dict=self.em, dest_path=('TEM', 'camera_length'),
+                    cast_fn=float, units='MilliM', conv_fn=None),
+                MappingElements(
+                    source_dict=self.inst_data, source_path='working_distance',
+                    dest_dict=self.em, dest_path=('SEM', 'working_distance'),
+                    cast_fn=float, units='MilliM', conv_fn=None)
+            ]
+
+            map_dict_values(mapping)
+
             self._process_hs_detectors()
 
         # Elements present (if known)
@@ -278,53 +337,85 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         set_val_units(self.em, ('General', 'title'),
                       get_val(self.meta, ('General', 'title'), str))
 
-    def _process_hs_detectors(self):
+    def _process_hs_detectors(self) -> None:
         """
         Parses HyperSpy-formatted metadata specific to detectors as specified by
-        http://hyperspy.org/hyperspy-doc/current/user_guide/metadata_structure.html
+        http://hyperspy.org/hyperspy-doc/current/user_guide
+        /metadata_structure.html
         """
         detector_node = get_val(self.inst_data, 'Detector')
-        set_val_units(self.em, ('General_EM', 'detector_name'),
-                      get_val(self.inst_data, 'detector_type', str))
+        mapping = [
+            MappingElements(
+                source_dict=self.inst_data, source_path='detector_type',
+                dest_dict=self.em, dest_path=('General_EM', 'detector_name'),
+                cast_fn=str, units=None, conv_fn=None
+            )
+        ]
 
         if detector_node is not None:
-            # EDS
-            set_val_units(self.em, ('EDS', 'azimuth_angle'),
-                          get_val(detector_node, ('EDS', 'azimuth_angle'),
-                                  float), 'DEG')
-            set_val_units(self.em, ('EDS', 'elevation_angle'),
-                          get_val(detector_node, ('EDS', 'elevation_angle'),
-                                  float), 'DEG')
-            set_val_units(self.em, ('EDS', 'energy_resolution_MnKa'),
-                          get_val(detector_node, ('EDS',
-                                                  'energy_resolution_MnKa'),
-                                  float), 'EV')
-            set_val_units(self.em, ('EDS', 'live_time'),
-                          get_val(detector_node, ('EDS', 'live_time'),
-                                  float), 'SEC')
-            set_val_units(self.em, ('EDS', 'real_time'),
-                          get_val(detector_node, ('EDS', 'real_time'),
-                                  float), 'SEC')
+            mapping += [
+                # EDS
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EDS', 'azimuth_angle'),
+                    dest_dict=self.em, dest_path=('EDS', 'azimuth_angle'),
+                    cast_fn=float, units='DEG', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EDS', 'elevation_angle'),
+                    dest_dict=self.em, dest_path=('EDS', 'elevation_angle'),
+                    cast_fn=float, units='DEG', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EDS', 'energy_resolution_MnKa'),
+                    dest_dict=self.em,
+                    dest_path=('EDS', 'energy_resolution_MnKa'),
+                    cast_fn=float, units='EV', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node, source_path=('EDS', 'live_time'),
+                    dest_dict=self.em, dest_path=('EDS', 'live_time'),
+                    cast_fn=float, units='SEC', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node, source_path=('EDS', 'real_time'),
+                    dest_dict=self.em, dest_path=('EDS', 'real_time'),
+                    cast_fn=float, units='SEC', conv_fn=None),
 
-            # EELS
-            set_val_units(self.em, ('EELS', 'aperture_size'),
-                          get_val(detector_node, ('EELS', 'aperture'),
-                                  float), 'MilliM')
-            set_val_units(self.em, ('EELS', 'collection_angle'),
-                          get_val(detector_node, ('EELS', 'collection_angle'),
-                                  float), 'MilliRAD')
-            set_val_units(self.em, ('General_EM', 'dwell_time'),
-                          get_val(detector_node, ('EELS', 'dwell_time'),
-                                  float), 'SEC')
-            set_val_units(self.em, ('General_EM', 'exposure_time'),
-                          get_val(detector_node, ('EELS', 'exposure'),
-                                  float), 'SEC')
-            set_val_units(self.em, ('EELS', 'number_of_samples'),
-                          get_val(detector_node, ('EELS', 'frame_number'),
-                                  int), 'NUM')
-            set_val_units(self.em, ('EELS', 'spectrometer_name'),
-                          get_val(self.inst_data, ('EELS', 'spectrometer'),
-                                  str))
+                # EELS
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EELS', 'aperture_size'),
+                    dest_dict=self.em, dest_path=('EELS', 'aperture_size'),
+                    cast_fn=float, units='MilliM', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EELS', 'collection_angle'),
+                    dest_dict=self.em, dest_path=('EELS', 'collection_angle'),
+                    cast_fn=float, units='MilliRAD', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EELS', 'dwell_time'),
+                    dest_dict=self.em, dest_path=('General_EM', 'dwell_time'),
+                    cast_fn=float, units='SEC', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EELS', 'exposure'),
+                    dest_dict=self.em,
+                    dest_path=('General_EM', 'exposure_time'),
+                    cast_fn=float, units='SEC', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EELS', 'frame_number'),
+                    dest_dict=self.em,
+                    dest_path=('EELS', 'number_of_samples'),
+                    cast_fn=int, units='NUM', conv_fn=None),
+                MappingElements(
+                    source_dict=detector_node,
+                    source_path=('EELS', 'spectrometer'),
+                    dest_dict=self.em,
+                    dest_path=('EELS', 'spectrometer_name'),
+                    cast_fn=str, units=None, conv_fn=None),
+            ]
+        map_dict_values(mapping)
 
     def implementors(self):
         return ['Jonathon Gaff <jgaff@uchicago.edu>',
