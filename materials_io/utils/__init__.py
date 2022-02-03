@@ -38,6 +38,10 @@ def get_nested_dict_value_by_path(nest_dict: Dict,
         except KeyError:
             return None
 
+    # coerce empty values to None
+    if sub_dict in [{}, dict(), [], '']:
+        return None
+
     if cast is not None:
         return cast(sub_dict)
     else:
