@@ -24,14 +24,14 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
     For base EM, return the following under "General_EM"
       - X accelerating_voltage
       - X acquisition_mode
-      - acquisition_software_name
-      - acquisition_software_version
+      - X acquisition_software_name
+      - X acquisition_software_version
       - X beam_current (measured at the sample)
       - X beam_energy 
       - X convergence_angle
       - X detector_name
       - X dwell_time (for STEM modes)
-      - emission_current
+      - X emission_current
       - X exposure_time (for non-STEM modes)
       - X elements (list of str - as detected from spectroscopy signal)
       - X magnification_actual
@@ -90,15 +90,21 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - vertical_field_width
       
     For EELS:
-      - X aperture_size
-      - X collection_angle
-      - dispersion_per_channel
-      - drift_tube_energy
+      - XX aperture_size
+      - XX collection_angle
+      - X dispersion_per_channel
+      - X drift_tube_voltage
+      - X drift_tube_enabled
+      - X energy_loss_offset
+      - X filter_slit_width
+      - X filter_slit_inserted
+      - X integration_time
       - X number_of_samples (The number of frames/spectra integrated during the
                              acquisition.)
-      - prism_shift_energy
+      - X prism_shift_voltage
+      - X prism_shift_enabled
       - spectrometer_mode
-      - X spectrometer_name
+      - XX spectrometer_name
       - total_energy_loss
 
     For EDS:
@@ -526,6 +532,12 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'stage_position', 'tilt_beta'),
                 cast_fn=float, units='DEG', conv_fn=None),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=base + ('Emission Current (µA)',),
+                dest_dict=dest_dict,
+                dest_path=('General_EM', 'emission_current'),
+                cast_fn=float, units='MicroA', conv_fn=None),
         ]
 
         voltage = get_val(self.raw_meta, base + ('Voltage',), float)
@@ -650,7 +662,101 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         return pre_path
 
     def _dm3_eels_info(self) -> None:
-        pass
+        # basic EELS metadata
+        pre_path = self.__get_dm3_tag_pre_path()
+        base = pre_path + ('EELS', )
+        mapping = [
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Acquisition', 'Exposure (s)'),
+                dest_path=('General_EM', 'exposure_time'), units='SEC',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Acquisition', 'Integration time (s)'),
+                dest_path=('EELS', 'integration_time'), units='SEC',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Acquisition', 'Number of frames'),
+                dest_path=('EELS', 'number_of_samples'), units='NUM',
+                conv_fn=None, cast_fn=int),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Experimental Conditions',
+                                    'Collection semi-angle (mrad)'),
+                dest_path=('EELS', 'collection_angle'), units='MilliRAD',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Experimental Conditions',
+                                    'Convergence semi-angle (mrad)'),
+                dest_path=('General_EM', 'convergence_angle'), units='MilliRAD',
+                conv_fn=None, cast_fn=float)]
+
+        # spectrometer metadata
+        # is usually at one of two places, so try both
+        spect_dict = get_val(self.raw_meta,
+                             pre_path + ('EELS', 'Acquisition', 'Spectrometer'))
+        if spect_dict is not None:
+            spect_path = pre_path + ('EELS', 'Acquisition', 'Spectrometer')
+        else:
+            spect_path = pre_path + ('EELS Spectrometer',)
+        mapping += [
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Aperture label',),
+                dest_path=('EELS', 'aperture_size'), units='MilliM',
+                conv_fn=None, cast_fn=lambda s: float(s.replace(' mm', ''))),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Dispersion (eV/ch)',),
+                dest_path=('EELS', 'dispersion_per_channel'), units='EV',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Energy loss (eV)',),
+                dest_path=('EELS', 'energy_loss_offset'), units='EV',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Instrument name',),
+                dest_path=('EELS', 'spectrometer_name'), units=None,
+                conv_fn=None, cast_fn=str),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Drift tube voltage (V)',),
+                dest_path=('EELS', 'drift_tube_voltage'), units='V',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Drift tube enabled',),
+                dest_path=('EELS', 'drift_tube_enabled'), units=None,
+                conv_fn=None, cast_fn=bool),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Prism offset (V)',),
+                dest_path=('EELS', 'prism_shift_voltage'), units='V',
+                conv_fn=None, cast_fn=float),
+            # note space at end of "Prism offset enabled " because that's how
+            # it gets loaded in from DigitalMicrograph...
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Prism offset enabled ',),
+                dest_path=('EELS', 'prism_shift_enabled'), units=None,
+                conv_fn=None, cast_fn=bool),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Slit width (eV)',),
+                dest_path=('EELS', 'filter_slit_width'), units='EV',
+                conv_fn=None, cast_fn=float),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=spect_path + ('Slit inserted',),
+                dest_path=('EELS', 'filter_slit_inserted'), units=None,
+                conv_fn=None, cast_fn=bool),
+        ]
+        map_dict_values(mapping)
 
     def _dm3_eds_info(self) -> None:
         pass
