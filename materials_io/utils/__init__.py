@@ -39,7 +39,7 @@ def get_nested_dict_value_by_path(nest_dict: Dict,
             return None
 
     # coerce empty values to None
-    if sub_dict in [{}, dict(), [], '']:
+    if sub_dict in [{}, dict(), [], '', None]:
         return None
 
     if cast is not None:
@@ -99,6 +99,7 @@ def set_nested_dict_value_with_units(nest_dict: Dict, path: Tuple,
         set_nested_dict_value(nest_dict, path, to_set, override)
 
 
+# type definition for the mapping dictionaries
 MappingElements = TypedDict('MappingElements',
                             {'source_dict': Dict,
                              'source_path': Union[str, Tuple[str, ...]],
@@ -106,7 +107,8 @@ MappingElements = TypedDict('MappingElements',
                              'dest_path': Union[str, Tuple[str, ...]],
                              'cast_fn': Optional[Callable],
                              'units': Optional[Union[None, str]],
-                             'conv_fn': Optional[Union[None, Callable]]})
+                             'conv_fn': Optional[Union[None, Callable]],
+                             'override': Optional[bool]})
 
 
 def map_dict_values(mapping: List[MappingElements]):
@@ -124,7 +126,8 @@ def map_dict_values(mapping: List[MappingElements]):
          'dest_path': ('dest', 'path',),
          'cast_fn': float,
          'units': str,
-         'conv_fn': lambda x: x}
+         'conv_fn': lambda x: x,
+         'override': bool}
     ]
     """
     for m in mapping:
@@ -138,4 +141,4 @@ def map_dict_values(mapping: List[MappingElements]):
             cast=m['cast_fn'])
         set_nested_dict_value_with_units(
             nest_dict=m['dest_dict'], path=m['dest_path'], value=value,
-            units=m['units'], fn=m['conv_fn'])
+            units=m['units'], fn=m['conv_fn'], override=m['override'])

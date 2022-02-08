@@ -1,12 +1,15 @@
 from hyperspy.io import load as hs_load
+import re
+import logging
 
 from materials_io.base import BaseSingleFileParser
 from materials_io.utils import get_nested_dict_value_by_path as get_val
 from materials_io.utils import map_dict_values, MappingElements
 from materials_io.utils import set_nested_dict_value_with_units as set_val_units
 
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict, Optional
 
+logger = logging.getLogger(__name__)
 
 class ElectronMicroscopyParser(BaseSingleFileParser):
     """Parse metadata specific to electron microscopy, meaning any file
@@ -71,12 +74,13 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - X acquisition_format
       - X acquisition_mode
       - X acquisition_signal
+      - X extractor_voltage
       - X illumination_mode
       - X imaging_mode
       - X operation_mode
       - X spherical_aberration_coefficient
-      - defocus
-      - spot_size
+      - X defocus
+      - X spot_size
       - X camera_length
 
     For SEM:
@@ -103,9 +107,9 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                              acquisition.)
       - X prism_shift_voltage
       - X prism_shift_enabled
-      - spectrometer_mode
+      - X spectrometer_mode
       - XX spectrometer_name
-      - total_energy_loss
+      - X total_energy_loss
 
     For EDS:
       - X azimuth_angle
@@ -143,8 +147,12 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self._process_hs_data()
         self._dm3_general_info()
         self._dm3_eels_info()
+        self._dm3_tecnai_info()
+
+        # TODO:
         self._dm3_eds_info()
         self._dm3_spectrum_image_info()
+
         self._tia_info()  # ...and so on
         self._tiff_info()  # ...and so on
 
@@ -242,33 +250,37 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     source_dict=source, source_path='acquisition_mode',
                     dest_dict=dest, dest_path=('General_EM',
                                                   'acquisition_mode'),
-                    cast_fn=str, units=None, conv_fn=None),
+                    cast_fn=str, units=None, conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source, source_path='beam_current',
                     dest_dict=dest, dest_path=('General_EM', 'beam_current'),
-                    cast_fn=float, units='NanoA', conv_fn=None),
+                    cast_fn=float, units='NanoA', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source, source_path='beam_energy',
                     dest_dict=dest, dest_path=('General_EM', 'beam_energy'),
-                    cast_fn=float, units='KiloEV', conv_fn=None),
+                    cast_fn=float, units='KiloEV', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=source, source_path='convergence_angle',
                     dest_dict=dest, dest_path=('General_EM',
                                                'convergence_angle'),
-                    cast_fn=float, units='MilliRAD', conv_fn=None),
+                    cast_fn=float, units='MilliRAD', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=source, source_path='magnification',
                     dest_dict=dest, dest_path=('General_EM',
                                                'magnification_indicated'),
-                    cast_fn=float, units='UNITLESS', conv_fn=None),
+                    cast_fn=float, units='UNITLESS', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=source, source_path='microscope',
                     dest_dict=dest, dest_path=('General_EM', 'microscope_name'),
-                    cast_fn=str, units=None, conv_fn=None),
+                    cast_fn=str, units=None, conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source, source_path='probe_area',
                     dest_dict=dest, dest_path=('General_EM', 'probe_area'),
-                    cast_fn=float, units='NanoM2', conv_fn=None),
+                    cast_fn=float, units='NanoM2', conv_fn=None,
+                    override=False),
 
                 # stage positions
                 MappingElements(
@@ -276,47 +288,52 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     source_path=('Stage', 'rotation'),
                     dest_dict=dest,
                     dest_path=('General_EM', 'stage_position', 'rotation'),
-                    cast_fn=float, units='DEG', conv_fn=None),
+                    cast_fn=float, units='DEG', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source,
                     source_path=('Stage', 'tilt_alpha'),
                     dest_dict=dest,
                     dest_path=('General_EM', 'stage_position', 'tilt_alpha'),
-                    cast_fn=float, units='DEG', conv_fn=None),
+                    cast_fn=float, units='DEG', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source,
                     source_path=('Stage', 'tilt_beta'),
                     dest_dict=dest,
                     dest_path=('General_EM', 'stage_position', 'tilt_beta'),
-                    cast_fn=float, units='DEG', conv_fn=None),
+                    cast_fn=float, units='DEG', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source,
                     dest_dict=dest,
                     source_path=('Stage', 'x'),
                     dest_path=('General_EM', 'stage_position', 'x'),
-                    cast_fn=float, units='MilliM', conv_fn=None),
+                    cast_fn=float, units='MilliM', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=source,
                     source_path=('Stage', 'y'),
                     dest_dict=dest,
                     dest_path=('General_EM', 'stage_position', 'y'),
-                    cast_fn=float, units='MilliM', conv_fn=None),
+                    cast_fn=float, units='MilliM', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=source,
                     source_path=('Stage', 'z'),
                     dest_dict=dest,
                     dest_path=('General_EM', 'stage_position', 'z'),
-                    cast_fn=float, units='MilliM', conv_fn=None),
+                    cast_fn=float, units='MilliM', conv_fn=None,
+                    override=False),
 
                 # camera length/working distance
                 MappingElements(
                     source_dict=source, source_path='camera_length',
                     dest_dict=dest, dest_path=('TEM', 'camera_length'),
-                    cast_fn=float, units='MilliM', conv_fn=None),
+                    cast_fn=float, units='MilliM', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=source, source_path='working_distance',
                     dest_dict=dest, dest_path=('SEM', 'working_distance'),
-                    cast_fn=float, units='MilliM', conv_fn=None)]
+                    cast_fn=float, units='MilliM', conv_fn=None,
+                    override=False)]
 
             map_dict_values(mapping)
 
@@ -330,43 +347,43 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_dict=source, dest_dict=dest,
                 source_path=('Sample', 'elements'),
                 dest_path=('General_EM', 'elements'),
-                cast_fn=list, units=None, conv_fn=None),
+                cast_fn=list, units=None, conv_fn=None, override=False),
             # General metadata
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'date'),
                 dest_path=('General', 'date'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'doi'),
                 dest_path=('General', 'doi'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'original_filename'),
                 dest_path=('General', 'original_filename'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'notes'),
                 dest_path=('General', 'notes'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'time'),
                 dest_path=('General', 'time'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'time_zone'),
                 dest_path=('General', 'time_zone'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=source, dest_dict=dest,
                 source_path=('General', 'title'),
                 dest_path=('General', 'title'),
-                cast_fn=str, units=None, conv_fn=None)]
+                cast_fn=str, units=None, conv_fn=None, override=False)]
 
         map_dict_values(mapping)
 
@@ -382,7 +399,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
             MappingElements(
                 source_dict=self.inst_data, source_path='detector_type',
                 dest_dict=dest_dict, dest_path=('General_EM', 'detector_name'),
-                cast_fn=str, units=None, conv_fn=None
+                cast_fn=str, units=None, conv_fn=None, override=False
             )
         ]
 
@@ -393,61 +410,63 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     source_dict=detector_node,
                     source_path=('EDS', 'azimuth_angle'),
                     dest_dict=dest_dict, dest_path=('EDS', 'azimuth_angle'),
-                    cast_fn=float, units='DEG', conv_fn=None),
+                    cast_fn=float, units='DEG', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EDS', 'elevation_angle'),
                     dest_dict=dest_dict, dest_path=('EDS', 'elevation_angle'),
-                    cast_fn=float, units='DEG', conv_fn=None),
+                    cast_fn=float, units='DEG', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EDS', 'energy_resolution_MnKa'),
                     dest_dict=dest_dict,
                     dest_path=('EDS', 'energy_resolution_MnKa'),
-                    cast_fn=float, units='EV', conv_fn=None),
+                    cast_fn=float, units='EV', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node, source_path=('EDS', 'live_time'),
                     dest_dict=dest_dict, dest_path=('EDS', 'live_time'),
-                    cast_fn=float, units='SEC', conv_fn=None),
+                    cast_fn=float, units='SEC', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node, source_path=('EDS', 'real_time'),
                     dest_dict=dest_dict, dest_path=('EDS', 'real_time'),
-                    cast_fn=float, units='SEC', conv_fn=None),
+                    cast_fn=float, units='SEC', conv_fn=None, override=False),
 
                 # EELS
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EELS', 'aperture_size'),
                     dest_dict=dest_dict, dest_path=('EELS', 'aperture_size'),
-                    cast_fn=float, units='MilliM', conv_fn=None),
+                    cast_fn=float, units='MilliM', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EELS', 'collection_angle'),
                     dest_dict=dest_dict, dest_path=('EELS', 'collection_angle'),
-                    cast_fn=float, units='MilliRAD', conv_fn=None),
+                    cast_fn=float, units='MilliRAD', conv_fn=None,
+                    override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EELS', 'dwell_time'),
                     dest_dict=dest_dict, dest_path=('General_EM', 'dwell_time'),
-                    cast_fn=float, units='SEC', conv_fn=None),
+                    cast_fn=float, units='SEC', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EELS', 'exposure'),
                     dest_dict=dest_dict,
                     dest_path=('General_EM', 'exposure_time'),
-                    cast_fn=float, units='SEC', conv_fn=None),
+                    cast_fn=float, units='SEC', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EELS', 'frame_number'),
                     dest_dict=dest_dict,
                     dest_path=('EELS', 'number_of_samples'),
-                    cast_fn=int, units='NUM', conv_fn=None),
+                    cast_fn=int, units='NUM', conv_fn=None, override=False),
                 MappingElements(
                     source_dict=detector_node,
                     source_path=('EELS', 'spectrometer'),
                     dest_dict=dest_dict,
                     dest_path=('EELS', 'spectrometer_name'),
-                    cast_fn=str, units=None, conv_fn=None),
+                    cast_fn=str, units=None, conv_fn=None, override=False),
             ]
         map_dict_values(mapping)
 
@@ -462,82 +481,85 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_path=base + ('Indicated Magnification',),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'magnification_indicated'),
-                cast_fn=float, units='UNITLESS', conv_fn=None),
+                cast_fn=float, units='UNITLESS', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Actual Magnification',),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'magnification_actual'),
-                cast_fn=float, units='UNITLESS', conv_fn=None),
+                cast_fn=float, units='UNITLESS', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Cs(mm)',),
                 dest_dict=dest_dict,
                 dest_path=('TEM', 'spherical_aberration_coefficient'),
-                cast_fn=float, units='MilliM', conv_fn=None),
+                cast_fn=float, units='MilliM', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('STEM Camera Length',),
                 dest_dict=dest_dict,
                 dest_path=('TEM', 'camera_length'),
-                cast_fn=float, units='MilliM', conv_fn=None),
+                cast_fn=float, units='MilliM', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Operation Mode',),
                 dest_dict=dest_dict, dest_path=('TEM', 'operation_mode'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Imaging Mode',),
                 dest_dict=dest_dict, dest_path=('TEM', 'imaging_mode'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Illumination Mode',),
                 dest_dict=dest_dict, dest_path=('TEM', 'illumination_mode'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Microscope',),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'microscope_name'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Stage Position', 'Stage X'),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'stage_position', 'x'),
-                cast_fn=float, units='MilliM', conv_fn=lambda x: x/1000),
+                cast_fn=float, units='MilliM', conv_fn=lambda x: x/1000,
+                override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Stage Position', 'Stage Y'),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'stage_position', 'y'),
-                cast_fn=float, units='MilliM', conv_fn=lambda x: x / 1000),
+                cast_fn=float, units='MilliM', conv_fn=lambda x: x / 1000,
+                override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Stage Position', 'Stage Z'),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'stage_position', 'z'),
-                cast_fn=float, units='MilliM', conv_fn=lambda x: x / 1000),
+                cast_fn=float, units='MilliM', conv_fn=lambda x: x / 1000,
+                override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Stage Position', 'Stage Alpha'),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'stage_position', 'tilt_alpha'),
-                cast_fn=float, units='DEG', conv_fn=None),
+                cast_fn=float, units='DEG', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Stage Position', 'Stage Beta'),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'stage_position', 'tilt_beta'),
-                cast_fn=float, units='DEG', conv_fn=None),
+                cast_fn=float, units='DEG', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Emission Current (µA)',),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'emission_current'),
-                cast_fn=float, units='MicroA', conv_fn=None),
+                cast_fn=float, units='MicroA', conv_fn=None, override=False),
         ]
 
         voltage = get_val(self.raw_meta, base + ('Voltage',), float)
@@ -548,7 +570,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     source_path=base + ('Voltage',), cast_fn=float,
                     dest_path=('General_EM', 'accelerating_voltage'),
                     units='KiloEV' if voltage >= 1000 else 'EV',
-                    conv_fn=lambda x: x / 1000 if voltage >= 1000 else x)
+                    conv_fn=lambda x: x / 1000 if voltage >= 1000 else x,
+                    override=False)
             ]
 
         # "Session Info"
@@ -557,12 +580,12 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
             MappingElements(
                 source_dict=self.raw_meta, source_path=base + ('Detector',),
                 dest_dict=dest_dict, dest_path=('General_EM', 'detector_name'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta, source_path=base + ('Microscope',),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'microscope_name'),
-                cast_fn=str, units=None, conv_fn=None)]
+                cast_fn=str, units=None, conv_fn=None, override=False)]
 
         # "Meta Data"
         base = self.__get_dm3_tag_pre_path() + ('Meta Data',)
@@ -571,24 +594,24 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_dict=self.raw_meta,
                 source_path=base + ('Acquisition Mode',),
                 dest_dict=dest_dict, dest_path=('TEM', 'acquisition_mode'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Format',),
                 dest_dict=dest_dict, dest_path=('TEM', 'acquisition_format'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Signal',),
                 dest_dict=dest_dict, dest_path=('TEM', 'acquisition_signal'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             # sometimes the EDS signal label is in a different place
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Experiment keywords', 'TagGroup1',
                                     'Label'),
                 dest_dict=dest_dict, dest_path=('TEM', 'acquisition_signal'),
-                cast_fn=str, units=None, conv_fn=None)
+                cast_fn=str, units=None, conv_fn=None, override=False)
         ]
 
         # a few miscellaneous DM tags:
@@ -598,29 +621,29 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_dict=self.raw_meta,
                 source_path=base + ('Acquisition', 'Device', 'Name'),
                 dest_dict=dest_dict, dest_path=('TEM', 'acquisition_device'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('DataBar', 'Device Name'),
                 dest_dict=dest_dict, dest_path=('TEM', 'acquisition_device'),
-                cast_fn=str, units=None, conv_fn=None),
+                cast_fn=str, units=None, conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('Acquisition', 'Parameters', 'High Level',
                                     'Exposure (s)'),
                 dest_dict=dest_dict, dest_path=('General_EM', 'exposure_time'),
-                cast_fn=float, units='SEC', conv_fn=None),
+                cast_fn=float, units='SEC', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('DataBar', 'Exposure Time (s)'),
                 dest_dict=dest_dict, dest_path=('General_EM', 'exposure_time'),
-                cast_fn=float, units='SEC', conv_fn=None),
+                cast_fn=float, units='SEC', conv_fn=None, override=False),
             MappingElements(
                 source_dict=self.raw_meta,
                 source_path=base + ('GMS Version', 'Created'),
                 dest_dict=dest_dict,
                 dest_path=('General_EM', 'acquisition_software_version'),
-                cast_fn=str, units=None, conv_fn=None)
+                cast_fn=str, units=None, conv_fn=None, override=False)
         ]
 
         if get_val(self.raw_meta, ('ImageList', 'TagGroup0', 'ImageTags')) is\
@@ -670,29 +693,29 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=base + ('Acquisition', 'Exposure (s)'),
                 dest_path=('General_EM', 'exposure_time'), units='SEC',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=base + ('Acquisition', 'Integration time (s)'),
                 dest_path=('EELS', 'integration_time'), units='SEC',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=base + ('Acquisition', 'Number of frames'),
                 dest_path=('EELS', 'number_of_samples'), units='NUM',
-                conv_fn=None, cast_fn=int),
+                conv_fn=None, cast_fn=int, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=base + ('Experimental Conditions',
                                     'Collection semi-angle (mrad)'),
                 dest_path=('EELS', 'collection_angle'), units='MilliRAD',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=base + ('Experimental Conditions',
                                     'Convergence semi-angle (mrad)'),
                 dest_path=('General_EM', 'convergence_angle'), units='MilliRAD',
-                conv_fn=None, cast_fn=float)]
+                conv_fn=None, cast_fn=float, override=False)]
 
         # spectrometer metadata
         # is usually at one of two places, so try both
@@ -707,54 +730,55 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Aperture label',),
                 dest_path=('EELS', 'aperture_size'), units='MilliM',
-                conv_fn=None, cast_fn=lambda s: float(s.replace(' mm', ''))),
+                conv_fn=None, cast_fn=lambda s: float(s.replace(' mm', '')),
+                override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Dispersion (eV/ch)',),
                 dest_path=('EELS', 'dispersion_per_channel'), units='EV',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Energy loss (eV)',),
                 dest_path=('EELS', 'energy_loss_offset'), units='EV',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Instrument name',),
                 dest_path=('EELS', 'spectrometer_name'), units=None,
-                conv_fn=None, cast_fn=str),
+                conv_fn=None, cast_fn=str, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Drift tube voltage (V)',),
                 dest_path=('EELS', 'drift_tube_voltage'), units='V',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Drift tube enabled',),
                 dest_path=('EELS', 'drift_tube_enabled'), units=None,
-                conv_fn=None, cast_fn=bool),
+                conv_fn=None, cast_fn=bool, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Prism offset (V)',),
                 dest_path=('EELS', 'prism_shift_voltage'), units='V',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             # note space at end of "Prism offset enabled " because that's how
             # it gets loaded in from DigitalMicrograph...
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Prism offset enabled ',),
                 dest_path=('EELS', 'prism_shift_enabled'), units=None,
-                conv_fn=None, cast_fn=bool),
+                conv_fn=None, cast_fn=bool, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Slit width (eV)',),
                 dest_path=('EELS', 'filter_slit_width'), units='EV',
-                conv_fn=None, cast_fn=float),
+                conv_fn=None, cast_fn=float, override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Slit inserted',),
                 dest_path=('EELS', 'filter_slit_inserted'), units=None,
-                conv_fn=None, cast_fn=bool),
+                conv_fn=None, cast_fn=bool, override=False),
         ]
         map_dict_values(mapping)
 
@@ -763,6 +787,236 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
     def _dm3_spectrum_image_info(self) -> None:
         pass
+
+    def _dm3_tecnai_info(self, delimiter: Optional[str] = u'\u2028') -> None:
+        """
+        Some FEI Microscopes will write additional metadata into dm3 files
+        in a long string separated by a unicode delimiter (u'\u2028'),
+        present at ``ImageList.TagGroup0.ImageTags.Tecnai.Microscope_Info``.
+        This method parses that information.  Adapted from the
+        implementation in https://github.com/usnistgov/NexusLIMS
+
+        Parameters
+        ----------
+        delimiter
+            The value (a unicode string) used to split the ``microscope_info``
+            string. Should not need to be provided (this value is hard-coded in
+            DigitalMicrograph), but specified as a parameter for future
+            flexibility
+        """
+        def __find_val(s_to_find, list_to_search):
+            """
+            Return the first value in ``list_to_search`` that contains
+            ``s_to_find``, or ``None`` if it is not found
+
+            Note: If needed, this could be improved to use regex instead,
+            which would provide more control over the patterns to return
+            """
+            res = [x for x in list_to_search if s_to_find in x]
+            if len(res) > 0:
+                res = res[0]
+                # remove the string we searched for from the beginning of
+                # the res
+                return re.sub("^" + s_to_find, "", res)
+            else:
+                return None
+
+        def __extract_val(regex: str, str_to_search: str,
+                          match_num : int = 1) -> Optional[str]:
+            """
+            Extract a value from a string based on a grouped regex
+            """
+            result = re.compile(regex).search(str_to_search)
+            if result is not None:
+                result = result[match_num]
+            return result
+
+        path_to_tecnai = ('ImageList', 'TagGroup0', 'ImageTags', 'Tecnai',
+                          'Microscope Info')
+        self.tecnai_info = get_val(self.raw_meta, path_to_tecnai)
+
+        if self.tecnai_info is None:
+            # if tecnai info is not present, return early to save some work
+            return
+        else:
+            # split the tecnai_info string into a list
+            self.tecnai_info = self.tecnai_info.split(delimiter)
+
+            # we override existing values since Tecnai info is more specific
+            mapping = [
+                MappingElements(
+                    source_dict={
+                        'Microscope_Name': __find_val('Microscope ',
+                                                      self.tecnai_info)},
+                    source_path='Microscope_Name', dest_dict=self.em,
+                    dest_path=('General_EM', 'microscope_name'), cast_fn=str,
+                    units=None, conv_fn=None, override=True),
+                MappingElements(
+                    source_dict={
+                        'Extractor_Voltage':
+                            __extract_val(r'Extr volt (\d*) V',
+                                          __find_val('Extr volt ',
+                                                     self.tecnai_info))},
+                    source_path='Extractor_Voltage', dest_dict=self.em,
+                    dest_path=('TEM', 'extractor_voltage'), cast_fn=int,
+                    units='V', conv_fn=None, override=True),
+                MappingElements(
+                    source_dict={
+                        'Emission_Current':
+                            __extract_val(r'Emission ([\d|\.]*)uA',
+                                          __find_val('Emission ',
+                                                     self.tecnai_info))},
+                    source_path='Emission_Current', dest_dict=self.em,
+                    dest_path=('General_EM', 'emission_current'), cast_fn=float,
+                    units='MicroA', conv_fn=None, override=True),
+                MappingElements(
+                    source_dict={
+                        'Operation_Mode':
+                            __extract_val(r'(.*) Defocus',
+                                          __find_val('Mode ',
+                                                     self.tecnai_info))},
+                    source_path='Operation_Mode', dest_dict=self.em,
+                    dest_path=('TEM', 'operation_mode'), cast_fn=str,
+                    units=None, conv_fn=None, override=True),
+
+                # try two different extractions of defocus for mag mode and
+                # diffraction mode:
+                MappingElements(
+                    source_dict={
+                        'Defocus':
+                            __extract_val(r'Defocus \(um\) (.*) Magn',
+                                          __find_val('Mode ',
+                                                     self.tecnai_info))},
+                    source_path='Defocus', dest_dict=self.em,
+                    dest_path=('TEM', 'defocus'), cast_fn=float,
+                    units='MicroM', conv_fn=None, override=True),
+                MappingElements(
+                    source_dict={
+                        'Defocus':
+                            __extract_val(r'Defocus ([\d|\.]*) CL',
+                                          __find_val('Mode ',
+                                                     self.tecnai_info))},
+                    source_path='Defocus', dest_dict=self.em,
+                    dest_path=('TEM', 'defocus'), cast_fn=float,
+                    units='MicroM', conv_fn=None, override=True),
+                # try magnification (not always present):
+                MappingElements(
+                    source_dict={
+                        'Magnification':
+                            __extract_val(r'Magn (\d*)x',
+                                          __find_val('Mode ',
+                                                     self.tecnai_info))},
+                    source_path='Magnification', dest_dict=self.em,
+                    dest_path=('General_EM', 'magnification_indicated'),
+                    cast_fn=int, units='UNITLESS', conv_fn=None,
+                    override=True),
+                MappingElements(
+                    source_dict={
+                        'Camera_Length':
+                            __extract_val(r'CL (.*)m',
+                                          __find_val('Mode ',
+                                                     self.tecnai_info))},
+                    source_path='Camera_Length', dest_dict=self.em,
+                    dest_path=('TEM', 'camera_length'), cast_fn=float,
+                    units='MilliM', conv_fn=lambda x: x*1000, override=True),
+                # spot size
+                MappingElements(
+                    source_dict={'Spot_Size':
+                                     __find_val('Spot ', self.tecnai_info)},
+                    source_path='Spot_Size', dest_dict=self.em,
+                    dest_path=('TEM', 'spot_size'), cast_fn=int,
+                    units='UNITLESS', conv_fn=None, override=True),
+                # Tecnai has info about apertures and lens strengths,
+                # but not extracting here (see NexusLIMS code for example)
+            ]
+            stage_vals = __find_val('Stage', self.tecnai_info)
+            if stage_vals:
+                x, y, z = re.findall(r' (-?\d*\.\d*) um', stage_vals)
+                alpha, beta = re.findall(r' (-?\d*\.\d*) deg', stage_vals)
+                stage = {'x': x, 'y': y, 'z': z, 'a': alpha, 'b': beta}
+                mapping += [
+                    MappingElements(
+                        source_dict=stage, source_path='x', dest_dict=self.em,
+                        dest_path=('General_EM', 'stage_position', 'x'),
+                        cast_fn=float, units='MicroM', conv_fn=None,
+                        override=True),
+                    MappingElements(
+                        source_dict=stage, source_path='y', dest_dict=self.em,
+                        dest_path=('General_EM', 'stage_position', 'y'),
+                        cast_fn=float, units='MicroM', conv_fn=None,
+                        override=True),
+                    MappingElements(
+                        source_dict=stage, source_path='z', dest_dict=self.em,
+                        dest_path=('General_EM', 'stage_position', 'z'),
+                        cast_fn=float, units='MicroM', conv_fn=None,
+                        override=True),
+                    MappingElements(
+                        source_dict=stage, source_path='a', dest_dict=self.em,
+                        dest_path=('General_EM', 'stage_position',
+                                   'tilt_alpha'), cast_fn=float, units='DEG',
+                        conv_fn=None, override=True),
+                    MappingElements(
+                        source_dict=stage, source_path='b', dest_dict=self.em,
+                        dest_path=('General_EM', 'stage_position', 'tilt_beta'),
+                        cast_fn=float, units='DEG', conv_fn=None,
+                        override=True),
+                ]
+
+            # process EELS spectrometer info from Tecnai string
+            if __find_val('Filter related settings', self.tecnai_info):
+                filter_dict = {
+                    'Mode': __find_val('Mode: ', self.tecnai_info),
+                    'Dispersion': __extract_val(
+                        r'(.*)\[eV/Channel\]',
+                        __find_val('Selected dispersion: ', self.tecnai_info)),
+                    'Aperture': __extract_val(
+                        r'(\d*)mm', __find_val('Selected aperture: ',
+                                               self.tecnai_info)),
+                    'Prism': __extract_val(
+                        r'(.*)\[eV\]',
+                        __find_val('Prism shift: ', self.tecnai_info)),
+                    'Drift': __extract_val(
+                        r'(.*)\[eV\]',
+                        __find_val('Drift tube: ', self.tecnai_info)),
+                    'TotalLoss': __extract_val(
+                        r'(.*)\[eV\]',
+                        __find_val('Total energy loss: ', self.tecnai_info))
+                }
+                mapping += [
+                    MappingElements(
+                        source_dict=filter_dict, source_path='Mode',
+                        dest_dict=self.em,
+                        dest_path=('EELS', 'spectrometer_mode'),
+                        cast_fn=str, units=None, conv_fn=None, override=True),
+                    MappingElements(
+                        source_dict=filter_dict, source_path='Dispersion',
+                        dest_dict=self.em,
+                        dest_path=('EELS', 'dispersion_per_channel'),
+                        cast_fn=float, units='EV', conv_fn=None, override=True),
+                    MappingElements(
+                        source_dict=filter_dict, source_path='Aperture',
+                        dest_dict=self.em,
+                        dest_path=('EELS', 'aperture_size'),
+                        cast_fn=float, units='MilliM', conv_fn=None,
+                        override=True),
+                    MappingElements(
+                        source_dict=filter_dict, source_path='Drift',
+                        dest_dict=self.em, dest_path=('EELS',
+                                                      'drift_tube_energy'),
+                        cast_fn=float, units='EV', conv_fn=None, override=True),
+                    MappingElements(
+                        source_dict=filter_dict, source_path='Prism',
+                        dest_dict=self.em, dest_path=('EELS',
+                                                      'prism_shift_energy'),
+                        cast_fn=float, units='EV', conv_fn=None, override=True),
+                    MappingElements(
+                        source_dict=filter_dict, source_path='TotalLoss',
+                        dest_dict=self.em, dest_path=('EELS',
+                                                      'total_energy_loss'),
+                        cast_fn=float, units='EV', conv_fn=None, override=True),
+                ]
+
+            map_dict_values(mapping)
 
     def _tia_info(self) -> None:
         pass
@@ -775,4 +1029,4 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 'Joshua Taillon <joshua.taillon@nist.gov>']
 
     def version(self):
-        return '0.0.3'
+        return '0.1.0'
