@@ -113,11 +113,15 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
     For EDS:
       - X azimuth_angle
+      - X detector_type
+      - X dispersion_per_channel
       - X elevation_angle
       - X energy_resolution_MnKa
+      - X incidence_angle
       - X live_time
       - X real_time
-      - dispersion_per_channel
+      - X solid_angle
+      - X stage_tilt
 
     For all:
       - raw_metadata - the superset of whatever metadata was extracted from
@@ -148,9 +152,9 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self._dm3_general_info()
         self._dm3_eels_info()
         self._dm3_tecnai_info()
+        self._dm3_eds_info()
 
         # TODO:
-        self._dm3_eds_info()
         self._dm3_spectrum_image_info()
 
         self._tia_info()  # ...and so on
@@ -783,7 +787,57 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def _dm3_eds_info(self) -> None:
-        pass
+        pre_path = self.__get_dm3_tag_pre_path()
+        base = pre_path + ('EDS',)
+        mapping = [
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Detector Info', 'Azimuthal angle'),
+                dest_path=('EDS', 'azimuth_angle'), units='DEG',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Detector Info', 'Detector type'),
+                dest_path=('EDS', 'detector_type'), units=None,
+                conv_fn=None, cast_fn=str, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Acquisition', 'Dispersion (eV)'),
+                dest_path=('EDS', 'dispersion_per_channel'), units='EV',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Detector Info', 'Elevation angle'),
+                dest_path=('EDS', 'elevation_angle'), units='DEG',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Detector Info', 'Incidence angle'),
+                dest_path=('EDS', 'incidence_angle'), units='DEG',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Live time',),
+                dest_path=('EDS', 'live_time'), units='SEC',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Real time',),
+                dest_path=('EDS', 'real_time'), units='SEC',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Detector Info', 'Solid angle'),
+                dest_path=('EDS', 'solid_angle'), units='SR',
+                conv_fn=None, cast_fn=float, override=False),
+            MappingElements(
+                source_dict=self.raw_meta, dest_dict=self.em,
+                source_path=base + ('Detector Info', 'Stage tilt'),
+                dest_path=('EDS', 'stage_tilt'), units='DEG',
+                conv_fn=None, cast_fn=float, override=False)
+        ]
+
+        map_dict_values(mapping)
 
     def _dm3_spectrum_image_info(self) -> None:
         pass

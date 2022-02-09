@@ -35,11 +35,11 @@ def test_dm4(parser):
 
 
 def test_eds(parser):
-    res = parser.parse([file_path('test-EDS_spectrum.dm3')])
+    res = parser.parse([file_path('01_test-EDS_spectrum.dm3')])
 
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2016-08-08'},
-        'original_filename': {'value': 'test-EDS_spectrum.dm3'},
+        'original_filename': {'value': '01_test-EDS_spectrum.dm3'},
         'time': {'value': '21:46:19'},
         'title': {'value': 'EDS Spectrum'}
     }
@@ -71,9 +71,56 @@ def test_eds(parser):
         'elevation_angle': {'value': 18.0, 'units': 'DEG'},
         'energy_resolution_MnKa': {'value': 130.0, 'units': 'EV'},
         'live_time': {'value': 3.806, 'units': 'SEC'},
-        'real_time': {'value': 4.233, 'units': 'SEC'}
-    }
+        'real_time': {'value': 4.233, 'units': 'SEC'},
+        'detector_type': {'value': 'SIUTW'},
+        'dispersion_per_channel': {'value': 5.0, 'units': 'EV'},
+        'incidence_angle': {'value': 90.0, 'units': 'DEG'},
+        'solid_angle': {'value': 0.7, 'units': 'SR'},
+        'stage_tilt': {'value': 0.0, 'units': 'DEG'}}
     assert res['image'] == {'shape': [4096]}
+
+    res = parser.parse([file_path('02_EDS_SI_Titan.dm4')])
+    assert res['electron_microscopy']['General'] == {
+        'date': {'value': '2019-05-21'},
+        'original_filename': {'value': '02_EDS_SI_Titan.dm4'},
+        'time': {'value': '15:49:18'}, 'title': {'value': 'EDS Spectrum Image'}}
+    assert res['electron_microscopy']['General_EM'] == {
+        'acquisition_mode': {'value': 'STEM'},
+        'beam_current': {'value': 0.0, 'units': 'NanoA'},
+        'beam_energy': {'value': 300.0, 'units': 'KiloEV'},
+        'magnification_indicated': {'value': 910000.0, 'units': 'UNITLESS'},
+        'microscope_name': {'value': 'Titan80-300_D3094'},
+        'stage_position': {
+            'tilt_alpha': {'value': 15.208992784409162, 'units': 'DEG'},
+            'tilt_beta': {'value': -0.88000014796348, 'units': 'DEG'},
+            'x': {'value': 0.013455, 'units': 'MilliM'},
+            'y': {'value': 0.137812, 'units': 'MilliM'},
+            'z': {'value': 0.0009226799999999999, 'units': 'MilliM'}},
+        'acquisition_software_name': {'value': 'DigitalMicrograph'},
+        'emission_current': {'value': 0.0, 'units': 'MicroA'},
+        'accelerating_voltage': {'value': 300.0, 'units': 'KiloEV'},
+        'detector_name': {'value': 'GIF CCD'},
+        'acquisition_software_version': {'value': '2.32.888.0'}}
+    assert res['electron_microscopy']['TEM'] == {
+        'camera_length': {'value': 77.0, 'units': 'MilliM'},
+        'spherical_aberration_coefficient': {'value': 1.0, 'units': 'MilliM'},
+        'operation_mode': {'value': 'SCANNING'},
+        'imaging_mode': {'value': 'DIFFRACTION'},
+        'illumination_mode': {'value': 'STEM NANOPROBE'},
+        'acquisition_mode': {'value': 'Parallel dispersive'},
+        'acquisition_format': {'value': 'Spectrum image'},
+        'acquisition_signal': {'value': 'X-ray'}}
+    assert res['electron_microscopy']['EDS'] == {
+        'azimuth_angle': {'value': 45.0, 'units': 'DEG'},
+        'elevation_angle': {'value': 40.0, 'units': 'DEG'},
+        'energy_resolution_MnKa': {'value': 130.0, 'units': 'EV'},
+        'live_time': {'value': 1.0, 'units': 'SEC'},
+        'real_time': {'value': 0.5, 'units': 'SEC'},
+        'detector_type': {'value': 'SIUTW'},
+        'incidence_angle': {'value': 90.0, 'units': 'DEG'},
+        'solid_angle': {'value': 0.002, 'units': 'SR'},
+        'stage_tilt': {'value': 0.0, 'units': 'DEG'}}
+    assert res['image'] == {'shape': [100, 4096]}
 
 
 def test_edax_eds(parser):
