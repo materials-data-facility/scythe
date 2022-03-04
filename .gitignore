@@ -17,3 +17,4 @@ src/*
 .vscode
 .venv
 .idea
+test_files/

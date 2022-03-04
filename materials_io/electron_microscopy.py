@@ -1,15 +1,18 @@
-from hyperspy.io import load as hs_load
-import re
 import logging
+import re
+from typing import Tuple, Dict, Optional
+
+from hyperspy.io import load as hs_load
+from traits.trait_base import Undefined
 
 from materials_io.base import BaseSingleFileParser
 from materials_io.utils import get_nested_dict_value_by_path as get_val
-from materials_io.utils import map_dict_values, MappingElements
+from materials_io.utils import \
+    map_dict_values, MappingElements, standardize_unit
 from materials_io.utils import set_nested_dict_value_with_units as set_val_units
 
-from typing import Tuple, Dict, Optional
-
 logger = logging.getLogger(__name__)
+
 
 class ElectronMicroscopyParser(BaseSingleFileParser):
     """Parse metadata specific to electron microscopy, meaning any file
@@ -68,6 +71,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
          etc., or a time offset, e.g. “+03:00” or “-05:00”
      - title : str
        - A title for the signal, e.g. “Sample overview”
+     - axis_calibration : dicts
+       - Information about the calibration of each axis found in the data
 
     For TEM:
       - X acquisition_device
@@ -130,18 +135,17 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
     def _parse_file(self, file_path: str, context: Dict = None) -> Dict:
         self.em = {}
-        self.image = {}
         self.inst_data = None
 
         # Read file lazily (reduce memory), both HyperSpy-formatted and raw data
-        hs_data = hs_load(file_path, lazy=True)
+        self.hs_data = hs_load(file_path, lazy=True)
 
         # if hs_data is a list, pull out first for metadata extraction
-        if isinstance(hs_data, list):
-            hs_data = hs_data[0]
+        if isinstance(self.hs_data, list):
+            self.hs_data = self.hs_data[0]
 
-        self.meta = hs_data.metadata.as_dictionary()
-        self.raw_meta = hs_data.original_metadata.as_dictionary()
+        self.meta = self.hs_data.metadata.as_dictionary()
+        self.raw_meta = self.hs_data.original_metadata.as_dictionary()
         self.em['raw_metadata'] = self.raw_meta
 
         for s in ['General', 'General_EM', 'TEM', 'SEM', 'EDS', 'EELS']:
@@ -155,8 +159,6 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self._dm3_eds_info()
 
         # TODO:
-        self._dm3_spectrum_image_info()
-
         self._tia_info()  # ...and so on
         self._tiff_info()  # ...and so on
 
@@ -168,57 +170,10 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         except Exception:
             micro_info = {}
         try:
+            # ser files
             exp_desc = self.raw_meta["ObjectInfo"]["ExperimentalDescription"]
         except Exception:
             exp_desc = {}
-
-        # emission_current
-        try:
-            self.em["emission_current"] = float(micro_info["Emission Current (µA)"])
-        except Exception:
-            try:
-                self.em["emission_current"] = float(exp_desc["Emission_uA"])
-            except Exception:
-                pass
-        # operation_mode
-        try:
-            self.em["operation_mode"] = str(micro_info["Operation Mode"])
-        except Exception:
-            pass
-        # microscope
-        try:
-            self.em["microscope"] = str(self.raw_meta["ImageList"]["TagGroup0"]["ImageTags"]
-                                           ["Session Info"]["Microscope"])
-        except Exception:
-            try:
-                self.em["microscope"] = str(micro_info["Name"])
-            except Exception:
-                pass
-        # spot_size
-        try:
-            self.em["spot_size"] = int(exp_desc["Spot size"])
-        except Exception:
-            pass
-
-        # Image metadata
-        try:
-            shape = []
-            base_shape = [int(dim) for dim in self.raw_meta["ImageList"]["TagGroup0"]
-                                                      ["ImageData"]["Dimensions"].values()]
-            # Reverse X and Y order to match MDF schema (y, x, z, ..., channels)
-            if len(base_shape) >= 2:
-                shape.append(base_shape[1])
-                shape.append(base_shape[0])
-                shape.extend(base_shape[2:])
-            # If 1 dimension, don't need to swap
-            elif len(base_shape) > 0:
-                shape = base_shape
-
-            if shape:
-                self.image["shape"] = shape
-        except Exception as e:
-            print(e)
-            pass
 
         # Remove None/empty values
         for key, val in list(self.em.items()):
@@ -228,8 +183,6 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         record = {}
         if self.em:
             record["electron_microscopy"] = self.em
-        if self.image:
-            record["image"] = self.image
 
         return record
 
@@ -390,6 +343,33 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 cast_fn=str, units=None, conv_fn=None, override=False)]
 
         map_dict_values(mapping)
+        self._process_hs_axes()
+
+    def _process_hs_axes(self) -> None:
+        """
+        Parses the HyperSpy signal axis calibrations into a format that can
+        be stored with the metadata
+        """
+        axes = self.hs_data.axes_manager.as_dictionary()
+
+        for k, v in axes.items():
+            # remove some non-relevant values
+            for to_remove in ['_type', 'navigate', 'is_binned']:
+                if to_remove in v:
+                    del axes[k][to_remove]
+
+            # attempt to standardize units according to QUDT:
+            if 'units' in v:
+                # check for "Undefined" units using traits
+                if axes[k]['units'] is Undefined:
+                    axes[k]['units'] = None
+                else:
+                    axes[k]['units'] = standardize_unit(axes[k]['units'])
+
+        self.em['General']['axis_calibration'] = axes
+        self.em['General']['data_dimensions'] = \
+            [v['size'] for v in
+             self.hs_data.axes_manager.as_dictionary().values()]
 
     def _process_hs_detectors(self) -> None:
         """
@@ -734,7 +714,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_dict=self.raw_meta, dest_dict=self.em,
                 source_path=spect_path + ('Aperture label',),
                 dest_path=('EELS', 'aperture_size'), units='MilliM',
-                conv_fn=None, cast_fn=lambda s: float(s.replace(' mm', '')),
+                conv_fn=None,
+                cast_fn=lambda s: float(s.replace(' mm', '').replace('mm', '')),
                 override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
@@ -838,9 +819,6 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         ]
 
         map_dict_values(mapping)
-
-    def _dm3_spectrum_image_info(self) -> None:
-        pass
 
     def _dm3_tecnai_info(self, delimiter: Optional[str] = u'\u2028') -> None:
         """

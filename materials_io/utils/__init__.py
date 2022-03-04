@@ -62,7 +62,7 @@ def set_nested_dict_value(nest_dict: Dict, path: Tuple,
         A dictionary of dictionaries that is to be queried
     path
         A tuple (or other iterable type) that specifies the subsequent keys
-        needed to get to a a value within `nest_dict`
+        needed to get to a value within `nest_dict`
     value
         The value which will be given to the path in the nested dictionary
     override
@@ -142,3 +142,37 @@ def map_dict_values(mapping: List[MappingElements]):
         set_nested_dict_value_with_units(
             nest_dict=m['dest_dict'], path=m['dest_path'], value=value,
             units=m['units'], fn=m['conv_fn'], override=m['override'])
+
+
+def standardize_unit(u: str) -> str:
+    """
+    Helper method to convert typically seen unit representations into a
+    standardized representation from QUDT
+    (http://www.qudt.org/doc/DOC_VOCAB-UNITS.html). This is
+    non-exhaustive, and may need to be updated as more types of units are
+    encountered
+    """
+    mapping = {
+        # length
+        'km': 'KiloM', 'cm': 'CentiM', 'm': 'M', 'mm': 'MilliM',
+        'µm': 'MicroM', 'um': 'MicroM', 'nm': 'NanoM', 'pm': 'PicoM',
+        'Å': 'ANGSTROM',
+        # current
+        'A': 'A', 'mA': 'MilliA', 'nA': 'NanoA', 'pA': 'PicoA',
+        'µA': 'MicroA', 'uA': 'MicroA',
+        # energy
+        'eV': 'EV', 'GeV': 'GigaEV', 'keV': 'KiloEV', 'MeV': 'MegaEV',
+        # mass
+        'g': 'GM', 'kg': 'KiloGM',
+        # potential
+        'V': 'V', 'kV': 'KiloV', 'MV': 'MegaV', 'mV': 'MilliV',
+        'uV': 'MicroV', 'µV': 'MicroV',
+        # inverse lengths
+        '1/nm': 'PER-NanoM', '1/mm': 'PER-MilliM', '1/m': 'PER-M',
+        '1/cm': 'PER-CentiM', '1/um': 'PER-MicroM', '1/µm': 'PER-MicroM',
+        '1/pm': 'PER-PicoM'
+    }
+    if u in mapping:
+        return mapping[u]
+    else:
+        return u
