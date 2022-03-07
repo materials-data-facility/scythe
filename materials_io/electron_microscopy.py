@@ -28,24 +28,24 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       }
     
     For base EM, return the following under "General_EM"
-      - X accelerating_voltage
-      - X acquisition_mode
-      - X acquisition_software_name
-      - X acquisition_software_version
-      - X beam_current (measured at the sample)
-      - X beam_energy 
-      - X convergence_angle
-      - X detector_name
-      - X dwell_time (for STEM modes)
-      - X emission_current
-      - X exposure_time (for non-STEM modes)
-      - X elements (list of str - as detected from spectroscopy signal)
-      - X frame_time
-      - X magnification_actual
-      - X magnification_indicated
-      - X microscope_name
-      - X probe_area
-      - X stage_position (dict with X, Y, Z, R, etc. as required)
+      - accelerating_voltage
+      - acquisition_mode
+      - acquisition_software_name
+      - acquisition_software_version
+      - beam_current (measured at the sample)
+      - beam_energy 
+      - convergence_angle
+      - detector_name
+      - dwell_time (for STEM modes)
+      - emission_current
+      - exposure_time (for non-STEM modes)
+      - elements (list of str - as detected from spectroscopy signal)
+      - frame_time
+      - magnification_actual
+      - magnification_indicated
+      - microscope_name
+      - probe_area
+      - stage_position (dict with X, Y, Z, R, etc. as required)
 
     For all, return the following under "General" (if known, from HyperSpy,
       following their metadata definitions:
@@ -76,18 +76,18 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
        - Information about the calibration of each axis found in the data
 
     For TEM:
-      - X acquisition_device
-      - X acquisition_format
-      - X acquisition_mode
-      - X acquisition_signal
-      - X extractor_voltage
-      - X illumination_mode
-      - X imaging_mode
-      - X operation_mode
-      - X spherical_aberration_coefficient
-      - X defocus
-      - X spot_size
-      - X camera_length
+      - acquisition_device
+      - acquisition_format
+      - acquisition_mode
+      - acquisition_signal
+      - extractor_voltage
+      - illumination_mode
+      - imaging_mode
+      - operation_mode
+      - spherical_aberration_coefficient
+      - defocus
+      - spot_size
+      - camera_length
 
     For SEM:
       - chamber_pressure
@@ -95,40 +95,41 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - magnification_mode
       - pixel_height
       - pixel_width
+      - spot_size
       - working_distance
       - vertical_field_width
       
     For EELS:
-      - XX aperture_size
-      - XX collection_angle
-      - X dispersion_per_channel
-      - X drift_tube_voltage
-      - X drift_tube_energy (TIA software)
-      - X drift_tube_enabled
-      - X energy_loss_offset
-      - X filter_slit_width
-      - X filter_slit_inserted
-      - X integration_time
-      - X number_of_samples (The number of frames/spectra integrated during the
-                             acquisition.)
-      - X prism_shift_voltage
-      - X prism_shift_energy (TIA software)
-      - X prism_shift_enabled
-      - X spectrometer_mode
-      - XX spectrometer_name
-      - X total_energy_loss
+      - aperture_size
+      - collection_angle
+      - dispersion_per_channel
+      - drift_tube_voltage
+      - drift_tube_energy (TIA software)
+      - drift_tube_enabled
+      - energy_loss_offset
+      - filter_slit_width
+      - filter_slit_inserted
+      - integration_time
+      - number_of_samples (The number of frames/spectra integrated during the
+                           acquisition.)
+      - prism_shift_voltage
+      - prism_shift_energy (TIA software)
+      - prism_shift_enabled
+      - spectrometer_mode
+      - spectrometer_name
+      - total_energy_loss
 
     For EDS:
-      - X azimuth_angle
-      - X detector_type
-      - X dispersion_per_channel
-      - X elevation_angle
-      - X energy_resolution_MnKa
-      - X incidence_angle
-      - X live_time
-      - X real_time
-      - X solid_angle
-      - X stage_tilt
+      - azimuth_angle
+      - detector_type
+      - dispersion_per_channel
+      - elevation_angle
+      - energy_resolution_MnKa
+      - incidence_angle
+      - live_time
+      - real_time
+      - solid_angle
+      - stage_tilt
 
     For all:
       - raw_metadata - the superset of whatever metadata was extracted from
@@ -160,21 +161,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self._dm3_tecnai_info()
         self._dm3_eds_info()
         self._tia_info()
-        # TODO:
-        self._tiff_info()  # ...and so on
-
-        # Non-HS data (not pulled into standard HS metadata)
-        # Pull out common dicts
-        try:
-            micro_info = self.raw_meta["ImageList"]["TagGroup0"]["ImageTags"][
-                "Microscope Info"]
-        except Exception:
-            micro_info = {}
-        try:
-            # ser files
-            exp_desc = self.raw_meta["ObjectInfo"]["ExperimentalDescription"]
-        except Exception:
-            exp_desc = {}
+        self._tiff_info()
 
         # Remove None/empty values
         for key, val in list(self.em.items()):
@@ -188,6 +175,9 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         return record
 
     def _process_hs_data(self) -> None:
+        """
+        Parse metadata that was already extracted from HyperSpy
+        """
         # Image mode is SEM, TEM, or STEM
         # STEM is a subset of TEM
         if "SEM" in self.meta.get('Acquisition_instrument', {}).keys():
@@ -349,7 +339,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
     def _process_hs_axes(self) -> None:
         """
         Parses the HyperSpy signal axis calibrations into a format that can
-        be stored with the metadata
+        be stored with the metadata. Make sure to remove "Undefined" traits
+        from any axis values, since that value cannot be serialized to JSON
         """
         axes = self.hs_data.axes_manager.as_dictionary()
 
@@ -671,6 +662,9 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         return pre_path
 
     def _dm3_eels_info(self) -> None:
+        """
+        Parse EELS-related information from Gatan DigitalMicrograph format
+        """
         # basic EELS metadata
         pre_path = self.__get_dm3_tag_pre_path()
         base = pre_path + ('EELS', )
@@ -770,6 +764,9 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def _dm3_eds_info(self) -> None:
+        """
+        Parse EDS-related information from Gatan DigitalMicrograph format
+        """
         pre_path = self.__get_dm3_tag_pre_path()
         base = pre_path + ('EDS',)
         mapping = [
@@ -1223,7 +1220,150 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def _tiff_info(self) -> None:
-        pass
+        """
+        Parses metadata found in FEI/ThermoFisher tiff formats (and perhaps
+        others in the future), produced by SEM and dual beam tools
+        """
+        mapping = [
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'System', 'Software'),
+                dest_dict=self.em, dest_path=('General_EM',
+                                              'acquisition_software_version'),
+                cast_fn=str, units=None, conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Beam', 'Spot'),
+                dest_dict=self.em, dest_path=('SEM', 'spot_size'),
+                cast_fn=lambda x: int(x) if x != '' else None, units=None,
+                conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Beam', 'HV'),
+                dest_dict=self.em, dest_path=('General_EM',
+                                              'accelerating_voltage'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='KiloV',
+                conv_fn=lambda x: x/1000 if x != '' else None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'EBeam', 'HV'),
+                dest_dict=self.em, dest_path=('General_EM',
+                                              'accelerating_voltage'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='KiloV', conv_fn=lambda x: x / 1000 if x != '' else None,
+                override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'EBeam', 'HFW'),
+                dest_dict=self.em, dest_path=('SEM', 'horizontal_field_width'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='M', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'EBeam', 'VFW'),
+                dest_dict=self.em, dest_path=('SEM', 'vertical_field_width'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='M',
+                conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'EBeam', 'WD'),
+                dest_dict=self.em, dest_path=('SEM', 'working_distance'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='M',
+                conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'EBeam', 'BeamCurrent'),
+                dest_dict=self.em, dest_path=('General_EM', 'beam_current'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='A',
+                conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Stage', 'StageX'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'x'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='MilliM',
+                conv_fn=lambda x: x * 1000 if x != '' else None, override=True),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Stage', 'StageY'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'y'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='MilliM',
+                conv_fn=lambda x: x * 1000 if x != '' else None, override=True),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Stage', 'StageZ'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'z'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='MilliM',
+                conv_fn=lambda x: x * 1000 if x != '' else None, override=True),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Stage', 'StageR'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'rotation'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='DEG',
+                conv_fn=None, override=True),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Stage', 'StageT'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'tilt_alpha'),
+                cast_fn=lambda x: float(x) if x != '' else None, units='DEG',
+                conv_fn=None, override=True),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Stage', 'StageTb'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'tilt_beta'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='DEG',
+                conv_fn=None, override=True),
+
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Scan', 'PixelWidth'),
+                dest_dict=self.em, dest_path=('SEM', 'pixel_width'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='M', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Scan', 'PixelHeight'),
+                dest_dict=self.em, dest_path=('SEM', 'pixel_height'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='M', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Scan', 'HorFieldsize'),
+                dest_dict=self.em, dest_path=('SEM', 'horizontal_field_width'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='M', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Scan', 'VerFieldsize'),
+                dest_dict=self.em, dest_path=('SEM', 'vertical_field_width'),
+                cast_fn=lambda x: float(x) if x != '' else None,
+                units='M', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Scan', 'FrameTime'),
+                dest_dict=self.em, dest_path=('General_EM', 'frame_time'),
+                cast_fn=lambda x: float(x) if x else None, units='SEC',
+                conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Image', 'MagnificationMode'),
+                dest_dict=self.em, dest_path=('SEM', 'magnification_mode'),
+                cast_fn=None, units=None, conv_fn=None, override=False),
+            # confirmed in Quanta SEM manual that the pressure units are Pascals
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('fei_metadata', 'Vacuum', 'ChPressure'),
+                dest_dict=self.em, dest_path=('SEM', 'chamber_pressure'),
+                cast_fn=lambda x: float(x) if x else None, units='PA',
+                conv_fn=None, override=False)
+        ]
+        map_dict_values(mapping)
 
     def implementors(self):
         return ['Jonathon Gaff <jgaff@uchicago.edu>',

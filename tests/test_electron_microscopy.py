@@ -542,6 +542,40 @@ def test_tia_haadf(parser):
         'total_energy_loss': {'value': 0.0, 'units': 'EV'}}
 
 
+def test_quanta_sem_tif(parser):
+    res = parser.parse([file_path('20_quanta_sem.tif')])
+    assert res['electron_microscopy']['General'] == {
+        'date': {'value': '2022-03-03'},
+        'original_filename': {'value': '20_quanta_sem.tif'},
+        'time': {'value': '17:27:45'}, 'axis_calibration': {
+            'axis-0': {'name': 'height', 'scale': 1.25e-09, 'offset': 0.0,
+                       'size': 943, 'units': 'M'},
+            'axis-1': {'name': 'width', 'scale': 1.25e-09, 'offset': 0.0,
+                       'size': 1024, 'units': 'M'}},
+        'data_dimensions': [943, 1024]}
+    assert res['electron_microscopy']['General_EM'] == {
+        'beam_energy': {'value': 30.0, 'units': 'KiloEV'},
+        'microscope_name': {'value': 'Quanta FEG'},
+        'stage_position': {'rotation': {'value': -0.0524327, 'units': 'DEG'},
+                           'x': {'value': -1.55644, 'units': 'MilliM'},
+                           'y': {'value': 3.15249, 'units': 'MilliM'},
+                           'z': {'value': 5.99983, 'units': 'MilliM'},
+                           'tilt_alpha': {'value': 0.0184572, 'units': 'DEG'},
+                           'tilt_beta': {'value': 0.0, 'units': 'DEG'}},
+        'acquisition_software_version': {'value': '4.1.15.2218'},
+        'accelerating_voltage': {'value': 30.0, 'units': 'KiloV'},
+        'frame_time': {'value': 29.5667, 'units': 'SEC'}}
+    assert res['electron_microscopy']['SEM'] == {
+        'working_distance': {'value': 6.25552, 'units': 'MilliM'},
+        'spot_size': {'value': 3},
+        'horizontal_field_width': {'value': 1.28e-06, 'units': 'M'},
+        'vertical_field_width': {'value': 1.105e-06, 'units': 'M'},
+        'pixel_width': {'value': 1.25e-09, 'units': 'M'},
+        'pixel_height': {'value': 1.25e-09, 'units': 'M'},
+        'magnification_mode': {'value': 3},
+        'chamber_pressure': {'value': 0.000703102, 'units': 'PA'}}
+
+
 def test_implementors(parser):
     assert 'Jonathon Gaff <jgaff@uchicago.edu>' in parser.implementors()
     assert 'Joshua Taillon <joshua.taillon@nist.gov>' in parser.implementors()
