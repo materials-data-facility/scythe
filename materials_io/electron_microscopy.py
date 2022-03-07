@@ -40,6 +40,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - X emission_current
       - X exposure_time (for non-STEM modes)
       - X elements (list of str - as detected from spectroscopy signal)
+      - X frame_time
       - X magnification_actual
       - X magnification_indicated
       - X microscope_name
@@ -94,7 +95,6 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - magnification_mode
       - pixel_height
       - pixel_width
-      - frame_time
       - working_distance
       - vertical_field_width
       
@@ -103,6 +103,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - XX collection_angle
       - X dispersion_per_channel
       - X drift_tube_voltage
+      - X drift_tube_energy (TIA software)
       - X drift_tube_enabled
       - X energy_loss_offset
       - X filter_slit_width
@@ -111,6 +112,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
       - X number_of_samples (The number of frames/spectra integrated during the
                              acquisition.)
       - X prism_shift_voltage
+      - X prism_shift_energy (TIA software)
       - X prism_shift_enabled
       - X spectrometer_mode
       - XX spectrometer_name
@@ -157,9 +159,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self._dm3_eels_info()
         self._dm3_tecnai_info()
         self._dm3_eds_info()
-
+        self._tia_info()
         # TODO:
-        self._tia_info()  # ...and so on
         self._tiff_info()  # ...and so on
 
         # Non-HS data (not pulled into standard HS metadata)
@@ -206,7 +207,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 MappingElements(
                     source_dict=source, source_path='acquisition_mode',
                     dest_dict=dest, dest_path=('General_EM',
-                                                  'acquisition_mode'),
+                                               'acquisition_mode'),
                     cast_fn=str, units=None, conv_fn=None, override=False),
                 MappingElements(
                     source_dict=source, source_path='beam_current',
@@ -358,13 +359,14 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 if to_remove in v:
                     del axes[k][to_remove]
 
+            # remove potentially unserializable values from axes:
+            for key in v:
+                if v[key] is Undefined:
+                    v[key] = None
+
             # attempt to standardize units according to QUDT:
             if 'units' in v:
-                # check for "Undefined" units using traits
-                if axes[k]['units'] is Undefined:
-                    axes[k]['units'] = None
-                else:
-                    axes[k]['units'] = standardize_unit(axes[k]['units'])
+                axes[k]['units'] = standardize_unit(axes[k]['units'])
 
         self.em['General']['axis_calibration'] = axes
         self.em['General']['data_dimensions'] = \
@@ -553,7 +555,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     source_dict=self.raw_meta, dest_dict=dest_dict,
                     source_path=base + ('Voltage',), cast_fn=float,
                     dest_path=('General_EM', 'accelerating_voltage'),
-                    units='KiloEV' if voltage >= 1000 else 'EV',
+                    units='KiloV' if voltage >= 1000 else 'V',
                     conv_fn=lambda x: x / 1000 if voltage >= 1000 else x,
                     override=False)
             ]
@@ -715,7 +717,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 source_path=spect_path + ('Aperture label',),
                 dest_path=('EELS', 'aperture_size'), units='MilliM',
                 conv_fn=None,
-                cast_fn=lambda s: float(s.replace(' mm', '').replace('mm', '')),
+                cast_fn=lambda s: float(s.replace('mm', '')),
                 override=False),
             MappingElements(
                 source_dict=self.raw_meta, dest_dict=self.em,
@@ -1051,7 +1053,174 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
             map_dict_values(mapping)
 
     def _tia_info(self) -> None:
-        pass
+        """
+        Parses information commonly found in .ser/.emi files produced by the
+        "Tecnai Imaging and Analysis" (TIA) software
+
+        Terms such as ``IntegrationTime`` and ``EnergyResolution`` appear to be
+        non-specific as to acqusition modality (i.e. could be EELS or EDS), so
+        we do not extract those into our metadata hierarchy 
+        """
+
+        mapping = [
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalConditions',
+                             'MicroscopeConditions', 'AcceleratingVoltage'),
+                dest_dict=self.em, dest_path=('General_EM',
+                                              'accelerating_voltage'),
+                cast_fn=float, units='V', conv_fn=None, override=False),
+
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'AcquireInfo', 'DwellTimePath'),
+                dest_dict=self.em, dest_path=('General_EM', 'dwell_time'),
+                cast_fn=float, units='SEC', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'AcquireInfo', 'FrameTime'),
+                dest_dict=self.em, dest_path=('General_EM', 'frame_time'),
+                cast_fn=float, units='SEC', conv_fn=None, override=False),
+
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'Microscope'),
+                dest_dict=self.em, dest_path=('General_EM', 'microscope_name'),
+                cast_fn=str, units=None, conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'High tension_kV'),
+                dest_dict=self.em, dest_path=('General_EM',
+                                              'accelerating_voltage'),
+                cast_fn=float, units='KiloV', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'Emission_uA'), dest_dict=self.em,
+                dest_path=('General_EM', 'emission_current'),
+                cast_fn=float, units='MicroA', conv_fn=None, override=False),
+            # this value is often more specific than the one from HyperSpy,
+            # so override acquisition mode:
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription', 'Mode'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'acquisition_mode'),
+                cast_fn=str, units=None, conv_fn=lambda x: x.strip(),
+                override=True),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'Defocus_um'),
+                dest_dict=self.em, dest_path=('TEM', 'defocus'),
+                cast_fn=float, units='MicroM', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'Magnification_x'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'magnification_indicated'),
+                cast_fn=float, units='UNITLESS', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'Camera length_m'),
+                dest_dict=self.em, dest_path=('TEM', 'camera_length'),
+                cast_fn=float, units='M', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=('ObjectInfo', 'ExperimentalDescription',
+                             'Spot size'),
+                dest_dict=self.em, dest_path=('TEM', 'spot_size'),
+                cast_fn=int, units='UNITLESS', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription', 'Stage X_um'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'x'),
+                cast_fn=float, units='MicroM', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription', 'Stage Y_um'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'y'),
+                cast_fn=float, units='MicroM', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription', 'Stage Z_um'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'z'),
+                cast_fn=float, units='MicroM', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription', 'Stage A_deg'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'tilt_alpha'),
+                cast_fn=float, units='DEG', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription', 'Stage B_deg'),
+                dest_dict=self.em,
+                dest_path=('General_EM', 'stage_position', 'tilt_beta'),
+                cast_fn=float, units='DEG', conv_fn=None, override=False),
+
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription', 'Filter mode'),
+                dest_dict=self.em,
+                dest_path=('EELS', 'spectrometer_mode'),
+                cast_fn=str, units=None, conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription',
+                    'Filter selected dispersion_eV/Channel'),
+                dest_dict=self.em,
+                dest_path=('EELS', 'dispersion_per_channel'),
+                cast_fn=float, units='EV', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription',
+                    'Filter selected aperture'),
+                dest_dict=self.em,
+                dest_path=('EELS', 'aperture_size'),
+                cast_fn=lambda x: float(x.replace('mm', '')),
+                units='MilliM', conv_fn=None,  override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription',
+                    'Filter prism shift_eV'),
+                dest_dict=self.em,
+                dest_path=('EELS', 'prism_shift_energy'),
+                cast_fn=float, units='EV', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription',
+                    'Filter drift tube_eV'),
+                dest_dict=self.em,
+                dest_path=('EELS', 'drift_tube_energy'),
+                cast_fn=float, units='EV', conv_fn=None, override=False),
+            MappingElements(
+                source_dict=self.raw_meta,
+                source_path=(
+                    'ObjectInfo', 'ExperimentalDescription',
+                    'Filter total energy loss_eV'),
+                dest_dict=self.em,
+                dest_path=('EELS', 'total_energy_loss'),
+                cast_fn=float, units='EV', conv_fn=None, override=False)
+        ]
+        map_dict_values(mapping)
 
     def _tiff_info(self) -> None:
         pass
