@@ -5,32 +5,25 @@ from typing_extensions import TypedDict
 def get_nested_dict_value_by_path(nest_dict: Dict,
                                   path: Union[Tuple, str],
                                   cast: Optional[Callable] = None) -> Any:
-    """
-    Get the value from within a nested dictionary structure by traversing into
-    the dictionary as deep as that path found and returning that value
+    """Get the value from within a nested dictionary structure by traversing
+    into the dictionary as deep as that path found and returning that value
 
-    Parameters
-    ----------
-    nest_dict
-        A dictionary of dictionaries that is to be queried
-    path
-        A string or tuple that specifies the subsequent keys
-        needed to get to a value within `nest_dict`. If a string, the value will
-        return just from the first level (mostly for convenience)
-    cast
-        A function that (if provided) will be applied to the value. This
-        helps with serialization.
+    Args:
+        nest_dict: A dictionary of dictionaries that is to be queried
+        path: A string or tuple that specifies the subsequent keys needed to
+            get to a value within `nest_dict`. If a string, the value will
+            return just from the first level (mostly for convenience)
+        cast: A function that (if provided) will be applied to the value. This
+            helps with serialization.
 
-    Returns
-    -------
-    value
+    Returns:
         The value at the path within the nested dictionary; if there's no
         value there, return ``None``
     """
     sub_dict = nest_dict
 
     if isinstance(path, str):
-        path = (path, )
+        path = (path,)
 
     for key in path:
         try:
@@ -49,25 +42,20 @@ def get_nested_dict_value_by_path(nest_dict: Dict,
 
 
 def set_nested_dict_value(nest_dict: Dict, path: Tuple,
-                          value: Any, override: Optional[bool] = False,):
-    """
-    Set a value within a nested dictionary structure by traversing into
+                          value: Any, override: Optional[bool] = False, ):
+    """Set a value within a nested dictionary structure by traversing into
     the dictionary as deep as that path found and changing it to ``value``.
     If ``value`` is ``None``, immediately return without performing an action
     Cribbed from https://stackoverflow.com/a/13688108/1435788
 
-    Parameters
-    ----------
-    nest_dict
-        A dictionary of dictionaries that is to be queried
-    path
-        A tuple (or other iterable type) that specifies the subsequent keys
-        needed to get to a value within `nest_dict`
-    value
-        The value which will be given to the path in the nested dictionary
-    override
-        If the value is already present, this flag controls whether to override
-        its existing value
+    Args:
+        nest_dict: A dictionary of dictionaries that is to be queried
+        path: A tuple (or other iterable type) that specifies the subsequent
+            keys needed to get to a value within `nest_dict`
+        value: The value which will be given to the path in the nested
+            dictionary
+        override: If the value is already present, this flag controls whether
+            to override its existing value
     """
     if value is None:
         return
@@ -84,11 +72,23 @@ def set_nested_dict_value_with_units(nest_dict: Dict, path: Tuple,
                                      value: Any, units: Optional[str] = None,
                                      override: bool = False,
                                      fn: Optional[Callable] = None):
-    """
-    Same as :func:`~materials_io.utils.set_nested_dict_value`, but sets the
+    """Same as :func:`~materials_io.utils.set_nested_dict_value`, but sets the
     value in the format of a dictionary with keys ``'value'`` and ``'units'``
     according to the specified units. If ``fn`` is supplied, it will be
     applied to the value prior to setting it.
+
+    Args:
+        nest_dict: A dictionary of dictionaries that is to be queried
+        path: A tuple (or other iterable type) that specifies the subsequent
+            keys needed to get to a value within ``nest_dict``.
+        value: The value which will be given to the path in the nested
+            dictionary
+        units: If provided, will set the value at the given path to the
+            provided units
+        override: Whether to override a value if there is one already present
+            at the path given
+        fn: A callable function to apply to the value; can be used (for example)
+            to convert a value form one unit to another, or any other purpose
     """
     if value is not None:
         if fn is not None:
@@ -109,6 +109,9 @@ MappingElements = TypedDict('MappingElements',
                              'units': Optional[Union[None, str]],
                              'conv_fn': Optional[Union[None, Callable]],
                              'override': Optional[bool]})
+"""TypedDict: A TypedDict to specify the exact types expected when creating a 
+mapping dictionary to map metadata from one place to another.
+"""
 
 
 def map_dict_values(mapping: List[MappingElements]):
@@ -120,15 +123,16 @@ def map_dict_values(mapping: List[MappingElements]):
     eaqch term, the source path, the destination path, the cast function,
     the units to set, and potentially a conversion function
 
-    So, ``mapping`` should be a list of dicts:
-    [
-        {'source_path': ('source', 'path',),
-         'dest_path': ('dest', 'path',),
-         'cast_fn': float,
-         'units': str,
-         'conv_fn': lambda x: x,
-         'override': bool}
-    ]
+    Args:
+        mapping: should be a list of dicts, for example:
+            [
+                {'source_path': ('source', 'path',),
+                 'dest_path': ('dest', 'path',),
+                 'cast_fn': float,
+                 'units': str,
+                 'conv_fn': lambda x: x,
+                 'override': bool}
+            ]
     """
     for m in mapping:
         m.setdefault('cast_fn', None)
@@ -151,6 +155,13 @@ def standardize_unit(u: str) -> str:
     (http://www.qudt.org/doc/DOC_VOCAB-UNITS.html). This is
     non-exhaustive, and may need to be updated as more types of units are
     encountered
+
+    Args:
+        u: The unit representation to convert
+
+    Returns:
+        The unit in a QUDT-standard representation (if known; otherwise just
+        returns the unit representation as provided)
     """
     mapping = {
         # length

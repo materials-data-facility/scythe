@@ -175,9 +175,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         return record
 
     def _process_hs_data(self) -> None:
-        """
-        Parse metadata that was already extracted from HyperSpy
-        """
+        """Parse metadata that was already extracted from HyperSpy"""
         # Image mode is SEM, TEM, or STEM
         # STEM is a subset of TEM
         if "SEM" in self.meta.get('Acquisition_instrument', {}).keys():
@@ -337,8 +335,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         self._process_hs_axes()
 
     def _process_hs_axes(self) -> None:
-        """
-        Parses the HyperSpy signal axis calibrations into a format that can
+        """Parses the HyperSpy signal axis calibrations into a format that can
         be stored with the metadata. Make sure to remove "Undefined" traits
         from any axis values, since that value cannot be serialized to JSON
         """
@@ -365,9 +362,8 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
              self.hs_data.axes_manager.as_dictionary().values()]
 
     def _process_hs_detectors(self) -> None:
-        """
-        Parses HyperSpy-formatted metadata specific to detectors as specified by
-        http://hyperspy.org/hyperspy-doc/current/user_guide
+        """Parses HyperSpy-formatted metadata specific to detectors as
+        specified by http://hyperspy.org/hyperspy-doc/current/user_guide
         /metadata_structure.html
         """
         detector_node = get_val(self.inst_data, 'Detector')
@@ -633,8 +629,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def __get_dm3_tag_pre_path(self) -> Tuple:
-        """
-        Get the path into a dictionary where the important DigitalMicrograph
+        """Get the path into a dictionary where the important DigitalMicrograph
         metadata is expected to be found. If the .dm3/.dm4 file contains a stack
         of images, the metadata to extract is instead under a `plane info`
         tag, so this method will determine if the stack metadata is present
@@ -642,11 +637,9 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         like ``('ImageList', 'TagGroup0', 'ImageTags', 'plane info',
         'TagGroup0', 'source tags')``.
 
-        Returns
-        -------
-        pre_path
-            A tuple containing the subsequent keys that need to be traversed to
-            get to the point in the ``raw_metadata`` where the important
+        Returns:
+            A tuple containing the subsequent keys that need to be traversed
+            to get to the point in the ``raw_metadata`` where the important
             metadata is stored
         """
         # test if we have a stack
@@ -662,8 +655,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         return pre_path
 
     def _dm3_eels_info(self) -> None:
-        """
-        Parse EELS-related information from Gatan DigitalMicrograph format
+        """Parse EELS-related information from Gatan DigitalMicrograph format
         """
         # basic EELS metadata
         pre_path = self.__get_dm3_tag_pre_path()
@@ -764,9 +756,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def _dm3_eds_info(self) -> None:
-        """
-        Parse EDS-related information from Gatan DigitalMicrograph format
-        """
+        """Parse EDS-related information from Gatan DigitalMicrograph format"""
         pre_path = self.__get_dm3_tag_pre_path()
         base = pre_path + ('EDS',)
         mapping = [
@@ -820,24 +810,20 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def _dm3_tecnai_info(self, delimiter: Optional[str] = u'\u2028') -> None:
-        """
-        Some FEI Microscopes will write additional metadata into dm3 files
+        """Some FEI Microscopes will write additional metadata into dm3 files
         in a long string separated by a unicode delimiter (u'\u2028'),
         present at ``ImageList.TagGroup0.ImageTags.Tecnai.Microscope_Info``.
         This method parses that information.  Adapted from the
         implementation in https://github.com/usnistgov/NexusLIMS
 
-        Parameters
-        ----------
-        delimiter
-            The value (a unicode string) used to split the ``microscope_info``
-            string. Should not need to be provided (this value is hard-coded in
-            DigitalMicrograph), but specified as a parameter for future
-            flexibility
+        args:
+            delimiter: The value (a unicode string) used to split the
+                ``microscope_info`` string. Should not need to be provided (
+                this value is hard-coded in DigitalMicrograph), but specified
+                as a parameter for future flexibility
         """
         def __find_val(s_to_find, list_to_search):
-            """
-            Return the first value in ``list_to_search`` that contains
+            """Return the first value in ``list_to_search`` that contains
             ``s_to_find``, or ``None`` if it is not found
 
             Note: If needed, this could be improved to use regex instead,
@@ -854,8 +840,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
 
         def __extract_val(regex: str, str_to_search: str,
                           match_num : int = 1) -> Optional[str]:
-            """
-            Extract a value from a string based on a grouped regex
+            """Extract a value from a string based on a grouped regex
             """
             result = re.compile(regex).search(str_to_search)
             if result is not None:
@@ -1050,8 +1035,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
             map_dict_values(mapping)
 
     def _tia_info(self) -> None:
-        """
-        Parses information commonly found in .ser/.emi files produced by the
+        """Parses information commonly found in .ser/.emi files produced by the
         "Tecnai Imaging and Analysis" (TIA) software
 
         Terms such as ``IntegrationTime`` and ``EnergyResolution`` appear to be
@@ -1220,8 +1204,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         map_dict_values(mapping)
 
     def _tiff_info(self) -> None:
-        """
-        Parses metadata found in FEI/ThermoFisher tiff formats (and perhaps
+        """Parses metadata found in FEI/ThermoFisher tiff formats (and perhaps
         others in the future), produced by SEM and dual beam tools
         """
         mapping = [
