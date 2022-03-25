@@ -1,0 +1,627 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "electron_microscopy": {"$ref": "#/definitions/electron_microscopy_type"}
+  },
+  "definitions": {
+    "single_value_number_type": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "number"},
+        "units": {"type": "string"}
+      }
+    },
+    "single_value_integer_type": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "integer"},
+        "units": {"type": "string"}
+      }
+    },
+    "single_value_string_type": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "string"}
+      }
+    },
+    "single_value_string_or_integer_type": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "oneOf": [
+            {"type": "integer"},
+            {"type": "string"}
+          ]
+        }
+      }
+    },
+    "single_value_boolean_type": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": "boolean"}
+      }
+    },
+    "single_value_string_array_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "Ac",
+              "Ag",
+              "Al",
+              "Am",
+              "Ar",
+              "As",
+              "At",
+              "Au",
+              "B",
+              "Ba",
+              "Be",
+              "Bh",
+              "Bi",
+              "Bk",
+              "Br",
+              "C",
+              "Ca",
+              "Cd",
+              "Ce",
+              "Cf",
+              "Cl",
+              "Cm",
+              "Cn",
+              "Co",
+              "Cr",
+              "Cs",
+              "Cu",
+              "Db",
+              "Ds",
+              "Dy",
+              "Er",
+              "Es",
+              "Eu",
+              "F",
+              "Fe",
+              "Fl",
+              "Fm",
+              "Fr",
+              "Ga",
+              "Gd",
+              "Ge",
+              "H",
+              "He",
+              "Hf",
+              "Hg",
+              "Ho",
+              "Hs",
+              "I",
+              "In",
+              "Ir",
+              "K",
+              "Kr",
+              "La",
+              "Li",
+              "Lr",
+              "Lu",
+              "Lv",
+              "Mc",
+              "Md",
+              "Mg",
+              "Mn",
+              "Mo",
+              "Mt",
+              "N",
+              "Na",
+              "Nb",
+              "Nd",
+              "Ne",
+              "Nh",
+              "Ni",
+              "No",
+              "Np",
+              "O",
+              "Og",
+              "Os",
+              "P",
+              "Pa",
+              "Pb",
+              "Pd",
+              "Pm",
+              "Po",
+              "Pr",
+              "Pt",
+              "Pu",
+              "Ra",
+              "Rb",
+              "Re",
+              "Rf",
+              "Rg",
+              "Rh",
+              "Rn",
+              "Ru",
+              "S",
+              "Sb",
+              "Sc",
+              "Se",
+              "Sg",
+              "Si",
+              "Sm",
+              "Sn",
+              "Sr",
+              "Ta",
+              "Tb",
+              "Tc",
+              "Te",
+              "Th",
+              "Ti",
+              "Tl",
+              "Tm",
+              "Ts",
+              "U",
+              "V",
+              "W",
+              "Xe",
+              "Y",
+              "Yb",
+              "Zn",
+              "Zr"
+            ]
+          }
+        }
+      }
+    },
+    "raw_metadata_type": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {}
+    },
+    "date_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "time_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "time"
+        }
+      }
+    },
+    "axis-type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "null"}
+          ]
+        },
+        "scale": {"type": "number"},
+        "offset": {"type": "number"},
+        "size": {"type": "integer"},
+        "units": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "axis_calibration_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(axis-)\\d*$": {"$ref": "#/definitions/axis-type"}
+      }
+    },
+    "data_dimensions_type": {
+      "type": "array",
+      "items": {"type": "integer"}
+    },
+    "stage_position_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x": {"$ref": "#/definitions/single_value_number_type"},
+        "y": {"$ref": "#/definitions/single_value_number_type"},
+        "z": {"$ref": "#/definitions/single_value_number_type"},
+        "tilt_alpha": {"$ref": "#/definitions/single_value_number_type"},
+        "tilt_beta": {"$ref": "#/definitions/single_value_number_type"},
+        "rotation": {"$ref": "#/definitions/single_value_number_type"}
+      }
+    },
+    "General_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "authors": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The authors of the data, in Latex format: Surname1, Name1 and Surname2, Name2, etc."
+        },
+        "date": {
+          "$ref": "#/definitions/date_type",
+          "description": "The acquisition or creation date in ISO 8601 date format, e.g. \u20182018-01-28\u2019"
+        },
+        "doi": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "Digital object identifier of the data, e.g. doi:10.5281/zenodo.58841"
+        },
+        "original_filename": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "If the data was loaded from a file this key stores the name of the original file"
+        },
+        "notes": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "Notes about the data"
+        },
+        "time": {
+          "$ref": "#/definitions/time_type",
+          "description": "The acquisition or creation time in ISO 8601 time format, e.g. \u201813:29:10\u2019"
+        },
+        "time_zone": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The time zone in either tzdata form, e.g. \u201cUTC\u201d, \u201cAmerica/New_York\u201d, etc., or a time offset, e.g. \u201c+03:00\u201d or \u201c-05:00\u201d"
+        },
+        "title": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "A title for the signal, e.g. \u201cSample overview\u201d"
+        },
+        "axis_calibration": {
+          "$ref": "#/definitions/axis_calibration_type",
+          "description": "Information about the calibration of each axis found in the data"
+        },
+        "data_dimensions": {
+          "$ref": "#/definitions/data_dimensions_type",
+          "description": "The size (extent) of each dimension as an array, matching the order found in \"axis_calibration\""
+        }
+      }
+    },
+    "General_EM_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accelerating_voltage": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The voltage used to accelerate electrons in the microscope"
+        },
+        "acquisition_mode": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The \"mode\" of the instrument as recorded by the acquisition software"
+        },
+        "acquisition_software_name": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The name of the software used to acquire this data"
+        },
+        "acquisition_software_version": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The version of the software used to acquire this data"
+        },
+        "beam_current": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The current of the electron beam during data collection"
+        },
+        "beam_energy": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The energy of the electron beam"
+        },
+        "convergence_angle": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The pre-specimen convergence semi-angle that defines the angle of incidence of the electron beam"
+        },
+        "detector_name": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The name of the detector used to collect this data"
+        },
+        "dwell_time": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The amount of time the beam dwelled on a given pixel (in scanning mode)"
+        },
+        "emission_current": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The current of the electron beam at its emission point"
+        },
+        "exposure_time": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The amount of time the camera or detector was exposed to the siganl"
+        },
+        "elements": {
+          "$ref": "#/definitions/single_value_string_array_type",
+          "description": "A list of element periodic abbreviations representing elements found in the sample data"
+        },
+        "frame_time": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The total amount of time the beam exposed the sample during a data collection (the sum of all pixels' dwell times)"
+        },
+        "magnification_actual": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The actual calibrated magnification of the collected data"
+        },
+        "magnification_indicated": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The magnification indicated by the acquisition software in this collected data"
+        },
+        "microscope_name": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The name of the microscope used to collect this data"
+        },
+        "probe_area": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The area (size) of the electron beam probe at the sample"
+        },
+        "stage_position": {
+          "$ref": "#/definitions/stage_position_type",
+          "description": "The absolute positions (in multiple axes) of the hardware stage"
+        }
+      }
+    },
+    "TEM_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "acquisition_device": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The TEM device used to acquire the signal, as reported by the acquisition software"
+        },
+        "acquisition_format": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The format of the data (image, spectrum, etc.) as reported by the acquisition software"
+        },
+        "acquisition_mode": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The TEM mode used to acquire the signal, as reported by the acquisition software"
+        },
+        "acquisition_signal": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The type of signal collected (EELS, EDS, etc.), as reported by the acquisition software"
+        },
+        "extractor_voltage": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The voltage used to extract electrons from the electron gun"
+        },
+        "illumination_mode": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The mode of illumination (STEM, TEM, NanoProbe, etc.) as reported by the acquisition software"
+        },
+        "imaging_mode": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The mode of imaging (regular imaging, diffraction, etc.) as reported by the acquisition software"
+        },
+        "operation_mode": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The operation mode of the microscope during data collection, as reported by the acquisition software (possible modes are specific to individual microscopes)"
+        },
+        "spherical_aberration_coefficient": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The spherical aberation coefficient (Cs) for the objective lens; a length describing the degree to which off-axis electrons cause blur in the image plane"
+        },
+        "defocus": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The focus shift (a length) of the objective lens used to acquire the data"
+        },
+        "spot_size": {
+          "$ref": "#/definitions/single_value_integer_type",
+          "description": "A manufacturer-specific indication of the strength of the first condenser lens, which generally determines the diameter of the electron beam impinging on the sample"
+        },
+        "camera_length": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The effective length between the sample and the imaging plane (controlled by projector lenses)"
+        }
+      }
+    },
+    "SEM_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chamber_pressure": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The pressure of the sample chamber when the data was acquired"
+        },
+        "horizontal_field_width": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The physical extent (a length) of the imaging frame width"
+        },
+        "magnification_mode": {
+          "$ref": "#/definitions/single_value_string_or_integer_type",
+          "description": "The magnification mode of the SEM specific to a given manufacturer, sometimes indicated by a word or a number"
+        },
+        "pixel_height": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The physical height represented by an individual pixel in the SEM scan"
+        },
+        "pixel_width": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The physical width represented by an individual pixel in the SEM scan"
+        },
+        "spot_size": {
+          "$ref": "#/definitions/single_value_integer_type",
+          "description": "A manufacturer-specific relative indicator of beam current and physical diameter of the electron beam impinging on the sample"
+        },
+        "working_distance": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The length between the final SEM lens and the beam's focus plane; controls the focus of the resulting image/scan"
+        },
+        "vertical_field_width": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The physical extent (a length) of the imaging frame height"
+        }
+      }
+    },
+    "EDS_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "azimuth_angle": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The rotational angle around the optic axis between the EDS detector and the primary (alpha) tilt axis. If zero, the detector is parallel to the primary tilt axis"
+        },
+        "detector_type": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The specific type of EDS detector, as reported by the acquisition software"
+        },
+        "dispersion_per_channel": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The energy range covered by an individual pixel (channel) in the EDS detector (analagous to \"pixel_width\" but in the energy dimension)"
+        },
+        "elevation_angle": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The vertical angle between a reference plane normal to the optic axis and the EDS detector. If zero, the detector is perpendicular to the optic axis"
+        },
+        "energy_resolution_MnKa": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The full width at half maximum (FWHM) of the manganese K alpha (Mn Ka) peak. This value is used as a first approximation of the energy resolution of the detector."
+        },
+        "incidence_angle": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The beam incidence angle relative to the sample normal"
+        },
+        "live_time": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The actual time during which pulses are measured in the detector (will be necessarily less then \"real_time\"), limited due to physical limitions of pulse processing"
+        },
+        "real_time": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The actual data collection duration in which the sample was exposed. Will be greater than \"live_time\" due to pulse-pilup rejections within the pulse processing circuitry of the EDS dector."
+        },
+        "solid_angle": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The effective size of the detector, which is the ratio of the area of the face of the detector to the square of the radial distance to the beam impact point (see Goldstein et al., 3rd Ed., pp. 127)"
+        },
+        "stage_tilt": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The tilt angle of the SEM stage (on its primary tilt axis, if more than one available -- see \"General_EM.stage_position.tilt_alpha/beta\" for more detail)"
+        }
+      }
+    },
+    "EELS_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "aperture_size": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The physical diameter of the EELS aperature (partly controls the collection angle)"
+        },
+        "collection_angle": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The collection semi-angle indicating the limit of angular spread of scattered electrons; typically expressed in milliradians"
+        },
+        "dispersion_per_channel": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The energy range covered by an individual pixel (channel) in the EELS detector (analagous to \"pixel_width\" but in the energy dimension)"
+        },
+        "drift_tube_voltage": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The voltage applied to the the EELS drift tube (some manufactures express this as a voltage, others as an energy)"
+        },
+        "drift_tube_energy": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The energy applied to the the EELS drift tube (some manufactures express this as a voltage, others as an energy)"
+        },
+        "drift_tube_enabled": {
+          "$ref": "#/definitions/single_value_boolean_type",
+          "description": "Whether the drift tube was enabled during EELS acquisition"
+        },
+        "energy_loss_offset": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The offset energy of the collected EELS data"
+        },
+        "filter_slit_width": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The width (in energy) of the EELS filter slit"
+        },
+        "filter_slit_inserted": {
+          "$ref": "#/definitions/single_value_boolean_type",
+          "description": "Whether the EELS filter slit was inserted during EELS acquisition"
+        },
+        "integration_time": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The total duration of time the EELS signal was integrated to produce the final data"
+        },
+        "number_of_samples": {
+          "$ref": "#/definitions/single_value_integer_type",
+          "description": "The number of frames or spectra integrated during the acquisition"
+        },
+        "prism_shift_voltage": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The voltage applied to the the EELS prism shift lenses to shift the collected specturm in the energy dimension (some manufactures express this as a voltage, others as an energy)"
+        },
+        "prism_shift_energy": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The energy applied to the the EELS prism shift lenses to shift the collected specturm in the energy dimension (some manufactures express this as a voltage, others as an energy)"
+        },
+        "prism_shift_enabled": {
+          "$ref": "#/definitions/single_value_boolean_type",
+          "description": "Whether the EELS prism shift was enabled during EELS acquisition"
+        },
+        "spectrometer_mode": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The mode of operation for the EELS spectrometer, as reported by the acquisition software"
+        },
+        "spectrometer_name": {
+          "$ref": "#/definitions/single_value_string_type",
+          "description": "The name of the EELS spectrometer, as reported by the acquisition software"
+        },
+        "total_energy_loss": {
+          "$ref": "#/definitions/single_value_number_type",
+          "description": "The total calculated energy loss, as reported by the acquisition software (note, this value is known to sometimes be incorrect)"
+        }
+      }
+    },
+    "electron_microscopy_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "raw_metadata": {
+          "$ref": "#/definitions/raw_metadata_type",
+          "description": "The superset of all metadata (in its original format) as extracted using HyperSpy"
+        },
+        "General": {
+          "$ref": "#/definitions/General_type",
+          "description": "Metadata about the file itself, not directly related to electron microscopy"
+        },
+        "General_EM": {
+          "$ref": "#/definitions/General_EM_type",
+          "description": "Metadata values that are generic to all forms of electron microscopy"
+        },
+        "TEM": {
+          "$ref": "#/definitions/TEM_type",
+          "description": "Metadata values specific to transmission electron microscopy (TEM)"
+        },
+        "SEM": {
+          "$ref": "#/definitions/SEM_type",
+          "description": "Metadata values specific to scanning electron microscopy (SEM)"
+        },
+        "EDS": {
+          "$ref": "#/definitions/EDS_type",
+          "description": "Metadata values specific to X-ray Energy Dispersive Spectroscopy (EDS)"
+        },
+        "EELS": {
+          "$ref": "#/definitions/EELS_type",
+          "description": "Metadata values specific to Electron Energy Loss Spectroscopy (EELS)"
+        }
+      }
+    }
+  }
+}

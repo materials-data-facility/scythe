@@ -1,8 +1,8 @@
 import tarfile
-import os
+import pathlib
 
-tar_f = os.path.join(os.path.dirname(__file__), 'data',
-                     'electron_microscopy', 'test_files.tar.gz')
+tar_f = pathlib.Path(__file__).parent / 'data' / 'electron_microscopy' / \
+        'test_files.tar.gz'
 
 
 def pytest_sessionstart(session):
@@ -13,7 +13,7 @@ def pytest_sessionstart(session):
     Unpack the compressed electron_microscopy est files.
     """
     with tarfile.open(tar_f, 'r:gz') as tar:
-        tar.extractall(path=os.path.dirname(tar_f))
+        tar.extractall(path=pathlib.Path(tar_f).parent)
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -26,8 +26,8 @@ def pytest_sessionfinish(session, exitstatus):
     with tarfile.open(tar_f, 'r:gz') as tar:
         fn_list = tar.getnames()
 
-    fn_list = [os.path.join(os.path.dirname(__file__), 'data',
-                            'electron_microscopy', f) for f in fn_list]
-    for fn in fn_list:
-        if os.path.isfile(fn):
-            os.remove(fn)
+    fn_list = [pathlib.Path(__file__).parent / 'data' /
+               'electron_microscopy' / f for f in fn_list]
+    for path in fn_list:
+        if path.is_file():
+            path.unlink()
