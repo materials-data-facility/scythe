@@ -1,6 +1,7 @@
 from materials_io.utils.interface import (get_available_parsers, execute_parser,
                                           get_available_adapters, run_all_parsers_on_directory,
                                           ParseResult)
+from materials_io.utils import set_nested_dict_value
 from materials_io.image import ImageParser
 import pytest
 import json
@@ -72,3 +73,48 @@ def test_run_all_parsers():
 
 def test_list_adapters():
     assert 'noop' in get_available_adapters()
+
+
+def test_set_nested_dict():
+    dest_dict1 = {
+        'key1': 'val1',
+        'key2': {
+            'key2.1': 'val2.1',
+            'key2.2': 'val2.2'}
+    }
+    dest_dict2 = {
+        'key1': 'val1',
+        'key2': {
+            'key2.1': 'val2.1',
+            'key2.2': 'val2.2'}
+    }
+
+    set_nested_dict_value(dest_dict2, ('key3', 'key3.1'), None)
+    assert dest_dict1 == dest_dict2
+
+    set_nested_dict_value(dest_dict2, ('key3', 'key3.1'), 4)
+    assert dest_dict2 == {
+        'key1': 'val1',
+        'key2': {
+            'key2.1': 'val2.1',
+            'key2.2': 'val2.2'},
+        'key3': {'key3.1': 4}
+    }
+
+    set_nested_dict_value(dest_dict2, ('key3', 'key3.1'), 5, override=False)
+    assert dest_dict2 == {
+            'key1': 'val1',
+            'key2': {
+                'key2.1': 'val2.1',
+                'key2.2': 'val2.2'},
+            'key3': {'key3.1': 4}
+    }
+
+    set_nested_dict_value(dest_dict2, ('key3', 'key3.1'), 5, override=True)
+    assert dest_dict2 == {
+        'key1': 'val1',
+        'key2': {
+            'key2.1': 'val2.1',
+            'key2.2': 'val2.2'},
+        'key3': {'key3.1': 5}
+    }

@@ -14,3 +14,8 @@ src/*
 
 *.coverage*
 *.pytest_cache*
+.vscode
+.venv
+.idea
+test_files/
+*.xpr

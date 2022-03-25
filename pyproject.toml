@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "materials_io"
+version = "0.0.1"
+description = "A library of tools that generate summaries of the data contained in scientific data files"
+authors = ["Materials Data Facility <materialsdatafacility@uchicago.edu>"]
+license = "Apache"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+mdf-toolbox = "^0.5.3"
+stevedore = "^1.28.0"
+
+ase = { version = "~3.19", optional = true }
+pymatgen = { version = "^2018.11.30", optional = true}
+tableschema = { version = "^1,<2", optional = true }
+dfttopif = { version = "^1.1.0", optional = true }
+hyperspy = { version = "^1.4.1", optional = true }
+python-magic = { version = "^0.4.15", optional = true }
+Pillow = { version = "^7.0.0", optional = true }
+xmltodict = { version = "^0.12.0", optional = true }
+pycalphad = { version = "^0.9", optional = true }
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+pytest = "^3.10.1"
+coveralls = "^3.3.1"
+pytest-cov = "^2.9.0"
+
+[tool.poetry.extras]
+ase = ['ase']
+crystal_structure = ['pymatgen', 'ase']
+csv = ['tableschema']
+dft = ['dfttopif']
+electron_microscopy = ['hyperspy']
+file = ['python-magic']
+image = ['Pillow']
+tdb = ['pycalphad']
+xml = ['xmltodict']
+# to make it easy to add all extras, maintain the list below as the sum
+# of all the dependencies above
+all = ['ase',
+       'pymatgen',
+       'tableschema',
+       'dfttopif',
+       'hyperspy',
+       'python-magic',
+       'Pillow',
+       'xmltodict',
+       'pycalphad']
+
+[tool.poetry.plugins]
+
+[tool.poetry.plugins."materialsio.parser"]
+"ase" = "materials_io.ase:AseParser"
+"crystal" = "materials_io.crystal_structure:CrystalStructureParser"
+"csv" = "materials_io.csv:CSVParser"
+"dft" = "materials_io.dft:DFTParser"
+"em" = "materials_io.electron_microscopy:ElectronMicroscopyParser"
+"filename" = "materials_io.filename:FilenameExtractor"
+"generic" = "materials_io.file:GenericFileParser"
+"image" = "materials_io.image:ImageParser"
+"json" = "materials_io.json:JSONExtractor"
+"noop" = "materials_io.testing:NOOPParser"
+"tdb" = "materials_io.tdb:TDBExtractor"
+"xml" = "materials_io.xml:XMLExtractor"
+"yaml" = "materials_io.yaml:YAMLExtractor"
+
+[tool.poetry.plugins."materialsio.adapter"]
+"noop" = "materials_io.adapters.base:NOOPAdapter"
+"serialize" = "materials_io.adapters.base:SerializeAdapter"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--ignore=setup.py --ignore=.venv --cov=materials_io"
