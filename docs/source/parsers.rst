@@ -35,9 +35,8 @@ Parsers that read image data
 Electron Microscopy Parsers
 ---------------------------
 
-Parsers that read electron microscopy data of various sorts (images,
-spectra, spectrum images, etc.) using the `HyperSpy <https://hyperspy.org>`_
-package.
+Parsers that read electron microscopy data of various sorts (images, spectra, spectrum images,
+etc.) using the `HyperSpy <https://hyperspy.org>`_ package.
 
 .. automodule:: materials_io.electron_microscopy
     :members:
