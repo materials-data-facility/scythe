@@ -11,18 +11,25 @@ Each parser is designed to generate the sum of all data needed by each of these 
 ## Installation
 
 MaterialsIO is still under early stages of development. 
-To use it, first clone this repository and then install the library with pip:
+To use it (as a user, rather than a developer), install the library from Github
+with an up-to-date version of `pip` on version 3.8 or higher of Python:
 
 ```bash
-git clone git@github.com:materials-data-facility/MaterialsIO.git
-cd MaterialsIO
-pip install -e .
+pip install git+https://github.com/materials-data-facility/MaterialsIO.git
 ```
 
 Each specific parser module has its own set of required libraries.
 Given that some modules have extensive dependencies, we do not install all of them automatically.
-You can install them either module-by-module using the pip "extras" installation (e.g., `pip install -e .['image']`),
-or install all requirements with the requirements file `pip install -r requirements.txt`.
+You can install them either module-by-module using the pip "extras" installation (e.g., 
+`pip install "git+https://github.com/materials-data-facility/MaterialsIO.git#egg=materials_io[image]"`),
+or install all parsers with 
+`pip install "git+https://github.com/materials-data-facility/MaterialsIO.git#egg=materials_io[all]"`.
+
+## Development/Contribution
+
+If you wish to develop new features using MaterialsIO, please consult the 
+[Contributor Guide](https://materialsio.readthedocs.io/en/latest/contributor-guide.html) that will
+walk you through installing [Poetry](https://python-poetry.org/) and the MaterialsIO dependencies.
 
 ## Documentation
 

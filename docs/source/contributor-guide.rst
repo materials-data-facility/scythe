@@ -44,6 +44,10 @@ Check out the ``[tool.tox]`` section of the ``pyproject.toml`` file to view how 
 configured, and the `tox documentation <https://tox.wiki/en/latest/config.html>`_ on how to add your
 own custom tasks, if needed.
 
+Finally, MaterialsIO uses ``flake8`` to enforce code styles, which will be run for you
+automatically when using ``tox`` as defined above. Any code-style errors, such as lines longer
+than 100 characters, trailing whitespace, etc. will be flagged when running ``poetry run tox``.
+
 The next part of the MaterialsIO guide details how to add a new parser to the ecosystem.
 
 Step 1: Implement the Parser
