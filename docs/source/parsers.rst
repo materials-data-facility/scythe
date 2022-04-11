@@ -26,11 +26,18 @@ Parsers that work for any kind of file
 Image Parsers
 -------------
 
-Parsers that read image data (e.g., electron microscopy, computed tomography)
+Parsers that read image data
 
 .. automodule:: materials_io.image
     :members:
     :exclude-members: implementors, schema, version, group
+
+Electron Microscopy Parsers
+---------------------------
+
+Parsers that read electron microscopy data of various sorts (images,
+spectra, spectrum images, etc.) using the `HyperSpy <https://hyperspy.org>`_
+package.
 
 .. automodule:: materials_io.electron_microscopy
     :members:
@@ -47,6 +54,7 @@ Parsers related to data files that encode atom-level structure
 
 .. automodule:: materials_io.ase
     :members:
+    :noindex:
     :exclude-members: implementors, schema, version, group
 
 Calculation Parsers
@@ -60,6 +68,7 @@ Parsers that retrieve results from calculations
 
 .. automodule:: materials_io.ase
     :members:
+    :noindex:
     :exclude-members: implementors, schema, version, group
 
 Structured Data Files

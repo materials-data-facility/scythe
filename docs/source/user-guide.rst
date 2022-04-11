@@ -4,50 +4,82 @@ User Guide
 In this part of the guide, we show a simple example of using a MaterialsIO parser
 and discuss the full functionality of a parser.
 
+Installing MaterialsIO (for users)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installing MaterialsIO should be as easy as a single ``pip`` command. Running::
+
+    pip install materials_io
+
+Should get the basics of MaterialsIO installed. By default however, only a
+small subset of parsers will be installed (this is done so you do not need
+to install all the dependencies of parsers you may never
+use). To install additional parsers, you can specify "extras" at install time
+using the ``[...]`` syntax for ``pip``. For example, if you want to install all
+the parsers bundled with MaterialsIO (and their dependencies), run::
+
+    pip install materials_io[all]
+
+This will pull in many more packages, but also enable as many parsers as
+possible. Check the list under ``[tool.poetry.extras]`` in ``pyproject.toml`` to
+see all the options you can specify in the brackets of the ``pip install``
+command.
+
 Discovering a Parser
 ~~~~~~~~~~~~~~~~~~~~
 
-MaterialsIO uses `stevedore <https://docs.openstack.org/stevedore/latest/index.html>`_ to manage a collection of parsers,
-and has a utility function for listing available parsers::
+MaterialsIO uses
+`stevedore <https://docs.openstack.org/stevedore/latest/index.html>`_ to
+manage a collection of parsers, and has a utility function for listing
+available parsers::
 
     from materials_io.utils.interface import get_available_parsers
     print(get_available_parsers())
 
 This snippet will print a dictionary of parsers installed on your system.
-Both parsers that are part of the MaterialsIO base package and those defined by other packages
-will be included in this list.
+Both parsers that are part of the MaterialsIO base package and those defined
+by other packages will be included in this list.
 
 Simple Interface
 ~~~~~~~~~~~~~~~~
 
-The methods in :mod:`materials_io.utils.interface` are useful for most applications.
-As an example, we illustrate the use of :class:`materials_io.generic.GenericFileParser`::
+The methods in :mod:`materials_io.utils.interface` are useful for most
+applications. As an example, we illustrate the use of
+:class:`materials_io.file.GenericFileParser`, which is available through the
+``'generic'`` parser plugin::
 
     from materials_io.utils.interface import execute_parser
-    print(execute_parser('generic', ['setup.py']))
+    print(execute_parser('generic', ['pyproject.toml']))
 
 
-The above snippet creates the parser object and runs it on a file named ``setup.py``.
-Run in the root directory of the MaterialsIO, it would produce output similar to:
+The above snippet creates the parser object and runs it on a file named
+``pyproject.toml``. Run in the root directory of the MaterialsIO, it would
+produce output similar to the following, likely with a different ``sha512``
+value if the contents of that file have changed since this documentation was
+written:
 
 .. code:: json
 
     [{
-        "mime_type": "text/x-python",
-        "length": 623,
-        "filename": "setup.py",
-        "hash": "[...]"
+        "data_type": "ASCII text",
+        "filename": "pyproject.toml",
+        "length": 2421,
+        "mime_type": "text/plain",
+        "path": "pyproject.toml",
+        "sha512": "a7eb382c4a3e6cf469656453f9ff2e3c1ac2c02c9c2ba31c3d569a09883e2b2471801c39125dafb7c13bfcaf9cf6afbab92afa4c053c0c93a4c8c59acad1b85b"
     }]
 
-The other pre-built parsing function provides the ability to run all parsers on all files in a directory::
+The other pre-built parsing function provides the ability to run all parsers
+on all files in a directory::
 
     from materials_io.utils.interface import run_all_parsers
     gen = run_all_parsers('.')
     for record in gen:
         print(record)
 
-A third route for using ``materials_io`` is to employ the ``get_parser`` operation to access a specific
-parser, and then use its class interface (described below)::
+A third route for using ``materials_io`` is to employ the ``get_parser``
+operation to access a specific parser, and then use its class interface
+(described below)::
 
     from materials_io.utils.interface import get_parser
     parser = get_parser('generic')
@@ -59,15 +91,18 @@ parser, and then use its class interface (described below)::
 Advanced Usage: Adding Context
 ++++++++++++++++++++++++++++++
 
-The function interface for MaterialsIO supports using "context" and "adapters" to provide additional infomration
-to a parser or change the output format, respectively.
-Adapters are described in `Integrating MaterialsIO into Applications <#id1>`_.
-Here, we describe the purpose of context and how to use it in our interface.
+The function interface for MaterialsIO supports using "context" and
+"adapters" to provide additional infomration to a parser or change the output
+format, respectively. Adapters are described in
+`Integrating MaterialsIO into Applications <#id1>`_. Here, we describe the
+purpose of context and how to use it in our interface.
 
-Context is information about the data held in a file that is not contained within the file itself.
-Examples include human-friendly descriptions of columns names or which values actually
-represent a missing measurement in tabular data file (e.g., CSV files).
-A limited number of parsers support context and this information can be provided via the ``execute_parser`` function::
+Context is information about the data held in a file that is not contained
+within the file itself. Examples include human-friendly descriptions of
+columns names or which values actually represent a missing measurement in
+tabular data file (e.g., CSV files). A limited number of parsers support
+context and this information can be provided via the ``execute_parser``
+function::
 
     execute_parser('csv', 'tests/data/test.csv', context={'na_values': ['N/A']})
 
@@ -75,11 +110,12 @@ A limited number of parsers support context and this information can be provided
 The types of context information used by a parser, if any, is described in the
 `documentation for each parser <parsers.html>`_.
 
-The ``run_all_parsers`` function has several options for providing context to the parsers.
-These options include specifying "global context" to be passed to every parser or adapter
-and ways of limiting the metadata to specific parsers.
-See :meth:`materials_io.utils.interface.run_all_parsers` for further details on the
-syntax for this command.
+The ``run_all_parsers_on_directory`` function has several options for
+providing context to the parsers. These options include specifying "global
+context" to be passed to every parser or adapter and ways of limiting the
+metadata to specific parsers. See
+:meth:`materials_io.utils.interface.run_all_parsers_on_directory` for further
+details on the syntax for this command.
 
 .. note::
 
@@ -212,16 +248,21 @@ Implementing Adapters
 Any new adapters must inherit from the ``BaseAdapter`` class defined above.
 You only need implement the ``transform`` operation.
 
-Once the adapter is implemented, you need to put it in a project that is installable via pip.
-See [python docs](https://docs.python.org/3.7/distutils/setupscript.html) for a detailed tutorial
-or copy the structure used by the `MDF's adapter library <https://github.com/materials-data-facility/mdf-materialsio-adapters>`_.
+Once the adapter is implemented, you need to put it in a project that is
+installable via pip. See
+[python docs](https://docs.python.org/3.7/distutils/setupscript.html) for a
+detailed tutorial or copy the structure used by the `MDF's adapter library
+<https://github.com/materials-data-facility/mdf-materialsio-adapters>`_.
 
-Then, register the adapter with stevedore by adding it as an entry point in your project's ``setup.py`` file.
+Then, register the adapter with ``stevedore`` by adding it as an entry point
+in your project's ``setup.py`` or ``pyproject.toml`` file.
 See `stevedore documentation for more detail <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
-We recommned using the same name for a adapter as the parser it is designed for
-so that ``materials_io`` can auto-detect the adapters associated with each parser.
+We recommend using the same name for a adapter as the parser it is designed for
+so that ``materials_io`` can auto-detect the adapters associated with each
+parser.
 
 Examples of Tools Using MaterialsIO
 +++++++++++++++++++++++++++++++++++
 
-Materials Data Facility: https://github.com/materials-data-facility/mdf-materialsio-adapters
+Materials Data Facility:
+https://github.com/materials-data-facility/mdf-materialsio-adapters

@@ -11,18 +11,20 @@ logger = logging.getLogger(__name__)
 class BaseParser(ABC):
     """Abstract base class for a file parser
 
-    This class defines the interface for all parsers in MaterialsIO.
-    Each new parser must implement the :meth:`parse`, :meth:`version`,
-    and :meth:`implementors` functions.
-    The :meth:`group` method should be overrode to generate smart groups of file (e.g., associating
-    the inputs and outputs to the same calculation)
-    :meth:`citations` can be used if there are papers that should be cited if the parser is used
-    as part of a scientific publication.
+    This class defines the interface for all parsers in MaterialsIO. Each new
+    parser must implement the :meth:`parse`, :meth:`version`,
+    and :meth:`implementors` functions. The :meth:`group` method should be
+    overridden to generate smart groups of file (e.g., associating the inputs
+    and outputs to the same calculation) :meth:`citations` can be used if
+    there are papers that should be cited if the parser is used as part of a
+    scientific publication.
 
-    See `MaterialsIO Contributor Guide <contributor-guide.html>`_ for further details.
+    See the `MaterialsIO Contributor Guide <contributor-guide.html>`_ for
+    further details.
     """
 
-    def identify_files(self, path: str, context: dict = None) -> Iterator[Tuple[str]]:
+    def identify_files(self, path: str, context: dict = None) -> \
+            Iterator[Tuple[str]]:
         """Identify all groups of files likely to be compatible with this parser
 
         Uses the :meth:`group` function to determine groups of files
@@ -45,7 +47,8 @@ class BaseParser(ABC):
             for group in self.group(files, dirs, context):
                 yield group
 
-    def parse_directory(self, path: str, context: dict = None) -> Iterator[Tuple[Tuple[str], dict]]:
+    def parse_directory(self, path: str, context: dict = None) -> \
+            Iterator[Tuple[Tuple[str], dict]]:
         """Run a parser on all appropriate files in a directory
 
         Skips files that throw exceptions while parsing
@@ -69,11 +72,12 @@ class BaseParser(ABC):
     def parse(self, group: Iterable[str], context: dict = None) -> dict:
         """Extract metadata from a group of files
 
-        A group of files is a set of 1 or more files that describe the same object, and will be
-        be used together to create s single summary record.
+        A group of files is a set of 1 or more files that describe the same
+        object, and will be be used together to create s single summary record.
 
         Arguments:
-            group (list of str):  A list of one or more files that should be parsed together
+            group ([str]):  A list of one or more files that should be
+                parsed together
             context (dict): Context about the files
 
         Returns:
@@ -82,9 +86,11 @@ class BaseParser(ABC):
 
     def group(self, files: Union[str, List[str]], directories: List[str] = None,
               context: dict = None) -> Iterator[Tuple[str, ...]]:
-        """Identify a groups of files and directories that should be parsed together
+        """Identify a groups of files and directories that should be parsed
+        together
 
-        Will create groups using only the files and directories included as input.
+        Will create groups using only the files and directories included as
+        input.
 
         The files of files are _all_ files that could be read by this parser,
         which may include many false positives.
@@ -116,10 +122,12 @@ class BaseParser(ABC):
     def implementors(self) -> List[str]:
         """List of implementors of the parser
 
-        These people are the points-of-contact for addressing errors or modifying the parser
+        These people are the points-of-contact for addressing errors or
+        modifying the parser
 
         Returns:
-            ([str]): List of implementors in the form "FirstName LastName <email@provider>"
+            ([str]): List of implementors in the form "FirstName LastName
+            <email@provider>"
         """
 
     @abstractmethod

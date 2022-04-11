@@ -1,7 +1,58 @@
 Contributor Guide
 =================
 
-This part of the MaterialsIO guide details how to add a new parser to the ecosystem.
+Setting up development environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+MaterialsIO makes use of the `Poetry <https://python-poetry.org/docs/>`_ project
+to manage dependencies and packaging. To install the latest version of
+MaterialsIO, first install poetry following
+`their documentation <https://python-poetry.org/docs/#installation>`_. Once
+that's done, clone/download the MaterialsIO repository locally from
+`Github <https://github.com/materials-data-facility/MaterialsIO/>`_. Change into
+that directory and run ``poetry install`` (it would be a good idea to create a
+new virtual environment for your project first too, so as to not mix
+dependencies with your system environment).
+
+By default, only a small subset of parsers will be installed (this is done so
+that you do not need to install all the dependencies of parsers you may never
+use). To install additional parsers, you can specify "extras" at install time
+using ``poetry``. Any of the values specified in the ``[tool.poetry.extras]``
+section of ``pyproject.toml`` can be provided, including ``all``, which will
+install all bundled parsers and their dependencies. For example::
+
+    poetry install -E all
+
+Poetry wil create a dedicated virtual environment for the project and the
+MaterialsIO code will be installed in "editable" mode, so any changes you
+make to the code will be reflected when running tests, importing parsers, etc.
+It will use the default version of python available. MaterialsIO is currently
+developed using 3.8.12 and tested against that version. We recommend using the
+`pyenv <https://github.com/pyenv/pyenv>`_ project to manage various python
+versions on your system if this does not match your system version of Python.
+It plays nicely with ``tox`` as well (see next paragraph).
+
+Additionally, the project uses `tox <https://tox.wiki/en/latest/>`_ to
+simplify common tasks and to be able to run tests in isolated environments.
+This will be installed automatically as a development package when running
+the ``poetry install`` command above. It can be used to run the test suite
+with common settings, as well as building the documentation. For example, to
+run the full MaterialsIO test suite, just run::
+
+    poetry run tox
+
+To build the HTML documentation (will be placed inside the ``./docs/_build/``
+folder), run::
+
+    poetry run tox -e docs
+
+Check out the ``[tool.tox]`` section of the ``pyproject.toml`` file to view
+how these tasks are configured, and the
+`tox documentation <https://tox.wiki/en/latest/config.html>`_ on how to add your
+own custom tasks, if needed.
+
+The next part of the MaterialsIO guide details how to add a new parser to the
+ecosystem.
 
 Step 1: Implement the Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -131,23 +182,36 @@ Step 3: Register the Parser
 Preferred Route: Adding the Parser to MaterialsIO
 -------------------------------------------------
 
-If your parser has the same dependencies as existing parsers, add it to the existing module with the same dependencies.
+If your parser has the same dependencies as existing parsers, add it to the
+existing module with the same dependencies.
 
-If your parser has new dependencies, create a new module for your parser in ``materials_io``, and then add the requirements as a new key in the ``extras_require`` dictionary of ``setup.py`` and the ``requirements.txt`` file.
-Next, add your parser to ``docs/source/parsers.rst`` by adding an ``.. automodule::`` statement that refers to your new module.
+If your parser has new dependencies, create a new module for your parser in
+``materials_io``, and then add the requirements as a new key in the
+``[tool.poetry.extras]`` section of ``pyproject.toml``, following the other
+parser examples in that section. Next, add your parser to
+``docs/source/parsers.rst`` by adding an ``.. automodule::`` statement that
+refers to your new module (again, following the existing pattern).
 
-MaterialsIO uses stevedore to simplify access to the parsers.
-After implementing and documenting the parser, add it to the ``entry_points`` section of the ``setup.py`` file for MaterialsIO.
-See `stevedore documentation for more information <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
+MaterialsIO uses ``stevedore`` to simplify access to the parsers.
+After implementing and documenting the parser, add it to the
+``[tool.poetry.plugins."materialsio.parser"]`` section of the
+``pyproject.toml`` file for MaterialsIO. See
+`stevedore documentation for more information <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_
+(these docs reference ``setup.py``, but the equivalent can be done via
+plugins in ``pyproject.toml``; follow the existing structure if you're
+unsure, and ask for help from the developers if you run into issues).
 
 
 Alternative Route: Including Parsers from Other Libraries
 ---------------------------------------------------------
 
-If a parser would be better suited as part of a different library, you can still register it as a parser with MaterialsIO by altering your ``setup.py`` file.
-Add an entry point with the namespace ``"materialsio.parser"`` and point to the class object following the
+If a parser would be better suited as part of a different library, you can
+still register it as a parser with MaterialsIO by altering your
+``pyproject.toml`` file. Add an entry point with the namespace
+``"materialsio.parser"`` and point to the class object following the
 `stevedore documentation <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
-Adding the entry point will let MaterialsIO use your parser if your librart is installed in the same Python environment as MaterialsIO.
+Adding the entry point will let MaterialsIO use your parser if your library
+is installed in the same Python environment as MaterialsIO.
 
 .. todo:: Provide a public listing of materials_io-compatible software.
 

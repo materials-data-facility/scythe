@@ -16,8 +16,8 @@ _vasp_file_names = ["outcar", "incar", "chgcar", "wavecar", "wavcar",
 class DFTParser(BaseParser):
     """Extract data from Density Functional Theory calculation results
 
-    Uses the `dfttopif <https://github.com/CitrineInformatics/pif-dft>`_ parser to extract
-    metadata from each file
+    Uses the `dfttopif <https://github.com/CitrineInformatics/pif-dft>`_
+    parser to extract metadata from each file
     """
 
     def __init__(self, quality_report=False):
@@ -44,14 +44,14 @@ class DFTParser(BaseParser):
     def _group_vasp(self, files: Iterable[str]) -> Iterable[Tuple[str, ...]]:
         """Find groupings of files associated with VASP calculations
 
-        Finds files that start with the name "OUTCAR" (not case sensitive) and groups
-        those files together with any file that share the same postfix
+        Finds files that start with the name "OUTCAR" (not case sensitive) and
+        groups those files together with any file that share the same postfix
         (e.g., "OUTCAR.1" and "INCAR.1" are grouped together)
 
         Args:
             files ([str]): List of files to be grouped
         Yields:
-            ((files]): List of VASP files from the same calculation
+            ((files)): List of VASP files from the same calculation
         """
 
         for group in group_by_postfix(files, _vasp_file_names):
@@ -70,11 +70,13 @@ class DFTParser(BaseParser):
         #  TODO (lw): Find files that have PWSCF flags in them
         #  TODO (lw): Read PWSCF input files to know the save directory
         file_and_dir = [(os.path.dirname(f), f) for f in files]
-        for k, group in itertools.groupby(sorted(file_and_dir), key=itemgetter(0)):
+        for k, group in itertools.groupby(sorted(file_and_dir),
+                                          key=itemgetter(0)):
             yield [x[1] for x in group]
 
     def parse(self, group: Iterable[str], context: dict = None):
-        return files_to_pif(group, quality_report=self.quality_report).as_dictionary()
+        return files_to_pif(
+            group, quality_report=self.quality_report).as_dictionary()
 
     def implementors(self):
         return ['Logan Ward']

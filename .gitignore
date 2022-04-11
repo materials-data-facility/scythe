@@ -8,10 +8,15 @@ Untitled*.ipynb
 *.DS_Store
 
 */build/*
+docs/_build
+materials_io/schemas/doc/
 */dist/*
 *.egg*
 src/*
+dist/
+.tox
 
+coverage_html/
 *.coverage*
 *.pytest_cache*
 .vscode

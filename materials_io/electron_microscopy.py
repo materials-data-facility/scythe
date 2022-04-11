@@ -15,20 +15,20 @@ logger = logging.getLogger(__name__)
 
 
 class ElectronMicroscopyParser(BaseSingleFileParser):
-    """Parse metadata specific to electron microscopy, meaning any file
-    supported by HyperSpy's I/O capabilities. Extract both the metadata
-    interpreted by HyperSpy directly, but also any important values we can
-    pick out manually.
+    """Parse metadata specific to electron microscopy.
 
-    For each value (if known), return the subdict:
-      {
-        "value": numeric/str value,
-        "unit": unit name from http://qudt.org/vocab/unit/ (see 
-                http://www.qudt.org/doc/DOC_VOCAB-UNITS.html for details)
-      }
+    This parser handles any file supported by HyperSpy's I/O capabilities.
+    Extract both the metadata interpreted by HyperSpy directly, but also any
+    important values we can pick out manually.
+
+    For each value (if it is known), return a subdict with two keys: ``value``,
+    containing the actual value of the metadata parameter, and ``unit``,
+    a string containing a unit name from the
+    `QUDT <http://www.qudt.org/doc/DOC_VOCAB-UNITS.html>`_ vocabulary. Including
+    a ``unit`` is optional, but highly recommended, if it is known.
     
-    The allowed metadata values are controlled by the
-    ../schemas/electron_microscopy.json JSONSchema specification
+    The allowed metadata values are controlled by the JSONSchema specification
+    in the ``schemas/electron_microscopy.json`` file.
     """
 
     def _parse_file(self, file_path: str, context: Dict = None) -> Dict:
