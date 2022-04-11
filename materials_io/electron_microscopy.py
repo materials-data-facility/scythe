@@ -1,5 +1,7 @@
 import logging
 import re
+import json
+import pathlib
 from typing import Tuple, Dict, Optional
 
 from hyperspy.io import load as hs_load
@@ -1061,4 +1063,11 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 'Joshua Taillon <joshua.taillon@nist.gov>']
 
     def version(self):
-        return '0.1.0'
+        return '0.1.1'
+
+    @property
+    def schema(self) -> dict:
+        """Schema for the output of the parser"""
+        with open(pathlib.Path(__file__).parent / 'schemas' /
+                  'electron_microscopy.json') as f:
+            return json.load(f)

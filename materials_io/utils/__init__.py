@@ -109,7 +109,7 @@ MappingElements = TypedDict('MappingElements',
                              'units': Optional[Union[None, str]],
                              'conv_fn': Optional[Union[None, Callable]],
                              'override': Optional[bool]})
-"""TypedDict: A TypedDict to specify the exact types expected when creating a 
+"""TypedDict: A TypedDict to specify the exact types expected when creating a
 mapping dictionary to map metadata from one place to another.
 """
 

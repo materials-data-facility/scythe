@@ -419,15 +419,15 @@
         },
         "defocus": {
           "$ref": "#/definitions/single_value_number_type",
-          "description": "The focus shift (a length) of the objective lens used to acquire the data"
+          "description": "The focus shift (a length) of the objective lens from the focal point of the examined object used to acquire the data"
         },
         "spot_size": {
           "$ref": "#/definitions/single_value_integer_type",
-          "description": "A manufacturer-specific indication of the strength of the first condenser lens, which generally determines the diameter of the electron beam impinging on the sample"
+          "description": "A manufacturer-specific indication of the strength of the first condenser lens, which generally determines the diameter and current of the electron beam impinging on the sample"
         },
         "camera_length": {
           "$ref": "#/definitions/single_value_number_type",
-          "description": "The effective length between the sample and the imaging plane (controlled by projector lenses)"
+          "description": "The effective length between the sample and the back focal plane (controlled by projector lenses)"
         }
       }
     },

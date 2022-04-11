@@ -1,9 +1,7 @@
 import pytest
 import pathlib
-import json
 import jsonschema
 
-from materials_io import electron_microscopy
 from materials_io.electron_microscopy import ElectronMicroscopyParser
 
 
@@ -17,17 +15,7 @@ def parser():
     return ElectronMicroscopyParser()
 
 
-@pytest.fixture
-def schema() -> dict:
-    """Return the JSON schema associated with this parser as a dictionary"""
-    p = pathlib.PurePath(electron_microscopy.__file__)
-    schema_path = p.parent / 'schemas' / f"{p.stem}.json"
-    with open(schema_path, 'r') as f:
-        schema = json.load(f)
-    return schema
-
-
-def test_dm3(parser, schema):
+def test_dm3(parser):
     res = parser.parse([file_path('test-1.dm3')])
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': 'test-1.dm3'},
@@ -37,10 +25,10 @@ def test_dm3(parser, schema):
                        'size': 2, 'units': ''}},
         'data_dimensions': [2]
     }
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_dm4(parser, schema):
+def test_dm4(parser):
     res = parser.parse([file_path('test-1.dm4')])
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': 'test-1.dm4'},
@@ -51,10 +39,10 @@ def test_dm4(parser, schema):
             'axis-1': {'name': 'x', 'scale': 1.0, 'offset': -0.0,
                        'size': 2, 'units': ''}},
         'data_dimensions': [2, 2]}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_eds(parser, schema):
+def test_eds(parser):
     res = parser.parse([file_path('01_test-EDS_spectrum.dm3')])
 
     assert res['electron_microscopy']['General'] == {
@@ -104,7 +92,7 @@ def test_eds(parser, schema):
         'incidence_angle': {'value': 90.0, 'units': 'DEG'},
         'solid_angle': {'value': 0.7, 'units': 'SR'},
         'stage_tilt': {'value': 0.0, 'units': 'DEG'}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
     res = parser.parse([file_path('02_EDS_SI_Titan.dm4')])
     assert res['electron_microscopy']['General'] == {
@@ -157,10 +145,10 @@ def test_eds(parser, schema):
         'incidence_angle': {'value': 90.0, 'units': 'DEG'},
         'solid_angle': {'value': 0.002, 'units': 'SR'},
         'stage_tilt': {'value': 0.0, 'units': 'DEG'}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_edax_eds(parser, schema):
+def test_edax_eds(parser):
     res = parser.parse([file_path('03_edax_sem_eds_map_dataZeroed.spd')])
 
     assert res['electron_microscopy']['General'] == {
@@ -188,10 +176,10 @@ def test_edax_eds(parser, schema):
                                    'units': 'EV'},
         'live_time': {'value': 2621.43994140625, 'units': 'SEC'}
     }
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_eels(parser, schema):
+def test_eels(parser):
     res = parser.parse([file_path('04_Titan_EELS_SI_dataZeroed.dm3')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2016-04-22'},
@@ -249,10 +237,10 @@ def test_eels(parser, schema):
         'prism_shift_enabled': {'value': True},
         'filter_slit_width': {'value': 10.0, 'units': 'EV'},
         'filter_slit_inserted': {'value': False}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_non_titan_dm3(parser, schema):
+def test_non_titan_dm3(parser):
     res = parser.parse([file_path('05_nonTitan_diffraction.dm3')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-07-01'},
@@ -270,10 +258,10 @@ def test_non_titan_dm3(parser, schema):
         'exposure_time': {'value': 0.1, 'units': 'SEC'}}
     assert res['electron_microscopy']['TEM'] == {
         'acquisition_device': {'value': 'Orius '}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_dm3_tecnai(parser, schema):
+def test_dm3_tecnai(parser):
     eels_mdata = {
         'spectrometer_mode': {'value': 'Spectroscopy'},
         'dispersion_per_channel': {'value': 0.1, 'units': 'EV'},
@@ -327,7 +315,7 @@ def test_dm3_tecnai(parser, schema):
         'defocus': {'value': -0.0, 'units': 'MicroM'},
         'spot_size': {'value': 2, 'units': 'UNITLESS'}}
     assert res['electron_microscopy']['EELS'] == eels_mdata
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
     # parse diffraction mode tecnai dm3
     res = parser.parse([file_path('07_Titan_Tecnai_diffraction.dm3')])
@@ -374,7 +362,7 @@ def test_dm3_tecnai(parser, schema):
         'defocus': {'value': 0.082, 'units': 'MicroM'},
         'spot_size': {'value': 8, 'units': 'UNITLESS'}}
     assert res['electron_microscopy']['EELS'] == eels_mdata
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
     # parse diffraction mode tecnai with no spectrometer info
     res = parser.parse([file_path(
@@ -420,10 +408,10 @@ def test_dm3_tecnai(parser, schema):
         'extractor_voltage': {'value': 4500, 'units': 'V'},
         'defocus': {'value': 0.0, 'units': 'MicroM'},
         'spot_size': {'value': 3, 'units': 'UNITLESS'}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_dm3_stack(parser, schema):
+def test_dm3_stack(parser):
     res = parser.parse([file_path('09_Titan_STEM_stack.dm3')])
     # note that the axis_calibration values are bogus, but they're not read
     # correctly my DigitalMicrograph, so we cannot expect to do better than
@@ -463,10 +451,10 @@ def test_dm3_stack(parser, schema):
         'imaging_mode': {'value': 'DIFFRACTION'},
         'illumination_mode': {'value': 'STEM NANOPROBE'},
         'acquisition_device': {'value': 'DigiScan'}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_eels_acquisition_spectrometer(parser, schema):
+def test_eels_acquisition_spectrometer(parser):
     res = parser.parse([file_path('10_Titan_EELS_proc.dm3')])
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': '10_Titan_EELS_proc.dm3'},
@@ -508,10 +496,10 @@ def test_eels_acquisition_spectrometer(parser, schema):
         'drift_tube_enabled': {'value': True},
         'prism_shift_voltage': {'value': 0.0, 'units': 'V'},
         'prism_shift_enabled': {'value': True}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_hs_signal_no_units(parser, schema):
+def test_hs_signal_no_units(parser):
     res = parser.parse([file_path('11_hs_signal_no_axis_units.hspy')])
     assert res['electron_microscopy']['General'] == {
         'axis_calibration': {
@@ -522,10 +510,10 @@ def test_hs_signal_no_units(parser, schema):
             'axis-2': {'name': None, 'scale': 1.0,
                        'offset': 0.0, 'size': 10, 'units': None}},
         'data_dimensions': [10, 10, 10]}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_tia_haadf(parser, schema):
+def test_tia_haadf(parser):
     res = parser.parse([file_path('12_TIA_HAADF.emi')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-06-28'},
@@ -566,10 +554,10 @@ def test_tia_haadf(parser, schema):
         'prism_shift_energy': {'value': -0.0, 'units': 'EV'},
         'drift_tube_energy': {'value': 0.0, 'units': 'EV'},
         'total_energy_loss': {'value': 0.0, 'units': 'EV'}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
-def test_quanta_sem_tif(parser, schema):
+def test_quanta_sem_tif(parser):
     res = parser.parse([file_path('20_quanta_sem.tif')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2022-03-03'},
@@ -601,7 +589,7 @@ def test_quanta_sem_tif(parser, schema):
         'pixel_height': {'value': 1.25e-09, 'units': 'M'},
         'magnification_mode': {'value': 3},
         'chamber_pressure': {'value': 0.000703102, 'units': 'PA'}}
-    assert jsonschema.validate(res, schema) is None
+    assert jsonschema.validate(res, parser.schema) is None
 
 
 def test_implementors(parser):
@@ -610,4 +598,4 @@ def test_implementors(parser):
 
 
 def test_version(parser):
-    assert parser.version() == '0.1.0'
+    assert parser.version() == '0.1.1'
