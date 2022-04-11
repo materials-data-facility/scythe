@@ -1,8 +1,0 @@
-ase>=3.17
-dfttopif>=1.1.0
-mdf_toolbox>=0.5.3
-pymatgen>=2018.11.30
-python-magic>=0.4.15
-sphinx_rtd_theme>=0.4.2
-tableschema>=1,<2
-xmltodict>=0.12.0
