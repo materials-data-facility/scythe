@@ -1,4 +1,5 @@
 from materials_io.file import GenericFileParser
+import pytest
 import os
 
 
@@ -18,6 +19,16 @@ def test_file():
         'sha512': '1f47ed450ad23e92caf1a0e5307e2af9b13edcd7735ac9685c9f21c'
                   '9faec62cb95892e890a73480b06189ed5b842d8b265c5e47cc6cf27'
                   '9d281270211cff8f90'}
+
+    # be defensive against data_type, which will only be present if the user has libmagic installed
+    if 'data_type' not in output:
+        del expected['data_type']
+        del expected['mime_type']
+        assert output == expected
+        assert isinstance(parser.schema, dict)
+        pytest.xfail("'data_type' was not present in the parser output, most likely because "
+                     "libmagic is not properly installed")
+
     for i in ['JPEG image data', 'density 300x300', 'TIFF image data',
               '1910x1000']:
         assert i in output['data_type']

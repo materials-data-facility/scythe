@@ -1,5 +1,4 @@
-from typing import Dict, Union, Tuple, Any, Callable, Optional, List
-from typing_extensions import TypedDict
+from typing import Dict, Union, Tuple, Any, Callable, Optional, List, TypedDict
 
 
 def get_nested_dict_value_by_path(nest_dict: Dict,

@@ -7,7 +7,8 @@ full functionality of a parser.
 Installing MaterialsIO (for users)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Installing MaterialsIO should be as easy as a single ``pip`` command. Running::
+Installing MaterialsIO should be as easy as a single ``pip`` command. Assuming you have a
+version of Python that is 3.8 or higher, running::
 
     pip install git+https://github.com/materials-data-facility/MaterialsIO.git
 

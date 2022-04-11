@@ -1,8 +1,11 @@
 # MaterialsIO
 
-[![Build Status](https://travis-ci.org/materials-data-facility/MaterialsIO.svg?branch=master)](https://travis-ci.org/materials-data-facility/MaterialsIO)
-[![Documentation Status](https://readthedocs.org/projects/materialsio/badge/?version=latest)](https://materialsio.readthedocs.io/en/latest/?badge=latest)
-[![Coverage Status](https://coveralls.io/repos/github/materials-data-facility/MaterialsIO/badge.svg?branch=master)](https://coveralls.io/github/materials-data-facility/MaterialsIO?branch=master)
+[![Build Status](https://github.com/materials-data-facility/MaterialsIO/workflows/Build%20Status/badge.svg)](https://github.com/materials-data-facility/MaterialsIO/actions/workflows/test-suite-and-docs.yml)
+[![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat&logo=bookstack&labelColor=grey&logoColor=white)](https://materials-data-facility.github.io/MaterialsIO)
+[![Coverage Status](https://codecov.io/gh/materials-data-facility/MaterialsIO/branch/master/graph/badge.svg)](https://codecov.io/gh/materials-data-facility/MaterialsIO)
+[![GitHub tag checks state](https://img.shields.io/github/checks-status/materials-data-facility/MaterialsIO/master)](https://github.com/materials-data-facility/MaterialsIO/actions)
+[![GitHub last commit](https://img.shields.io/github/last-commit/materials-data-facility/MaterialsIO)](https://github.com/materials-data-facility/MaterialsIO/commits/master)
+[![GitHub contributors](https://img.shields.io/github/contributors/materials-data-facility/MaterialsIO)](https://github.com/materials-data-facility/MaterialsIO/graphs/contributors)
 
 MaterialsIO is a library of tools that generate summaries of the data contained in scientific data files.
 The goal of MaterialsIO is to provide a shared resources of these tool to avoid duplication of effort between the many emerging materials databases.

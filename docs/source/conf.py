@@ -22,7 +22,7 @@ from materials_io import __version__
 # -- Project information -----------------------------------------------------
 
 project = 'MaterialsIO'
-copyright = '2019, Materials Data Facility Team, Citrine Informatics'
+copyright = '2019 - 2022, Materials Data Facility Team, Citrine Informatics'
 author = 'Materials Data Facility Team, Citrine Informatics'
 
 # The short X.Y version
@@ -47,7 +47,8 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'stevedore.sphinxext',
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.githubpages'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
