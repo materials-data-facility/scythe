@@ -104,6 +104,7 @@ passenv = *
 whitelist_externals = poetry
 commands =
     poetry install -E all
+    poetry run flake8
     poetry run pytest
 
 [testenv:docs]
@@ -111,5 +112,6 @@ passenv = *
 description = invoke sphinx-build to build the HTML docs
 commands =
     poetry install -E all
+    poetry run flake8
     poetry run python -m sphinx.cmd.build ./docs/source ./docs/_build -n -E -a -j auto -b html
 """

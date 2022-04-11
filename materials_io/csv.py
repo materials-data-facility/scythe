@@ -12,7 +12,7 @@ class CSVParser(BaseSingleFileParser):
 
     The context dictionary for the CSV parser includes several fields:
         - ``schema``: Dictionary defining the schema for this dataset, following that of
-        FrictionlessIO
+          FrictionlessIO
         - ``na_values``: Any values that should be interpreted as missing
 
     """
