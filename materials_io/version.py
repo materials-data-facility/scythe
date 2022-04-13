@@ -1,9 +1,10 @@
-import tomli
-import pathlib
+try:
+    import importlib.metadata as importlib_metadata
+except ModuleNotFoundError:
+    # for Python <3.8 add 'importlib_metadata' as a dependency
+    import importlib_metadata  # type: ignore
+
 # single source of truth for package version,
 # see https://packaging.python.org/en/latest/single_source_version/
 
-with open(pathlib.Path(__file__).parent / '..' / 'pyproject.toml', 'rb') as f:
-    toml_dict = tomli.load(f)
-
-__version__ = toml_dict["tool"]["poetry"]["version"]
+__version__ = importlib_metadata.version('materials_io')
