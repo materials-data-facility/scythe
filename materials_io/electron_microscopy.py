@@ -86,6 +86,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
         if self.inst_data is not None:
             source = self.inst_data
             dest = self.em
+
             mapping = [
                 MappingElements(
                     source_dict=source, source_path='acquisition_mode',
@@ -104,11 +105,6 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     source_dict=source, source_path='convergence_angle',
                     dest_dict=dest, dest_path=('General_EM', 'convergence_angle'),
                     cast_fn=float, units='MilliRAD', conv_fn=None,
-                    override=False),
-                MappingElements(
-                    source_dict=source, source_path='magnification',
-                    dest_dict=dest, dest_path=('General_EM', 'magnification_indicated'),
-                    cast_fn=float, units='UNITLESS', conv_fn=None,
                     override=False),
                 MappingElements(
                     source_dict=source, source_path='microscope',
@@ -160,6 +156,24 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                     dest_dict=dest, dest_path=('SEM', 'working_distance'),
                     cast_fn=float, units='MilliM', conv_fn=None,
                     override=False)]
+
+            # some logic to parse how Zeiss stores floats in their SEM tifs:
+            mag = get_val(source, path='magnification')
+            if mag and isinstance(mag, str):
+                if ' K X' in mag:
+                    mag = mag.replace(' K X', '')
+                    try:
+                        mag = float(mag)
+                        mag *= 1000
+                    except ValueError:
+                        # don't do anything if we can't coerce the value to a float
+                        pass
+
+            mapping += [MappingElements(
+                source_dict={'magnification': mag}, source_path='magnification',
+                dest_dict=dest, dest_path=('General_EM', 'magnification_indicated'),
+                cast_fn=float, units='UNITLESS', conv_fn=None,
+                override=False)]
 
             map_dict_values(mapping)
 
@@ -1063,7 +1077,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
                 'Joshua Taillon <joshua.taillon@nist.gov>']
 
     def version(self):
-        return '0.1.1'
+        return '0.1.2'
 
     @property
     def schema(self) -> dict:

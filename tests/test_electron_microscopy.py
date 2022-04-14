@@ -592,10 +592,62 @@ def test_quanta_sem_tif(parser):
     assert jsonschema.validate(res, parser.schema) is None
 
 
+def test_zeiss_sem_tif(parser):
+    res = parser.parse([file_path('21_zeiss_sem.tif')])
+    assert res['electron_microscopy']['General'] == {
+        'date': {'value': '2017-12-15'},
+        'original_filename': {'value': '21_zeiss_sem.tif'},
+        'time': {'value': '10:43:43'},
+        'axis_calibration': {
+            'axis-0': {'name': 'height', 'scale': 1.057033e-09, 'offset': 0.0, 'size': 768,
+                       'units': 'M'},
+            'axis-1': {'name': 'width', 'scale': 1.057033e-09, 'offset': 0.0, 'size': 1024,
+                       'units': 'M'}},
+        'data_dimensions': [768, 1024]}
+    assert res['electron_microscopy']['General_EM'] == {
+        'beam_current': {'value': 0.159, 'units': 'NanoA'},
+        'beam_energy': {'value': 15.0, 'units': 'KiloEV'},
+        'microscope_name': {'value': '1525-XX-XX'},
+        'stage_position': {'rotation': {'value': 4.3, 'units': 'DEG'},
+                           'x': {'value': 56.8511, 'units': 'MilliM'},
+                           'y': {'value': 53.0695, 'units': 'MilliM'},
+                           'z': {'value': 14.996, 'units': 'MilliM'}},
+        'magnification_indicated': {'value': 267430.0, 'units': 'UNITLESS'}}
+    assert res['electron_microscopy']['SEM'] == {
+        'working_distance': {'value': 2.0, 'units': 'MilliM'}}
+    assert jsonschema.validate(res, parser.schema) is None
+
+
+def test_zeiss_sem_bad_mag_tif(parser):
+    res = parser.parse([file_path('22_zeiss_sem_bad_mag.tif')])
+    assert res['electron_microscopy']['General'] == {
+        'date': {'value': '2017-12-15'},
+        'original_filename': {'value': '22_zeiss_sem_bad_mag.tif'},
+        'time': {'value': '10:43:43'},
+        'axis_calibration': {
+            'axis-0': {'name': 'height', 'scale': 1.057033e-09,
+                       'offset': 0.0, 'size': 768, 'units': 'M'},
+            'axis-1': {'name': 'width', 'scale': 1.057033e-09,
+                       'offset': 0.0, 'size': 1024, 'units': 'M'}},
+        'data_dimensions': [768, 1024]}
+    assert res['electron_microscopy']['General_EM'] == {
+        'beam_current': {'value': 0.159, 'units': 'NanoA'},
+        'beam_energy': {'value': 15.0, 'units': 'KiloEV'},
+        'microscope_name': {'value': '1525-XX-XX'},
+        'stage_position': {'rotation': {'value': 4.3, 'units': 'DEG'},
+                           'x': {'value': 56.8511, 'units': 'MilliM'},
+                           'y': {'value': 53.0695, 'units': 'MilliM'},
+                           'z': {'value': 14.996, 'units': 'MilliM'}},
+        'magnification_indicated': {'value': 'TESTER', 'units': 'UNITLESS'}}
+    assert res['electron_microscopy']['SEM'] == {
+        'working_distance': {'value': 2.0, 'units': 'MilliM'}}
+    assert jsonschema.validate(res, parser.schema) is None
+
+
 def test_implementors(parser):
     assert 'Jonathon Gaff <jgaff@uchicago.edu>' in parser.implementors()
     assert 'Joshua Taillon <joshua.taillon@nist.gov>' in parser.implementors()
 
 
 def test_version(parser):
-    assert parser.version() == '0.1.1'
+    assert parser.version() == '0.1.2'

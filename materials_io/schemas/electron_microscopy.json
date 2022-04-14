@@ -45,6 +45,20 @@
         }
       }
     },
+    "single_value_string_or_number_type": {
+      "type": "object",
+      "required": ["value"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "oneOf": [
+            {"type": "number"},
+            {"type": "string"}
+          ]
+        },
+        "units": {"type": "string"}
+      }
+    },
     "single_value_boolean_type": {
       "type": "object",
       "required": ["value"],
@@ -356,12 +370,12 @@
           "description": "The total amount of time the beam exposed the sample during a data collection (the sum of all pixels' dwell times)"
         },
         "magnification_actual": {
-          "$ref": "#/definitions/single_value_number_type",
-          "description": "The actual calibrated magnification of the collected data"
+          "$ref": "#/definitions/single_value_string_or_number_type",
+          "description": "The actual calibrated magnification of the collected data. Preference is a number, but string values are accepted"
         },
         "magnification_indicated": {
-          "$ref": "#/definitions/single_value_number_type",
-          "description": "The magnification indicated by the acquisition software in this collected data"
+          "$ref": "#/definitions/single_value_string_or_number_type",
+          "description": "The magnification indicated by the acquisition software in this collected data. Preference is a number, but string values are accepted"
         },
         "microscope_name": {
           "$ref": "#/definitions/single_value_string_type",
