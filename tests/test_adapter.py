@@ -1,4 +1,4 @@
-from materials_io.adapters.base import NOOPAdapter
+from materials_io.adapters.base import NOOPAdapter, GreedySerializeAdapter
 from materials_io.testing import NOOPParser
 
 
@@ -17,3 +17,10 @@ def test_compatibility():
     # Make sure giving it a different version number breaks compatibility
     adapter.version = lambda: parser.version() + '1'
     assert not adapter.check_compatibility(parser)
+
+
+def test_greedy_adapter_unserializable():
+    adapter = GreedySerializeAdapter()
+    unserializable_bytes = {'key': b'\x03\xdd'}
+    s = adapter.transform(unserializable_bytes)
+    assert s == '{"key": "<<Unserializable type: bytes>>"}'

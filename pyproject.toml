@@ -31,6 +31,7 @@ pytest-cov = "^3.0.0"
 tox = "^3.25.0"
 Sphinx = "^4.5.0"
 sphinx-rtd-theme = "^1.0.0"
+diff-cover = "^6.4.5"
 
 [tool.poetry.extras]
 ase = ['ase']
@@ -74,13 +75,14 @@ all = ['ase',
 [tool.poetry.plugins."materialsio.adapter"]
 "noop" = "materials_io.adapters.base:NOOPAdapter"
 "serialize" = "materials_io.adapters.base:SerializeAdapter"
+"greedy_serialize" = "materials_io.adapters.base:GreedySerializeAdapter"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "--ignore=.venv --ignore=.tox --cov=materials_io --cov-report html --cov-report term-missing"
+addopts = "--ignore=.venv --ignore=.tox --cov=materials_io --cov-report html --cov-report term-missing --cov-report=xml"
 testpaths = ['tests']
 
 [tool.coverage.run]
@@ -107,6 +109,7 @@ commands =
     poetry install -E all
     poetry run flake8
     poetry run pytest
+    poetry run diff-cover coverage.xml --compare-branch=origin/master
 
 [testenv:docs]
 passenv = *

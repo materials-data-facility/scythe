@@ -12,13 +12,18 @@ jobs:
         poetry-version: ["1.1.13"]
         os: [ubuntu-latest, macos-latest] #, windows-latest]
         include:
-          # add xml coverage report to the highest version of ubuntu for codecov
+          # add upload coverage report to the highest version of ubuntu for codecov
           - os: ubuntu-latest
             python-version: "3.10"
-            pytest-args-coverage: --cov-report=xml
+            upload-coverage: true
             build-docs: true
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Check out the repo at master branch (for diff-cover)
+        uses: actions/checkout@v3
+        with:
+          ref: master
+
       - uses: actions/checkout@v3
 
       - uses: actions/setup-python@v2
@@ -39,13 +44,16 @@ jobs:
         run: poetry run flake8
 
       - name: Echo args
-        run: echo ${{ matrix.pytest-args-coverage }} and ${{ matrix.build-docs }}
+        run: echo ${{ matrix.upload-coverage }} and ${{ matrix.build-docs }}
 
       - name: Run tests
-        run: poetry run pytest ${{ matrix.pytest-args-coverage }}
+        run: poetry run pytest
+
+      - name: Run diff-cover
+        run: poetry run diff-cover coverage.xml --compare-branch=origin/master --diff-range-notation '..'
 
       - name: Upload coverage to Codecov
-        if: ${{ matrix.pytest-args-coverage }}
+        if: ${{ matrix.upload-coverage }}
         uses: codecov/codecov-action@v2
 
       - name: Build documentation

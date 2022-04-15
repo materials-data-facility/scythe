@@ -1,8 +1,10 @@
 """Base classes for adapters"""
 
+import json
 from abc import abstractmethod
 from typing import Any, Union
-import json
+
+import numpy as np
 
 from materials_io.base import BaseParser
 
@@ -62,3 +64,30 @@ class SerializeAdapter(BaseAdapter):
 
     def transform(self, metadata: dict, context=None) -> str:
         return json.dumps(metadata)
+
+
+class GreedySerializeAdapter(BaseAdapter):
+    """Converts the metadata to a string by serializing with JSON, making some (hopefully) informed
+    choices about what to do with various types commonly seen, and otherwise reporting that the
+    data type could not be serialized. May not work in all situations, but should cover a large
+    number of cases."""
+    @staticmethod
+    def default(o):
+        success = False
+        if isinstance(o, np.void):
+            return None
+        elif isinstance(o, (np.ndarray, np.generic)):
+            return o.tolist()
+        elif isinstance(o, bytes):
+            try:
+                return o.decode()
+            except UnicodeDecodeError:
+                pass
+
+        if not success:
+            type_name = o.__class__.__name__
+            return f"<<Unserializable type: {type_name}>>"
+
+    def transform(self, metadata: dict, context=None) -> str:
+        s = json.dumps(metadata, default=GreedySerializeAdapter.default)
+        return s

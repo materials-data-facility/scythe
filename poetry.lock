@@ -149,7 +149,7 @@ name = "chardet"
 version = "4.0.0"
 description = "Universal encoding detector for Python 2 and 3"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
@@ -311,6 +311,23 @@ pypif = ">=2.0.1,<3"
 
 [package.extras]
 report = ["requests"]
+
+[[package]]
+name = "diff-cover"
+version = "6.4.5"
+description = "Run coverage and linting reports on diffs"
+category = "dev"
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+
+[package.dependencies]
+chardet = ">=3.0.0"
+Jinja2 = ">=2.7.1"
+pluggy = ">=0.13.1,<2"
+Pygments = ">=2.9.0,<3.0.0"
+
+[package.extras]
+toml = ["tomli (>=1.2.1)"]
 
 [[package]]
 name = "dill"
@@ -2195,7 +2212,7 @@ xml = ["xmltodict"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8.0,<3.11"
-content-hash = "eeefc7d6fef28d50f05cb31d854e55c81d98ccb0b0b811305c4a82957d8f83a8"
+content-hash = "78b40f8d9b29b93e1d886cd6800309e83b3f26cd05c4e80a004aad905bf766a6"
 
 [metadata.files]
 alabaster = [
@@ -2424,6 +2441,10 @@ dftparse = [
 ]
 dfttopif = [
     {file = "dfttopif-1.1.0.tar.gz", hash = "sha256:45c82f341ea3c2cff3f4cc128d49743466968b498b5681d0defeaa1b98d34cb7"},
+]
+diff-cover = [
+    {file = "diff_cover-6.4.5-py3-none-any.whl", hash = "sha256:b51356163ab1f93592dd7e45adb169cc8c7044ad8c2fe19b2bacc0ac90e70336"},
+    {file = "diff_cover-6.4.5.tar.gz", hash = "sha256:a94b8c1c17dc24498917f7289fe383b457d8ad4ef2a3ffca80a892a41c8b58a6"},
 ]
 dill = [
     {file = "dill-0.3.4-py2.py3-none-any.whl", hash = "sha256:7e40e4a70304fd9ceab3535d36e58791d9c4a776b38ec7f7ec9afc8d3dca4d4f"},
