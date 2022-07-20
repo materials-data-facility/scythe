@@ -8,9 +8,8 @@ import os
 
 
 # List of files that are known to the VASP parser
-_vasp_file_names = ["outcar", "incar", "chgcar", "wavecar", "wavcar",
-                    "oszicar", "ibzcar", "kpoints", "doscar", "poscar",
-                    "contcar", "vasp_run.xml", "xdatcar"]
+_vasp_file_names = ["outcar", "incar", "chgcar", "wavecar", "wavcar", "oszicar", "ibzcar",
+                    "kpoints", "doscar", "poscar", "contcar", "vasp_run.xml", "xdatcar"]
 
 
 class DFTParser(BaseParser):
@@ -44,14 +43,14 @@ class DFTParser(BaseParser):
     def _group_vasp(self, files: Iterable[str]) -> Iterable[Tuple[str, ...]]:
         """Find groupings of files associated with VASP calculations
 
-        Finds files that start with the name "OUTCAR" (not case sensitive) and groups
-        those files together with any file that share the same postfix
-        (e.g., "OUTCAR.1" and "INCAR.1" are grouped together)
+        Find files that start with the name "OUTCAR" (not case sensitive) and groups those files
+        together with any file that share the same postfix (e.g., "OUTCAR.1" and "INCAR.1" are
+        grouped together)
 
         Args:
             files ([str]): List of files to be grouped
         Yields:
-            ((files]): List of VASP files from the same calculation
+            ((files)): List of VASP files from the same calculation
         """
 
         for group in group_by_postfix(files, _vasp_file_names):

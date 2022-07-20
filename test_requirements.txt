@@ -1,4 +1,0 @@
-pytest>=3.6
-flake8
-coveralls
-pytest-cov

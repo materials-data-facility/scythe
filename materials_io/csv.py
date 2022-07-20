@@ -12,7 +12,7 @@ class CSVParser(BaseSingleFileParser):
 
     The context dictionary for the CSV parser includes several fields:
         - ``schema``: Dictionary defining the schema for this dataset, following that of
-        FrictionlessIO
+          FrictionlessIO
         - ``na_values``: Any values that should be interpreted as missing
 
     """
@@ -23,8 +23,7 @@ class CSVParser(BaseSingleFileParser):
              return_records (bool): Whether to return each row in the CSV file
         Keyword:
             All kwargs as passed to
-            `TableSchema's infer <https://github.com/frictionlessdata/tableschema-py#infer>`_
-            method
+            `TableSchema's infer <https://github.com/frictionlessdata/tableschema-py#infer>`_ method
         """
         self.return_records = return_records
         self.infer_kwargs = kwargs
