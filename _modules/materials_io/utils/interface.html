@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>materials_io.utils.interface &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../goals.html">Project Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>materials_io.utils.interface</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for materials_io.utils.interface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Utilities for working with parsers from other applications&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">stevedore.extension</span> <span class="kn">import</span> <span class="n">ExtensionManager</span>
+<span class="kn">from</span> <span class="nn">stevedore.driver</span> <span class="kn">import</span> <span class="n">DriverManager</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">materials_io.adapters.base</span> <span class="kn">import</span> <span class="n">BaseAdapter</span>
+<span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">ParseResult</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ParseResult&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="s1">&#39;parser&#39;</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">_output_plugin_info</span><span class="p">(</span><span class="n">mgr</span><span class="p">:</span> <span class="n">ExtensionManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Gets information about all plugins attached to a particular manager</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mgr (ExtensionManager): Plugin manager</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (dict): Dictionary where keys are plugin ids and values are descriptions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">mgr</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">plugin</span> <span class="o">=</span> <span class="n">ext</span><span class="o">.</span><span class="n">plugin</span><span class="p">()</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">plugin</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="n">plugin</span><span class="o">.</span><span class="n">version</span><span class="p">(),</span>
+            <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="n">ext</span><span class="o">.</span><span class="n">entry_point_target</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="n">output</span>
+
+
+<div class="viewcode-block" id="get_available_parsers"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.get_available_parsers">[docs]</a><span class="k">def</span> <span class="nf">get_available_parsers</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Get information about the available parsers</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [dict]: Descriptions of available parsers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mgr</span> <span class="o">=</span> <span class="n">ExtensionManager</span><span class="p">(</span>
+        <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;materialsio.parser&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Get information about each parser</span>
+    <span class="k">return</span> <span class="n">_output_plugin_info</span><span class="p">(</span><span class="n">mgr</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_available_adapters"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.get_available_adapters">[docs]</a><span class="k">def</span> <span class="nf">get_available_adapters</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Get information on all available adapters</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (dict) Where keys are adapter names and values are descriptions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">_output_plugin_info</span><span class="p">(</span><span class="n">ExtensionManager</span><span class="p">(</span><span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;materialsio.adapter&#39;</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_adapter_map</span><span class="p">(</span><span class="n">adapter_map</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parsers</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Helper function to generate &#39;adapter map&#39;</span>
+<span class="sd">            (so different run_all_parsers functions can call it)</span>
+
+<span class="sd">    Adapter map is a list of parsers and names of the appropriate adapters</span>
+<span class="sd">    to use to format their output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        adapter_map (str): string argument for adapters.</span>
+<span class="sd">            - &#39;match&#39; means just find adapters with same names as corresponding parsers.</span>
+<span class="sd">        parsers ([str]): list of parsers</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (dict) where keys are adapter names parser/adapter names and values are adapter objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">adapter_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adapter_map</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">elif</span> <span class="n">adapter_map</span> <span class="o">==</span> <span class="s1">&#39;match&#39;</span><span class="p">:</span>
+        <span class="n">adapters</span> <span class="o">=</span> <span class="n">get_available_adapters</span><span class="p">()</span>
+        <span class="n">adapter_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parsers</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">adapters</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">adapter_map</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Adapter map must be a dict, None, or `matching`&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Give it to the user</span>
+    <span class="k">return</span> <span class="n">adapter_map</span>
+
+
+<span class="k">def</span> <span class="nf">_get_parser_and_adapter_contexts</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">global_context</span><span class="p">,</span> <span class="n">parser_context</span><span class="p">,</span> <span class="n">adapter_context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to update the helper and adapter contexts and the &#39;name&#39;</span>
+<span class="sd">        of a parser/adapter pair</span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): adapter/parser name.</span>
+<span class="sd">        global_context (dict): Context of the files, used for every parser and adapter</span>
+<span class="sd">        adapter_context (dict): Context used for adapters. Key is the name of the adapter,</span>
+<span class="sd">            value is the context.  The key ``@all`` is used to for context used for every adapter</span>
+<span class="sd">        parser_context (dict): Context used for adapters. Key is the name of the parser,</span>
+<span class="sd">            value is the context. The key ``@all`` is used to for context used for every parser</span>
+<span class="sd">    Returns:</span>
+<span class="sd">         (dict, dict): parser_context, my_adapter context tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the context information for the parser and adapter</span>
+    <span class="n">my_parser_context</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">global_context</span><span class="p">)</span>
+    <span class="n">my_parser_context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">parser_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;@all&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="n">my_parser_context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">parser_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{}))</span>
+
+    <span class="n">my_adapter_context</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">global_context</span><span class="p">)</span>
+    <span class="n">my_adapter_context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">adapter_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;@all&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="n">my_adapter_context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">adapter_context</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{}))</span>
+
+    <span class="k">return</span> <span class="n">my_parser_context</span><span class="p">,</span> <span class="n">my_adapter_context</span>
+
+
+<span class="k">def</span> <span class="nf">_get_parser_list</span><span class="p">(</span><span class="n">include_parsers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">exclude_parsers</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Helper function to get a list of parsers given lists of parsers to include/exclude</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        include_parsers ([str]): Predefined list of parsers to run. Only these will be used.</span>
+<span class="sd">            Mutually exclusive with `exclude_parsers`.</span>
+<span class="sd">        exclude_parsers ([str]): List of parsers to exclude.</span>
+<span class="sd">            Mutually exclusive with `include_parsers`.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        parsers (list): list of all applicable parsers.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">parsers</span> <span class="o">=</span> <span class="n">get_available_parsers</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">include_parsers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude_parsers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Including and excluding parsers are mutually exclusive&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">include_parsers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">missing_parsers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">include_parsers</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_parsers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Some parsers are missing: &#39;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_parsers</span><span class="p">))</span>
+        <span class="n">parsers</span> <span class="o">=</span> <span class="n">include_parsers</span>
+    <span class="k">elif</span> <span class="n">exclude_parsers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parsers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">parsers</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">exclude_parsers</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">parsers</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseParser</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Load a parser object</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of parser</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (BaseParser) Requested parser</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">DriverManager</span><span class="p">(</span>
+        <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;materialsio.parser&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">invoke_on_load</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">driver</span></div>
+
+
+<div class="viewcode-block" id="get_adapter"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.get_adapter">[docs]</a><span class="k">def</span> <span class="nf">get_adapter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseAdapter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Load an adapter</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of adapter</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (BaseAdapter) Requested adapter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Load the adapter</span>
+    <span class="n">mgr</span> <span class="o">=</span> <span class="n">DriverManager</span><span class="p">(</span>
+        <span class="n">namespace</span><span class="o">=</span><span class="s1">&#39;materialsio.adapter&#39;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">invoke_on_load</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Give it to the user</span>
+    <span class="k">return</span> <span class="n">mgr</span><span class="o">.</span><span class="n">driver</span></div>
+
+
+<div class="viewcode-block" id="execute_parser"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.execute_parser">[docs]</a><span class="k">def</span> <span class="nf">execute_parser</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                   <span class="n">adapter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Invoke a parser on a certain group of data</span>
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): Name of the parser</span>
+<span class="sd">        group ([str]): Paths to group of files to be parsed</span>
+<span class="sd">        context (dict): Context of the files, used in adapter and parser</span>
+<span class="sd">        adapter (str): Name of adapter to use to transform metadata</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ([dict]): Metadata generated by the parser</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">get_adapter</span><span class="p">(</span><span class="n">adapter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">adapter</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">metadata</span></div>
+
+
+<div class="viewcode-block" id="run_all_parsers_on_directory"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.run_all_parsers_on_directory">[docs]</a><span class="k">def</span> <span class="nf">run_all_parsers_on_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">global_context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">adapter_context</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">parser_context</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">include_parsers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">exclude_parsers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">adapter_map</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">default_adapter</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> \
+                                                    <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ParseResult</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Run all known files on a directory of files</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        directory (str): Path to directory to be parsed</span>
+<span class="sd">        global_context (dict): Context of the files, used for every parser and adapter</span>
+<span class="sd">        adapter_context (dict): Context used for adapters. Key is the name of the adapter,</span>
+<span class="sd">            value is the context.  The key ``@all`` is used to for context used for every adapter</span>
+<span class="sd">        parser_context (dict): Context used for adapters. Key is the name of the parser,</span>
+<span class="sd">            value is the context. The key ``@all`` is used to for context used for every parser</span>
+<span class="sd">        include_parsers ([str]): Predefined list of parsers to run. Only these will be used.</span>
+<span class="sd">            Mutually exclusive with `exclude_parsers`.</span>
+<span class="sd">        exclude_parsers ([str]): List of parsers to exclude.</span>
+<span class="sd">            Mutually exclusive with `include_parsers`.</span>
+<span class="sd">        adapter_map (str, dict): Map of parser name to the desired adapter.</span>
+<span class="sd">            Use &#39;match&#39; to find adapters with the same names</span>
+<span class="sd">        default_adapter (str): Adapter to use if no other adapter is defined</span>
+<span class="sd">    Yields</span>
+<span class="sd">        ((str), str, dict) Tuple of (1) group of files, (2) name of parser, (3) metadata</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Load in default arguments</span>
+    <span class="k">if</span> <span class="n">global_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">global_context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">adapter_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adapter_context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">parser_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parser_context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="c1"># Get the list of parsers</span>
+    <span class="n">parsers</span> <span class="o">=</span> <span class="n">_get_parser_list</span><span class="p">(</span><span class="n">include_parsers</span><span class="p">,</span> <span class="n">exclude_parsers</span><span class="p">)</span>
+
+    <span class="c1"># Make the adapter map</span>
+    <span class="n">adapter_map</span> <span class="o">=</span> <span class="n">_get_adapter_map</span><span class="p">(</span><span class="n">adapter_map</span><span class="o">=</span><span class="n">adapter_map</span><span class="p">,</span> <span class="n">parsers</span><span class="o">=</span><span class="n">parsers</span><span class="p">)</span>
+
+    <span class="c1"># Get the list of known parsers</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">parsers</span><span class="p">:</span>
+        <span class="c1"># Get the parser and adapter</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">adapter_name</span> <span class="o">=</span> <span class="n">adapter_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default_adapter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">adapter_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="n">get_adapter</span><span class="p">(</span><span class="n">adapter_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">my_parser_context</span><span class="p">,</span> <span class="n">my_adapter_context</span> <span class="o">=</span> <span class="n">_get_parser_and_adapter_contexts</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                                                                                 <span class="n">global_context</span><span class="p">,</span>
+                                                                                 <span class="n">parser_context</span><span class="p">,</span>
+                                                                                 <span class="n">adapter_context</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">metadata</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_directory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">my_parser_context</span><span class="p">):</span>
+            <span class="c1"># Run the adapter, if defined</span>
+            <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">my_adapter_context</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Adapter for </span><span class="si">{</span><span class="n">parser</span><span class="si">}</span><span class="s1"> failed with caught exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+            <span class="k">yield</span> <span class="n">ParseResult</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="run_all_parsers_on_group"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.utils.interface.run_all_parsers_on_group">[docs]</a><span class="k">def</span> <span class="nf">run_all_parsers_on_group</span><span class="p">(</span><span class="n">group</span><span class="p">,</span>
+                             <span class="n">adapter_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">global_context</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">adapter_context</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="n">parser_context</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="n">include_parsers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="n">exclude_parsers</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="n">default_adapter</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse metadata from a file-group and adapt its metadata per a user-supplied adapter_map.</span>
+
+<span class="sd">    This function is effectively a wrapper to execute_parser() that enables us to output metadata</span>
+<span class="sd">    in the same format as run_all_parsers_on_directory(), but just on a single file group.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        group ([str]): Paths to group of files to be parsed</span>
+<span class="sd">        global_context (dict): Context of the files, used for every parser and adapter</span>
+<span class="sd">        adapter_context (dict): Context used for adapters. Key is the name of the adapter,</span>
+<span class="sd">            value is the context.  The key ``@all`` is used to for context used for every adapter</span>
+<span class="sd">        parser_context (dict): Context used for adapters. Key is the name of the parser,</span>
+<span class="sd">            value is the context. The key ``@all`` is used to for context used for every parser</span>
+<span class="sd">        include_parsers ([str]): Predefined list of parsers to run. Only these will be used.</span>
+<span class="sd">            Mutually exclusive with `exclude_parsers`.</span>
+<span class="sd">        exclude_parsers ([str]): List of parsers to exclude.</span>
+<span class="sd">            Mutually exclusive with `include_parsers`.</span>
+<span class="sd">        adapter_map (str, dict): Map of parser name to the desired adapter.</span>
+<span class="sd">            Use &#39;match&#39; to find adapters with the same names:</span>
+<span class="sd">        default_adapter:</span>
+<span class="sd">    Yields:</span>
+<span class="sd">        ParseResult(group, name, metadata)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Load in default arguments</span>
+    <span class="k">if</span> <span class="n">global_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">global_context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">adapter_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">adapter_context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">parser_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parser_context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="c1"># Get the list of parsers</span>
+    <span class="n">parsers</span> <span class="o">=</span> <span class="n">_get_parser_list</span><span class="p">(</span><span class="n">include_parsers</span><span class="p">,</span> <span class="n">exclude_parsers</span><span class="p">)</span>
+
+    <span class="c1"># Make the adapter map</span>
+    <span class="n">adapter_map</span> <span class="o">=</span> <span class="n">_get_adapter_map</span><span class="p">(</span><span class="n">adapter_map</span><span class="o">=</span><span class="n">adapter_map</span><span class="p">,</span> <span class="n">parsers</span><span class="o">=</span><span class="n">parsers</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">parsers</span><span class="p">:</span>
+        <span class="c1"># Get the parser and adapter</span>
+        <span class="n">adapter_name</span> <span class="o">=</span> <span class="n">adapter_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default_adapter</span><span class="p">)</span>
+
+        <span class="n">my_parser_context</span><span class="p">,</span> <span class="n">my_adapter_context</span> <span class="o">=</span> <span class="n">_get_parser_and_adapter_contexts</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+                                                                                 <span class="n">global_context</span><span class="p">,</span>
+                                                                                 <span class="n">parser_context</span><span class="p">,</span>
+                                                                                 <span class="n">adapter_context</span><span class="p">)</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">execute_parser</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">my_parser_context</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">adapter_name</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="n">ParseResult</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

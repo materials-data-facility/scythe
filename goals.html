@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Goals &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Guide" href="user-guide.html" />
+    <link rel="prev" title="Welcome to MaterialsIO’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Project Goals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-does-materialsio-do">What Does MaterialsIO <em>Do</em>?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-does-materialsio-not-do">What Does MaterialsIO <em>Not Do</em>?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Project Goals</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/goals.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="project-goals">
+<h1>Project Goals<a class="headerlink" href="#project-goals" title="Permalink to this headline"></a></h1>
+<p>The goal of MaterialsIO is to minimize the amount of code duplication between data-driven
+materials software codes. Many materials databases at present rely on custom software to extract
+information from scientific files and transform that data into a standardized format. Further,
+automation or analysis software requires extracting information from files. While the data
+needs of application vary, they all rely on similar algorithms to extract information from the
+same types of files. <em>MaterialsIO is designed to be a shared repository for these algorithms</em>.</p>
+<p>The core of MaterialsIO is a collection of “parsers” which each generate simplified, standardized
+data from a certain class of files. For example, the
+<a class="reference internal" href="parsers.html#materials_io.electron_microscopy.ElectronMicroscopyParser" title="materials_io.electron_microscopy.ElectronMicroscopyParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectronMicroscopyParser</span></code></a> produces structured data from
+file types specific to brands of electron microscopes.</p>
+<p>The parsers do not necessarily generate data in a format needed by any tool. Rather, the parsers
+are designed to produce <em>all</em> of the information needed by all projects that utilize the
+libraries. In this way, the parsers can service every user without modification.</p>
+<section id="what-does-materialsio-do">
+<h2>What Does MaterialsIO <em>Do</em>?<a class="headerlink" href="#what-does-materialsio-do" title="Permalink to this headline"></a></h2>
+<p>MaterialsIO is designed to provide the answer to two limited questions:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><em>Which files can I parse with a certain tool?</em></dt><dd><p>MaterialsIO provides tools for quickly finding files of a certain type</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>What information does a set of files contain?</em></dt><dd><p>MaterialsIO provides a library of tools that transform data into a simpler formats</p>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="what-does-materialsio-not-do">
+<h2>What Does MaterialsIO <em>Not Do</em>?<a class="headerlink" href="#what-does-materialsio-not-do" title="Permalink to this headline"></a></h2>
+<p>There are several questions that are specifically out-of-scope for MaterialsIO:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><em>How do I get access to files that I want to parse?</em></dt><dd><p>MaterialsIO does not solve the data transfer problem</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>How can I parse large numbers of files reliably?</em></dt><dd><p>MaterialsIO is not a distributed workflow engine, but is designed to integrate with one
+for extracting metadata from large filesystems.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>How can I translate data into the schema needed for my application?</em></dt><dd><p>The goal of MaterialsIO is to go from opaque to well-documented formats. We recommend
+implementing separate “adapter” classes to transform MaterialsIO metadata to your
+specific requirements.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>See our
+<a class="reference external" href="user-guide.html#integrating-materialsio-into-applications">“how to use MaterialsIO” documentation</a>
+for more detail on how to integrate MaterialsIO into an application that provides these
+intentionally-missing features.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to MaterialsIO’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="user-guide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

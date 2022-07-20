@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>materials_io.base &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>materials_io.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for materials_io.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">materials_io.utils.grouping</span> <span class="kn">import</span> <span class="n">preprocess_paths</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseParser"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser">[docs]</a><span class="k">class</span> <span class="nc">BaseParser</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract base class for a file parser</span>
+
+<span class="sd">    This class defines the interface for all parsers in MaterialsIO. Each new parser must</span>
+<span class="sd">    implement the :meth:`parse`, :meth:`version`, and :meth:`implementors` functions. The</span>
+<span class="sd">    :meth:`group` method should be overridden to generate smart groups of file (e.g., associating</span>
+<span class="sd">    the inputs and outputs to the same calculation) :meth:`citations` can be used if there</span>
+<span class="sd">    are papers that should be cited if the parser is used as part of a scientific publication.</span>
+
+<span class="sd">    See the `MaterialsIO Contributor Guide &lt;contributor-guide.html&gt;`_ for further details.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseParser.identify_files"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.identify_files">[docs]</a>    <span class="k">def</span> <span class="nf">identify_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> \
+            <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Identify all groups of files likely to be compatible with this parser</span>
+
+<span class="sd">        Uses the :meth:`group` function to determine groups of files that should be parsed together.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Root of directory to parser</span>
+<span class="sd">            context (dict): Context about the files</span>
+<span class="sd">        Yields:</span>
+<span class="sd">            ([str]) Groups of eligible files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Walk through the directories</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="c1"># Generate the full paths</span>
+            <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">]</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+            <span class="c1"># Get any groups from this directory</span>
+            <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">group</span></div>
+
+<div class="viewcode-block" id="BaseParser.parse_directory"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.parse_directory">[docs]</a>    <span class="k">def</span> <span class="nf">parse_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> \
+            <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">dict</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Run a parser on all appropriate files in a directory</span>
+
+<span class="sd">        Skips files that throw exceptions while parsing</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Root of directory to parser</span>
+<span class="sd">            context (dict): Context about the files</span>
+<span class="sd">        Yields:</span>
+<span class="sd">            ([str], dict): Tuple of the group identity and the metadata unit</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">identify_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">metadata_unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">metadata_unit</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseParser.parse"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.parse">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Extract metadata from a group of files</span>
+
+<span class="sd">        A group of files is a set of 1 or more files that describe the same object, and will be</span>
+<span class="sd">        be used together to create s single summary record.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            group ([str]):  A list of one or more files that should be parsed together</span>
+<span class="sd">            context (dict): Context about the files</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (dict): The parsed results, in JSON-serializable format.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseParser.group"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.group">[docs]</a>    <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">directories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Identify a groups of files and directories that should be parsed together</span>
+
+<span class="sd">        Will create groups using only the files and directories included as input.</span>
+
+<span class="sd">        The files of files are _all_ files that could be read by this parser, which may include</span>
+<span class="sd">        many false positives.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            files (str or [str]): List of files to consider grouping</span>
+<span class="sd">            directories ([str]): Any directories to consider group as well</span>
+<span class="sd">            context (dict): Context about the files</span>
+<span class="sd">        Yields:</span>
+<span class="sd">            ((str)): Groups of files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make sure file paths are strings or Path-like objects</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">preprocess_paths</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+
+        <span class="c1"># Default: Every file is in its own group</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">f</span><span class="p">,)</span></div>
+
+<div class="viewcode-block" id="BaseParser.citations"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.citations">[docs]</a>    <span class="k">def</span> <span class="nf">citations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Citation(s) and reference(s) for this parser</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ([str]): each element should be a string citation in BibTeX format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="BaseParser.implementors"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.implementors">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">implementors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;List of implementors of the parser</span>
+
+<span class="sd">        These people are the points-of-contact for addressing errors or modifying the parser</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ([str]): List of implementors in the form &quot;FirstName LastName &lt;email@provider&gt;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="BaseParser.version"><a class="viewcode-back" href="../../user-guide.html#materials_io.base.BaseParser.version">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the version of the parser</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (str): Version of the parser</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Schema for the output of the parser&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://json-schema.org/schema#&quot;</span>
+        <span class="p">}</span></div>
+
+
+<span class="k">class</span> <span class="nc">BaseSingleFileParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for parsers that only ever considers a single file at a time</span>
+
+<span class="sd">    Instead of implementing :meth:`parse`, implement :meth:`_parse_file`&quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate the metadata for a single file</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): Path to the file</span>
+<span class="sd">            context (dict): Optional context information about the file</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            (dict): Metadata for the file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Error catching: allows for single files to passed not as list</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_file</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Assumes that the group must have exactly one file</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Parser only takes a single file at a time&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_file</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

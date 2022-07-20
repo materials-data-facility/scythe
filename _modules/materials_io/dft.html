@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>materials_io.dft &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>materials_io.dft</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for materials_io.dft</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">materials_io.utils.grouping</span> <span class="kn">import</span> <span class="n">preprocess_paths</span><span class="p">,</span> <span class="n">group_by_postfix</span>
+<span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">dfttopif</span> <span class="kn">import</span> <span class="n">files_to_pif</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># List of files that are known to the VASP parser</span>
+<span class="n">_vasp_file_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outcar&quot;</span><span class="p">,</span> <span class="s2">&quot;incar&quot;</span><span class="p">,</span> <span class="s2">&quot;chgcar&quot;</span><span class="p">,</span> <span class="s2">&quot;wavecar&quot;</span><span class="p">,</span> <span class="s2">&quot;wavcar&quot;</span><span class="p">,</span> <span class="s2">&quot;oszicar&quot;</span><span class="p">,</span> <span class="s2">&quot;ibzcar&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;kpoints&quot;</span><span class="p">,</span> <span class="s2">&quot;doscar&quot;</span><span class="p">,</span> <span class="s2">&quot;poscar&quot;</span><span class="p">,</span> <span class="s2">&quot;contcar&quot;</span><span class="p">,</span> <span class="s2">&quot;vasp_run.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;xdatcar&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="DFTParser"><a class="viewcode-back" href="../../parsers.html#materials_io.dft.DFTParser">[docs]</a><span class="k">class</span> <span class="nc">DFTParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract data from Density Functional Theory calculation results</span>
+
+<span class="sd">    Uses the `dfttopif &lt;https://github.com/CitrineInformatics/pif-dft&gt;`_ parser to extract</span>
+<span class="sd">    metadata from each file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quality_report</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize a featurizer</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            quality_report (bool): Whether to generate a quality report</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_report</span> <span class="o">=</span> <span class="n">quality_report</span>
+
+    <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">directories</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Convert paths into standardized form</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">preprocess_paths</span><span class="p">(</span><span class="n">files</span><span class="p">))</span>
+
+        <span class="c1"># Find all of the files, and attempt to group them</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_group_vasp</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>  <span class="c1"># VASP grouping logic</span>
+            <span class="c1"># Remove all files matched as VASP from the matchable files</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">difference_update</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">group</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_group_pwscf</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">group</span>  <span class="c1"># Do not remove, as the PWSCF group is not reliable</span>
+
+    <span class="k">def</span> <span class="nf">_group_vasp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Find groupings of files associated with VASP calculations</span>
+
+<span class="sd">        Find files that start with the name &quot;OUTCAR&quot; (not case sensitive) and groups those files</span>
+<span class="sd">        together with any file that share the same postfix (e.g., &quot;OUTCAR.1&quot; and &quot;INCAR.1&quot; are</span>
+<span class="sd">        grouped together)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            files ([str]): List of files to be grouped</span>
+<span class="sd">        Yields:</span>
+<span class="sd">            ((files)): List of VASP files from the same calculation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">group_by_postfix</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">_vasp_file_names</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">group</span>
+
+    <span class="k">def</span> <span class="nf">_group_pwscf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Assemble groups of files that are potentially PWSCF calculations</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            files ([str]): List of files to be grouped</span>
+<span class="sd">        Yields:</span>
+<span class="sd">            ((str)): Groups of potential-pwscf files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># For now, we just group files by directory</span>
+        <span class="c1">#  TODO (lw): Find files that have PWSCF flags in them</span>
+        <span class="c1">#  TODO (lw): Read PWSCF input files to know the save directory</span>
+        <span class="n">file_and_dir</span> <span class="o">=</span> <span class="p">[(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">file_and_dir</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
+
+<div class="viewcode-block" id="DFTParser.parse"><a class="viewcode-back" href="../../parsers.html#materials_io.dft.DFTParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">files_to_pif</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">quality_report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quality_report</span><span class="p">)</span><span class="o">.</span><span class="n">as_dictionary</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">implementors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Logan Ward&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;0.0.1&#39;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

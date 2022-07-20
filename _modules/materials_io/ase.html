@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>materials_io.ase &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>materials_io.ase</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for materials_io.ase</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">ase.io.jsonio</span> <span class="kn">import</span> <span class="n">create_ndarray</span>
+<span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span><span class="p">,</span> <span class="n">write</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+
+
+<div class="viewcode-block" id="object_hook"><a class="viewcode-back" href="../../parsers.html#materials_io.ase.object_hook">[docs]</a><span class="k">def</span> <span class="nf">object_hook</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom decoder for ASE JSON objects</span>
+
+<span class="sd">    Does everything *except* reconstitute the JSON object and</span>
+<span class="sd">    also converts numpy arrays to lists</span>
+
+<span class="sd">    Adapted from ase.io.jsonio</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dct (dict): Dictionary to reconstitute to an ASE object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;__datetime__&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dct</span><span class="p">[</span><span class="s1">&#39;__datetime__&#39;</span><span class="p">],</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">T%H:%M:%S.</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;__complex__&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="o">*</span><span class="n">dct</span><span class="p">[</span><span class="s1">&#39;__complex__&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="s1">&#39;__ndarray__&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">create_ndarray</span><span class="p">(</span><span class="o">*</span><span class="n">dct</span><span class="p">[</span><span class="s1">&#39;__ndarray__&#39;</span><span class="p">])</span>
+
+    <span class="c1"># No longer used (only here for backwards compatibility):</span>
+    <span class="k">if</span> <span class="s1">&#39;__complex_ndarray__&#39;</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">[</span><span class="s1">&#39;__complex_ndarray__&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">r</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
+
+    <span class="k">return</span> <span class="n">dct</span></div>
+
+
+<div class="viewcode-block" id="AseParser"><a class="viewcode-back" href="../../parsers.html#materials_io.ase.AseParser">[docs]</a><span class="k">class</span> <span class="nc">AseParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse information from atomistic simulation input files using ASE.</span>
+
+<span class="sd">       ASE can read many file types. These can be found at</span>
+<span class="sd">       https://wiki.fysik.dtu.dk/ase/ase/io/io.html</span>
+
+<span class="sd">       Metadata are generated as ASE JSON DB format</span>
+<span class="sd">       https://wiki.fysik.dtu.dk/ase/ase/db/db.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Attempt to read the file with ASE</span>
+        <span class="c1"># To return ASE JSON DB requires writing to file.</span>
+        <span class="c1"># Here we use StringIO instead of a file on disk.</span>
+
+        <span class="n">fobj</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">write</span><span class="p">(</span><span class="n">images</span><span class="o">=</span><span class="n">m</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">fobj</span><span class="p">)</span>
+        <span class="n">js</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">fobj</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(),</span> <span class="n">object_hook</span><span class="o">=</span><span class="n">object_hook</span><span class="p">)</span>
+
+        <span class="c1"># Select the first record.</span>
+        <span class="c1"># TODO: Test this against multiple records</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="n">js</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span>
+        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;chemical_formula&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">get_chemical_formula</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">record</span>
+
+    <span class="k">def</span> <span class="nf">implementors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Ben Blaiszik &lt;blaiszik@uchicago.edu&gt;&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;0.0.1&#39;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

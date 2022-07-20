@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributor Guide &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Available Parsers" href="parsers.html" />
+    <link rel="prev" title="User Guide" href="user-guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="goals.html">Project Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributor Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-development-environment">Setting up development environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-1-implement-the-parser">Step 1: Implement the Parser</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#class-attributes-and-initializer">Class Attributes and Initializer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-parse">Implementing <code class="docutils literal notranslate"><span class="pre">parse</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-group">Implementing <code class="docutils literal notranslate"><span class="pre">group</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-citations-and-implementors">Implementing <code class="docutils literal notranslate"><span class="pre">citations</span></code> and <code class="docutils literal notranslate"><span class="pre">implementors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-version">Implementing <code class="docutils literal notranslate"><span class="pre">version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-document-the-parser">Step 2: Document the Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-register-the-parser">Step 3: Register the Parser</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preferred-route-adding-the-parser-to-materialsio">Preferred Route: Adding the Parser to MaterialsIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alternative-route-including-parsers-from-other-libraries">Alternative Route: Including Parsers from Other Libraries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Contributor Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributor-guide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributor-guide">
+<h1>Contributor Guide<a class="headerlink" href="#contributor-guide" title="Permalink to this headline"></a></h1>
+<section id="setting-up-development-environment">
+<h2>Setting up development environment<a class="headerlink" href="#setting-up-development-environment" title="Permalink to this headline"></a></h2>
+<p>MaterialsIO makes use of the <a class="reference external" href="https://python-poetry.org/docs/">Poetry</a> project to manage
+dependencies and packaging. To install the latest version of MaterialsIO, first install poetry
+following <a class="reference external" href="https://python-poetry.org/docs/#installation">their documentation</a>. Once that’s
+done, clone/download the MaterialsIO repository locally from
+<a class="reference external" href="https://github.com/materials-data-facility/MaterialsIO/">Github</a>. Change into that directory
+and run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> (it would be a good idea to create a new virtual environment for your
+project first too, so as to not mix dependencies with your system environment).</p>
+<p>By default, only a small subset of parsers will be installed (this is done so that you do not
+need to install all the dependencies of parsers you may never use). To install additional
+parsers, you can specify “extras” at install time using <code class="docutils literal notranslate"><span class="pre">poetry</span></code>. Any of the values specified
+in the <code class="docutils literal notranslate"><span class="pre">[tool.poetry.extras]</span></code> section of <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> can be provided, including <code class="docutils literal notranslate"><span class="pre">all</span></code>,
+which will install all bundled parsers and their dependencies. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">install</span> <span class="o">-</span><span class="n">E</span> <span class="nb">all</span>
+</pre></div>
+</div>
+<p>Poetry wil create a dedicated virtual environment for the project and the MaterialsIO code will
+be installed in “editable” mode, so any changes you make to the code will be reflected when
+running tests, importing parsers, etc. It will use the default version of python available.
+MaterialsIO is currently developed and tested against Python versions 3.8.12, 3.9.12, and 3.10.4.
+We recommend using the <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a> project to manage
+various python versions on your system if this does not match your system version of Python. It
+is required to use <code class="docutils literal notranslate"><span class="pre">tox</span></code> as well (see next paragraph). Make sure you install the versions
+specified in the <code class="docutils literal notranslate"><span class="pre">.python-version</span></code> file by running commands such as <code class="docutils literal notranslate"><span class="pre">pyenv</span> <span class="pre">install</span> <span class="pre">3.8.12</span></code> etc.</p>
+<p>Additionally, the project uses <a class="reference external" href="https://tox.wiki/en/latest/">tox</a> to simplify common tasks and
+to be able to run tests in isolated environments. This will be installed automatically as a
+development package when running the <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> command above. It can be used to run the
+test suite with common settings, as well as building the documentation. For example, to
+run the full MaterialsIO test suite on all three versions of Python targetd, just run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">tox</span>
+</pre></div>
+</div>
+<p>To build the HTML documentation (will be placed inside the <code class="docutils literal notranslate"><span class="pre">./docs/_build/</span></code> folder), run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">tox</span> <span class="o">-</span><span class="n">e</span> <span class="n">docs</span>
+</pre></div>
+</div>
+<p>For the sake of speed, if you would like to focus your testing on just one Python version, you can
+temporarily override the environment list from <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> with an enviornment variable.
+For example, to only run the test/coverage suite on Python 3.8.X, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TOXENV</span><span class="o">=</span><span class="n">py38</span> <span class="n">poetry</span> <span class="n">run</span> <span class="n">tox</span>
+</pre></div>
+</div>
+<p>Check out the <code class="docutils literal notranslate"><span class="pre">[tool.tox]</span></code> section of the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file to view how these tasks are
+configured, and the <a class="reference external" href="https://tox.wiki/en/latest/config.html">tox documentation</a> on how to add your
+own custom tasks, if needed.</p>
+<p>Finally, MaterialsIO uses <code class="docutils literal notranslate"><span class="pre">flake8</span></code> to enforce code styles, which will be run for you
+automatically when using <code class="docutils literal notranslate"><span class="pre">tox</span></code> as defined above. Any code-style errors, such as lines longer
+than 100 characters, trailing whitespace, etc. will be flagged when running <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">tox</span></code>.</p>
+<p>The next part of the MaterialsIO guide details how to add a new parser to the ecosystem.</p>
+</section>
+<section id="step-1-implement-the-parser">
+<h2>Step 1: Implement the Parser<a class="headerlink" href="#step-1-implement-the-parser" title="Permalink to this headline"></a></h2>
+<p>Creating a new parser is accomplished by implementing the
+<a class="reference external" href="user-guide.html#parser-api">BaseParser</a> abstract class. If you are new to MaterailsIO, we
+recommend reviewing the <a class="reference external" href="user-guide.html#available-methods">User Guide</a> first to learn about
+the available methods of BaseParser. Minimally, you need only implement the <code class="docutils literal notranslate"><span class="pre">parse</span></code>,
+<code class="docutils literal notranslate"><span class="pre">version</span></code>, and <code class="docutils literal notranslate"><span class="pre">implementors</span></code> operations for a new parser. Each of these methods (and any
+other methods you override) must be stateless, so that running the operation does not change the
+behavior of the parser.</p>
+<p>We also have subclasses of <code class="docutils literal notranslate"><span class="pre">BaseParser</span></code> that are useful for common types of parsers:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BaseSingleFileParser</span></code>: Parsers that only ever evaluate a single file at a time</p></li>
+</ul>
+<section id="class-attributes-and-initializer">
+<h3>Class Attributes and Initializer<a class="headerlink" href="#class-attributes-and-initializer" title="Permalink to this headline"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">BaseParser</span></code> class supports configuration options as Python class attributes.
+These options are intended to define the behavior of a parser for a particular environment
+(e.g., paths of required executables) or for a particular application (e.g., turning off unneeded
+features). We recommend limiting these options to be only JSON-serializable data types and for
+all to be defined in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function to simplify text-based configuration files.</p>
+<p>The initializer function should check if a parser has access to all required external tools, and
+throw exceptions if not. For example, a parser that relies on calling an external command-line
+tool should check whether the package is installed. In general, parsers should fail during
+initialization and not during the parsing operation if the system in misconfigured.</p>
+</section>
+<section id="implementing-parse">
+<h3>Implementing <code class="docutils literal notranslate"><span class="pre">parse</span></code><a class="headerlink" href="#implementing-parse" title="Permalink to this headline"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">parse</span></code> method contains the core logic of a MaterialsIO parser: rendering a summary of a
+group of data files. We do not specify any particular schema for the output but we do recommend
+best practices:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><em>Summaries must be JSON-serializable.</em></dt><dd><p>Limiting to JSON data types ensures summaries are readable by most software without specia
+libraries. JSON documents are also able to be documented easily.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>Human-readability is desirable.</em></dt><dd><p>JSON summaries should be understandable to users without expert-level knowledge of the data.
+Avoid unfamiliar acronyms, such as names of variables in a specific simulation code or settings
+specific to a certain brand of instrument.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>Adhere closely to the original format.</em></dt><dd><p>If feasible, try to stay close to the original data format of a file or the output of a library
+used for parsing. Deviating from already existing formats complicates modifications to a parser.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>Always return a dictionary.</em></dt><dd><p>If a parser can return multiple records from a single file group, return the list as an element
+of the dictionary. Any metadata that pertains to each of the sub-records should be stored as
+a distinct element rather than being duplicated in each sub-record.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>We also have a recommendations for the parser behavior:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><em>Avoid configuration options that change only output format.</em></dt><dd><p>Parsers can take configuration options that alter the output format, but configurations
+should be used sparingly. A good use of configuration would be to disable complex parsing
+operations if unneeded. A bad use of configuration would be to change the output to match a
+different schema. Operations that significantly alter the form but not the content of a
+summary should be implemented as adaptors.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>Consider whether context should be configuration.</em></dt><dd><p>Settings that are identical for each file could be better suited as configuration settings
+than as context.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="implementing-group">
+<h3>Implementing <code class="docutils literal notranslate"><span class="pre">group</span></code><a class="headerlink" href="#implementing-group" title="Permalink to this headline"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">group</span></code> operation finds all sets of files in a user-provided list files and directories
+that should be parsed together. Implementing <code class="docutils literal notranslate"><span class="pre">group</span></code> is optional. Implementing a new <code class="docutils literal notranslate"><span class="pre">group</span></code>
+method is required only when the default behavior of “each file is its own group” (i.e., the
+parser only treats files individually) is incorrect.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">group</span></code> operation should not require access to the content of the files or directories to
+determine groupings. Being able to determine file groups via only file names improves performance
+and allows for determining groups of parsable files without needing to download them from remote
+systems.</p>
+<p>Files are allowed to appear in more than one group, but we recommend generating only the largest
+valid group of files to minimize the same metadata being generated multiple times.</p>
+<p>It is important to note that that file groups are specific to a parser. Groupings of files that
+are meaningful to one parser need not be meaningful to another. For that reason, limit the
+definition of groups to sets of files that can be parsed together without consideration to what
+other information makes the files related (e.g., being in the same directory).</p>
+<p>Another appropriate use of the <code class="docutils literal notranslate"><span class="pre">group</span></code> operation is to filter out files which are very unlikely
+to parse correctly. For example, a PDF parser could identify only files with a “.pdf” extension.
+However, we recommend using filtering sparing to ensure no files are missed.</p>
+</section>
+<section id="implementing-citations-and-implementors">
+<h3>Implementing <code class="docutils literal notranslate"><span class="pre">citations</span></code> and <code class="docutils literal notranslate"><span class="pre">implementors</span></code><a class="headerlink" href="#implementing-citations-and-implementors" title="Permalink to this headline"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">citation</span></code> and <code class="docutils literal notranslate"><span class="pre">implementors</span></code> methods identify additional resources describing a parser
+and provide credit to contributors. <code class="docutils literal notranslate"><span class="pre">implementors</span></code> is required, as this operation is also used
+to identify points-of-contact for support requests.</p>
+<p><code class="docutils literal notranslate"><span class="pre">citation</span></code> should return a list of BibTeX-format references.</p>
+<p><code class="docutils literal notranslate"><span class="pre">implementors</span></code> should return a list of people and, optionally, their contract information
+in the form: “FirstName LastName &lt;<a class="reference external" href="mailto:email&#37;&#52;&#48;provider&#46;com">email<span>&#64;</span>provider<span>&#46;</span>com</a>&gt;”.</p>
+</section>
+<section id="implementing-version">
+<h3>Implementing <code class="docutils literal notranslate"><span class="pre">version</span></code><a class="headerlink" href="#implementing-version" title="Permalink to this headline"></a></h3>
+<p>We require using <a class="reference external" href="https://semver.org/">semantic versioning</a> for specifying the version of parsers.
+As the API of the parser should remain unchanged, use versioning to indicate changes in available
+options or the output schema. The <code class="docutils literal notranslate"><span class="pre">version</span></code> operation should return the version of the parser.</p>
+</section>
+</section>
+<section id="step-2-document-the-parser">
+<h2>Step 2: Document the Parser<a class="headerlink" href="#step-2-document-the-parser" title="Permalink to this headline"></a></h2>
+<p>The docstring for a parser must start with a short, one sentence summary of the parser, which
+will be used by our autodocumentation tooling. The rest of the documentation should describe what
+types of files are compatible, what context infomration can be used, and
+summarize what types of metadata are generated.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Actually write these descriptors for the available parsers</p>
+</div>
+<p>The MaterialsIO project uses JSON documents as the output for all parsers and
+<a class="reference external" href="https://json-schema.org/">JSON Schema</a> to describe the content of the documents. The
+BaseParser class includes a property, <code class="docutils literal notranslate"><span class="pre">schema</span></code>, that stores a description of the output format.
+We recommend writing your description as a separate file and having the <code class="docutils literal notranslate"><span class="pre">schema</span></code> property read
+and output the contents of this file. See the
+<a class="reference external" href="https://github.com/materials-data-facility/MaterialsIO/blob/master/materials_io/file.py">GenericFileParser source code</a>
+for a example.</p>
+</section>
+<section id="step-3-register-the-parser">
+<h2>Step 3: Register the Parser<a class="headerlink" href="#step-3-register-the-parser" title="Permalink to this headline"></a></h2>
+<section id="preferred-route-adding-the-parser-to-materialsio">
+<h3>Preferred Route: Adding the Parser to MaterialsIO<a class="headerlink" href="#preferred-route-adding-the-parser-to-materialsio" title="Permalink to this headline"></a></h3>
+<p>If your parser has the same dependencies as existing parsers, add it to the existing module with
+the same dependencies.</p>
+<p>If your parser has new dependencies, create a new module for your parser in <code class="docutils literal notranslate"><span class="pre">materials_io</span></code>, and
+then add the requirements as a new key in the <code class="docutils literal notranslate"><span class="pre">[tool.poetry.extras]</span></code> section of <code class="docutils literal notranslate"><span class="pre">pyproject</span>
+<span class="pre">.toml</span></code>, following the other parser examples in that section. Next, add your parser to
+<code class="docutils literal notranslate"><span class="pre">docs/source/parsers.rst</span></code> by adding an <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">automodule::</span></code> statement that refers to your new
+module (again, following the existing pattern).</p>
+<p>MaterialsIO uses <code class="docutils literal notranslate"><span class="pre">stevedore</span></code> to simplify access to the parsers. After implementing and
+documenting the parser, add it to the <code class="docutils literal notranslate"><span class="pre">[tool.poetry.plugins.&quot;materialsio.parser&quot;]</span></code> section of the
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file for MaterialsIO. See
+<a class="reference external" href="https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins">stevedore documentation for more information</a>
+(these docs reference <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, but the equivalent can be done via plugins in <code class="docutils literal notranslate"><span class="pre">pyproject</span>
+<span class="pre">.toml</span></code>; follow the existing structure if you’re unsure, and ask for help from the developers if
+you run into issues).</p>
+</section>
+<section id="alternative-route-including-parsers-from-other-libraries">
+<h3>Alternative Route: Including Parsers from Other Libraries<a class="headerlink" href="#alternative-route-including-parsers-from-other-libraries" title="Permalink to this headline"></a></h3>
+<p>If a parser would be better suited as part of a different library, you can still register it as a
+parser with MaterialsIO by altering your <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file. Add an entry point with the
+namespace <code class="docutils literal notranslate"><span class="pre">&quot;materialsio.parser&quot;</span></code> and point to the class object following the
+<a class="reference external" href="https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins">stevedore documentation</a>.
+Adding the entry point will let MaterialsIO use your parser if your library is installed in the
+same Python environment as MaterialsIO.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Provide a public listing of materials_io-compatible software.</p>
+<p>So that people know where to find these external libraries</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="user-guide.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parsers.html" class="btn btn-neutral float-right" title="Available Parsers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

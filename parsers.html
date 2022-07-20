@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Available Parsers &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="materials_io" href="api/materials_io.html" />
+    <link rel="prev" title="Contributor Guide" href="contributor-guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="goals.html">Project Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Available Parsers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-summary">Quick Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detailed-listing">Detailed Listing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generic-file-parsers">Generic File Parsers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image-parsers">Image Parsers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#electron-microscopy-parsers">Electron Microscopy Parsers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#atomistic-data-parsers">Atomistic Data Parsers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculation-parsers">Calculation Parsers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#structured-data-files">Structured Data Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Available Parsers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/parsers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="available-parsers">
+<h1>Available Parsers<a class="headerlink" href="#available-parsers" title="Permalink to this headline"></a></h1>
+<p>These pages detail all of the parsers currently available in MaterialsIO.</p>
+<section id="quick-summary">
+<h2>Quick Summary<a class="headerlink" href="#quick-summary" title="Permalink to this headline"></a></h2>
+<p>The parsers that are configured to work with the stevedore plugin are:</p>
+<ul class="simple">
+<li><p>ase – Parse information from atomistic simulation input files using ASE.</p></li>
+<li><p>crystal – Parse information about a crystal structure</p></li>
+<li><p>csv – Reads comma-separated value (CSV) files</p></li>
+<li><p>dft – Extract data from Density Functional Theory calculation results</p></li>
+<li><p>em – Parse metadata specific to electron microscopy.</p></li>
+<li><p>filename – Extracts metadata in a filename, according to user-supplied patterns.</p></li>
+<li><p>generic – Gathers basic file information</p></li>
+<li><p>image – Retrieves basic information about an image</p></li>
+<li><p>json – Extracts fields in JSON into a user-defined new schema.</p></li>
+<li><p>noop – Determine whether files exist, used for debugging</p></li>
+<li><p>tdb – Extract information from a TDB file.</p></li>
+<li><p>xml – Extracts fields in XML into a user-defined new schema in JSON.</p></li>
+<li><p>yaml – Extracts fields in YAML into a user-defined new schema in JSON.</p></li>
+</ul>
+</section>
+<section id="detailed-listing">
+<h2>Detailed Listing<a class="headerlink" href="#detailed-listing" title="Permalink to this headline"></a></h2>
+<section id="generic-file-parsers">
+<h3>Generic File Parsers<a class="headerlink" href="#generic-file-parsers" title="Permalink to this headline"></a></h3>
+<p>Parsers that work for any kind of file</p>
+<span class="target" id="module-materials_io.file"></span><dl class="py class">
+<dt class="sig sig-object py" id="materials_io.file.GenericFileParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.file.</span></span><span class="sig-name descname"><span class="pre">GenericFileParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_hash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/materials_io/file.html#GenericFileParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.file.GenericFileParser" title="Permalink to this definition"></a></dt>
+<dd><p>Gathers basic file information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to record the path of the file</p></li>
+<li><p><strong>compute_hash</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to compute the hash of a file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="image-parsers">
+<h3>Image Parsers<a class="headerlink" href="#image-parsers" title="Permalink to this headline"></a></h3>
+<p>Parsers that read image data</p>
+<span class="target" id="module-materials_io.image"></span><dl class="py class">
+<dt class="sig sig-object py" id="materials_io.image.ImageParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.image.</span></span><span class="sig-name descname"><span class="pre">ImageParser</span></span><a class="reference internal" href="_modules/materials_io/image.html#ImageParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.image.ImageParser" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieves basic information about an image</p>
+</dd></dl>
+
+</section>
+<section id="electron-microscopy-parsers">
+<h3>Electron Microscopy Parsers<a class="headerlink" href="#electron-microscopy-parsers" title="Permalink to this headline"></a></h3>
+<p>Parsers that read electron microscopy data of various sorts (images, spectra, spectrum images,
+etc.) using the <a class="reference external" href="https://hyperspy.org">HyperSpy</a> package.</p>
+<span class="target" id="module-materials_io.electron_microscopy"></span><dl class="py class">
+<dt class="sig sig-object py" id="materials_io.electron_microscopy.ElectronMicroscopyParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.electron_microscopy.</span></span><span class="sig-name descname"><span class="pre">ElectronMicroscopyParser</span></span><a class="reference internal" href="_modules/materials_io/electron_microscopy.html#ElectronMicroscopyParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.electron_microscopy.ElectronMicroscopyParser" title="Permalink to this definition"></a></dt>
+<dd><p>Parse metadata specific to electron microscopy.</p>
+<p>This parser handles any file supported by HyperSpy’s I/O capabilities. Extract both the
+metadata interpreted by HyperSpy directly, but also any important values we can pick out
+manually.</p>
+<p>For each value (if it is known), return a subdict with two keys: <code class="docutils literal notranslate"><span class="pre">value</span></code>, containing the
+actual value of the metadata parameter, and <code class="docutils literal notranslate"><span class="pre">unit</span></code>, a string containing a unit name from the
+<a class="reference external" href="http://www.qudt.org/doc/DOC_VOCAB-UNITS.html">QUDT</a> vocabulary. Including a <code class="docutils literal notranslate"><span class="pre">unit</span></code> is
+optional, but highly recommended, if it is known.</p>
+<p>The allowed metadata values are controlled by the JSONSchema specification in the
+<code class="docutils literal notranslate"><span class="pre">schemas/electron_microscopy.json</span></code> file.</p>
+</dd></dl>
+
+</section>
+<section id="atomistic-data-parsers">
+<h3>Atomistic Data Parsers<a class="headerlink" href="#atomistic-data-parsers" title="Permalink to this headline"></a></h3>
+<p>Parsers related to data files that encode atom-level structure</p>
+<span class="target" id="module-materials_io.crystal_structure"></span><dl class="py class">
+<dt class="sig sig-object py" id="materials_io.crystal_structure.CrystalStructureParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.crystal_structure.</span></span><span class="sig-name descname"><span class="pre">CrystalStructureParser</span></span><a class="reference internal" href="_modules/materials_io/crystal_structure.html#CrystalStructureParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.crystal_structure.CrystalStructureParser" title="Permalink to this definition"></a></dt>
+<dd><p>Parse information about a crystal structure</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.ase.</span></span><span class="sig-name descname"><span class="pre">AseParser</span></span><a class="reference internal" href="_modules/materials_io/ase.html#AseParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Parse information from atomistic simulation input files using ASE.</p>
+<p>ASE can read many file types. These can be found at
+<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/io/io.html">https://wiki.fysik.dtu.dk/ase/ase/io/io.html</a></p>
+<p>Metadata are generated as ASE JSON DB format
+<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/db/db.html">https://wiki.fysik.dtu.dk/ase/ase/db/db.html</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">materials_io.ase.</span></span><span class="sig-name descname"><span class="pre">object_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/materials_io/ase.html#object_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Custom decoder for ASE JSON objects</p>
+<p>Does everything <em>except</em> reconstitute the JSON object and
+also converts numpy arrays to lists</p>
+<p>Adapted from ase.io.jsonio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dct</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to reconstitute to an ASE object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="calculation-parsers">
+<h3>Calculation Parsers<a class="headerlink" href="#calculation-parsers" title="Permalink to this headline"></a></h3>
+<p>Parsers that retrieve results from calculations</p>
+<span class="target" id="module-materials_io.dft"></span><dl class="py class">
+<dt class="sig sig-object py" id="materials_io.dft.DFTParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.dft.</span></span><span class="sig-name descname"><span class="pre">DFTParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quality_report</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/materials_io/dft.html#DFTParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.dft.DFTParser" title="Permalink to this definition"></a></dt>
+<dd><p>Extract data from Density Functional Theory calculation results</p>
+<p>Uses the <a class="reference external" href="https://github.com/CitrineInformatics/pif-dft">dfttopif</a> parser to extract
+metadata from each file</p>
+<p>Initialize a featurizer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quality_report</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to generate a quality report</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.dft.DFTParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/materials_io/dft.html#DFTParser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.dft.DFTParser.parse" title="Permalink to this definition"></a></dt>
+<dd><p>Extract metadata from a group of files</p>
+<p>A group of files is a set of 1 or more files that describe the same object, and will be
+be used together to create s single summary record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of one or more files that should be parsed together</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Context about the files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed results, in JSON-serializable format.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.ase.</span></span><span class="sig-name descname"><span class="pre">AseParser</span></span><a class="reference internal" href="_modules/materials_io/ase.html#AseParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Parse information from atomistic simulation input files using ASE.</p>
+<p>ASE can read many file types. These can be found at
+<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/io/io.html">https://wiki.fysik.dtu.dk/ase/ase/io/io.html</a></p>
+<p>Metadata are generated as ASE JSON DB format
+<a class="reference external" href="https://wiki.fysik.dtu.dk/ase/ase/db/db.html">https://wiki.fysik.dtu.dk/ase/ase/db/db.html</a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">materials_io.ase.</span></span><span class="sig-name descname"><span class="pre">object_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/materials_io/ase.html#object_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Custom decoder for ASE JSON objects</p>
+<p>Does everything <em>except</em> reconstitute the JSON object and
+also converts numpy arrays to lists</p>
+<p>Adapted from ase.io.jsonio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dct</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to reconstitute to an ASE object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="structured-data-files">
+<h3>Structured Data Files<a class="headerlink" href="#structured-data-files" title="Permalink to this headline"></a></h3>
+<p>Parsers that read data from structured files</p>
+<span class="target" id="module-materials_io.csv"></span><dl class="py class">
+<dt class="sig sig-object py" id="materials_io.csv.CSVParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.csv.</span></span><span class="sig-name descname"><span class="pre">CSVParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_records</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/materials_io/csv.html#CSVParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.csv.CSVParser" title="Permalink to this definition"></a></dt>
+<dd><p>Reads comma-separated value (CSV) files</p>
+<dl class="simple">
+<dt>The context dictionary for the CSV parser includes several fields:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">schema</span></code>: Dictionary defining the schema for this dataset, following that of
+FrictionlessIO</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">na_values</span></code>: Any values that should be interpreted as missing</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>return_records</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to return each row in the CSV file</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Keyword:</dt><dd><p>All kwargs as passed to
+<a class="reference external" href="https://github.com/frictionlessdata/tableschema-py#infer">TableSchema’s infer</a> method</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.csv.CSVParser.citations">
+<span class="sig-name descname"><span class="pre">citations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/csv.html#CSVParser.citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.csv.CSVParser.citations" title="Permalink to this definition"></a></dt>
+<dd><p>Citation(s) and reference(s) for this parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>each element should be a string citation in BibTeX format</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>([<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="contributor-guide.html" class="btn btn-neutral float-left" title="Contributor Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/materials_io.html" class="btn btn-neutral float-right" title="materials_io" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

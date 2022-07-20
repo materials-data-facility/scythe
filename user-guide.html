@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Guide &mdash; MaterialsIO 0.1.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributor Guide" href="contributor-guide.html" />
+    <link rel="prev" title="Project Goals" href="goals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> MaterialsIO
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="goals.html">Project Goals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-materialsio-for-users">Installing MaterialsIO (for users)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#discovering-a-parser">Discovering a Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simple-interface">Simple Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-usage-adding-context">Advanced Usage: Adding Context</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#class-interface">Class Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#initializing-a-parser">Initializing a Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parsing-method">Parsing Method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grouping-files">Grouping Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parsing-entire-directories">Parsing Entire Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#attribution-functions">Attribution Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#full-parser-api">Full Parser API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Integrating MaterialsIO into Applications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#baseadapter">BaseAdapter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-adapters">Using Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-adapters">Implementing Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples-of-tools-using-materialsio">Examples of Tools Using MaterialsIO</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/materials_io.html">materials_io</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">MaterialsIO</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>User Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/user-guide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline"></a></h1>
+<p>In this part of the guide, we show a simple example of using a MaterialsIO parser and discuss the
+full functionality of a parser.</p>
+<section id="installing-materialsio-for-users">
+<h2>Installing MaterialsIO (for users)<a class="headerlink" href="#installing-materialsio-for-users" title="Permalink to this headline"></a></h2>
+<p>Installing MaterialsIO should be as easy as a single <code class="docutils literal notranslate"><span class="pre">pip</span></code> command. Assuming you have a
+version of Python that is 3.8 or higher, running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">materials</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">facility</span><span class="o">/</span><span class="n">MaterialsIO</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Should get the basics of MaterialsIO installed. By default however, only a small subset of
+parsers will be installed (this is done so you do not need to install all the dependencies of
+parsers you may never use). To install additional parsers, you can specify “extras” at install time
+using the <code class="docutils literal notranslate"><span class="pre">[...]</span></code> syntax for <code class="docutils literal notranslate"><span class="pre">pip</span></code>. For example, if you want to install all the parsers
+bundled with MaterialsIO (and their dependencies), run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/materials-data-facility/MaterialsIO.git#egg=materials_io[all]&quot;</span>
+</pre></div>
+</div>
+<p>This will pull in many more packages, but also enable as many parsers as possible. Check the list
+under <code class="docutils literal notranslate"><span class="pre">[tool.poetry.extras]</span></code> in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> to see all the options you can specify in
+the brackets of the <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> command.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the <em>hopefully</em> near future, MaterialsIO should be published on
+<a class="reference external" href="https://pypi.org">PyPI</a> (see
+<a class="reference external" href="https://github.com/materials-data-facility/MaterialsIO/issues/42">this Github issue</a> for
+updates), meaning install should be easier via a simple <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">materials_io</span></code> or
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">materials_io[all]</span></code>, rather than having to specify the Git URL as in the above
+example</p>
+</div>
+</section>
+<section id="discovering-a-parser">
+<h2>Discovering a Parser<a class="headerlink" href="#discovering-a-parser" title="Permalink to this headline"></a></h2>
+<p>MaterialsIO uses <a class="reference external" href="https://docs.openstack.org/stevedore/latest/index.html">stevedore</a> to manage
+a collection of parsers, and has a utility function for listing available parsers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">get_available_parsers</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">get_available_parsers</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>This snippet will print a dictionary of parsers installed on your system. Both parsers that are
+part of the MaterialsIO base package and those defined by other packages will be included in this
+list.</p>
+</section>
+<section id="simple-interface">
+<h2>Simple Interface<a class="headerlink" href="#simple-interface" title="Permalink to this headline"></a></h2>
+<p>The methods in <a class="reference internal" href="api/materials_io.html#module-materials_io.utils.interface" title="materials_io.utils.interface"><code class="xref py py-mod docutils literal notranslate"><span class="pre">materials_io.utils.interface</span></code></a> are useful for most applications. As an
+example, we illustrate the use of <a class="reference internal" href="parsers.html#materials_io.file.GenericFileParser" title="materials_io.file.GenericFileParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">materials_io.file.GenericFileParser</span></code></a>, which is
+available through the <code class="docutils literal notranslate"><span class="pre">'generic'</span></code> parser plugin:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">execute_parser</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">execute_parser</span><span class="p">(</span><span class="s1">&#39;generic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;pyproject.toml&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>The above snippet creates the parser object and runs it on a file named <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. Run
+in the root directory of the MaterialsIO, it would produce output similar to the following,
+likely with a different <code class="docutils literal notranslate"><span class="pre">sha512</span></code> value if the contents of that file have changed since this
+documentation was written:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;data_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASCII text&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;filename&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2421</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;mime_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text/plain&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;sha512&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a7eb382c4a3e6cf469656453f9ff2e3c1ac2c02c9c2ba31c3d569a09883e2b2471801c39125dafb7c13bfcaf9cf6afbab92afa4c053c0c93a4c8c59acad1b85b&quot;</span><span class="w"></span>
+<span class="p">}]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The other pre-built parsing function provides the ability to run all parsers on all files in a
+directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">run_all_parsers</span>
+<span class="n">gen</span> <span class="o">=</span> <span class="n">run_all_parsers</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A third route for using <code class="docutils literal notranslate"><span class="pre">materials_io</span></code> is to employ the <code class="docutils literal notranslate"><span class="pre">get_parser</span></code> operation to access a
+specific parser, and then use its class interface (described below):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">get_parser</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">(</span><span class="s1">&#39;generic&#39;</span><span class="p">)</span>
+<span class="n">gen</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_directory</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="advanced-usage-adding-context">
+<h3>Advanced Usage: Adding Context<a class="headerlink" href="#advanced-usage-adding-context" title="Permalink to this headline"></a></h3>
+<p>The function interface for MaterialsIO supports using “context” and “adapters” to provide
+additional infomration to a parser or change the output format, respectively. Adapters are
+described in <a class="reference external" href="#id1">Integrating MaterialsIO into Applications</a>. Here, we describe the purpose
+of context and how to use it in our interface.</p>
+<p>Context is information about the data held in a file that is not contained within the file itself
+. Examples include human-friendly descriptions of columns names or which values actually
+represent a missing measurement in tabular data file (e.g., CSV files). A limited number of
+parsers support context and this information can be provided via the <code class="docutils literal notranslate"><span class="pre">execute_parser</span></code>
+function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">execute_parser</span><span class="p">(</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span> <span class="s1">&#39;tests/data/test.csv&#39;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;na_values&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;N/A&#39;</span><span class="p">]})</span>
+</pre></div>
+</div>
+<p>The types of context information used by a parser, if any, is described in the
+<a class="reference external" href="parsers.html">documentation for each parser</a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run_all_parsers_on_directory</span></code> function has several options for providing context to the
+parsers. These options include specifying “global context” to be passed to every parser or
+adapter and ways of limiting the metadata to specific parsers. See
+<a class="reference internal" href="api/materials_io.html#materials_io.utils.interface.run_all_parsers_on_directory" title="materials_io.utils.interface.run_all_parsers_on_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">materials_io.utils.interface.run_all_parsers_on_directory()</span></code></a> for further details on the
+syntax for this command.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>Context is still an experimental feature and APIs are subject to change</em></p>
+</div>
+</section>
+</section>
+<section id="class-interface">
+<h2>Class Interface<a class="headerlink" href="#class-interface" title="Permalink to this headline"></a></h2>
+<p>The class API of parsers provide access to more detailed features of individual parsers. The
+functionality of a parser is broken into several simple operations.</p>
+<section id="initializing-a-parser">
+<h3>Initializing a Parser<a class="headerlink" href="#initializing-a-parser" title="Permalink to this headline"></a></h3>
+<p>The first step to using a Parser is to initialize it. Most parsers do not have any options for
+the initializer, so you can create them with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Some parsers require configuration options that define how the parser runs, such as the location
+of a non-Python executable.</p>
+</section>
+<section id="parsing-method">
+<h3>Parsing Method<a class="headerlink" href="#parsing-method" title="Permalink to this headline"></a></h3>
+<p>The main operation for any parser is the data extraction operation: <code class="docutils literal notranslate"><span class="pre">parse</span></code>.</p>
+<p>In most cases, the <code class="docutils literal notranslate"><span class="pre">parse</span></code> operation takes the path to a file and and returns a summary of the
+data the file holds:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">([</span><span class="s1">&#39;/my/file&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Some parsers take multiple files that describe the same object (e.g., the input and output files
+of a simulation) and use them to generate a single metadata record:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">([</span><span class="s1">&#39;/my/file.in&#39;</span><span class="p">,</span> <span class="s1">&#39;/my/file.out&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="#grouping-files">grouping method</a> for these parsers provides logic to identify groups of
+related files.</p>
+<p>Some parsers also can use information that is not contained within the file themselves, which can
+be provided to the parser as a “context”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">([</span><span class="s1">&#39;/my/file1&#39;</span><span class="p">],</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;headers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;temp&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">}})</span>
+</pre></div>
+</div>
+<p>The documentation for the parser should indicate valid types of context information.</p>
+</section>
+<section id="grouping-files">
+<h3>Grouping Files<a class="headerlink" href="#grouping-files" title="Permalink to this headline"></a></h3>
+<p>Parsers also provide the ability to quickly find groups of associated files: <code class="docutils literal notranslate"><span class="pre">group</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">group</span></code> operation takes path or list of files and, optionally, directories and generates
+a list of files that should be treated together when parsing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span><span class="o">.</span><span class="n">group</span><span class="p">([</span><span class="s1">&#39;input.file&#39;</span><span class="p">,</span> <span class="s1">&#39;output.file&#39;</span><span class="p">,</span> <span class="s1">&#39;unrelated&#39;</span><span class="p">])</span> <span class="c1"># -&gt; [(&#39;input.file&#39;, &#39;output.file&#39;), (&#39;unrelated&#39;,)]</span>
+</pre></div>
+</div>
+</section>
+<section id="parsing-entire-directories">
+<h3>Parsing Entire Directories<a class="headerlink" href="#parsing-entire-directories" title="Permalink to this headline"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">materials_io</span></code> also provides a utility operation to parse all groups of valid files in a directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_directory</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">parse_directory</span></code> is a generator function, so we use <code class="docutils literal notranslate"><span class="pre">list</span></code> here to turn the output into a list
+format.</p>
+</section>
+<section id="attribution-functions">
+<h3>Attribution Functions<a class="headerlink" href="#attribution-functions" title="Permalink to this headline"></a></h3>
+<p>Two functions, <code class="docutils literal notranslate"><span class="pre">citations</span></code> and <code class="docutils literal notranslate"><span class="pre">implementors</span></code>, are available to determine who contirbuted a
+parser. <code class="docutils literal notranslate"><span class="pre">implementors</span></code> returns the list of people who created a parser, who are likely the
+points-of-contact for support. <code class="docutils literal notranslate"><span class="pre">citations</span></code> indicates if any publications are available that
+describe the underlying methods and should be reference in scientific articles.</p>
+</section>
+<section id="full-parser-api">
+<h3>Full Parser API<a class="headerlink" href="#full-parser-api" title="Permalink to this headline"></a></h3>
+<p>The full API for the parsers are described as a Python abstract class:</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.base.</span></span><span class="sig-name descname"><span class="pre">BaseParser</span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract base class for a file parser</p>
+<p>This class defines the interface for all parsers in MaterialsIO. Each new parser must
+implement the <a class="reference internal" href="#materials_io.base.BaseParser.parse" title="materials_io.base.BaseParser.parse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse()</span></code></a>, <a class="reference internal" href="#materials_io.base.BaseParser.version" title="materials_io.base.BaseParser.version"><code class="xref py py-meth docutils literal notranslate"><span class="pre">version()</span></code></a>, and <a class="reference internal" href="#materials_io.base.BaseParser.implementors" title="materials_io.base.BaseParser.implementors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">implementors()</span></code></a> functions. The
+<a class="reference internal" href="#materials_io.base.BaseParser.group" title="materials_io.base.BaseParser.group"><code class="xref py py-meth docutils literal notranslate"><span class="pre">group()</span></code></a> method should be overridden to generate smart groups of file (e.g., associating
+the inputs and outputs to the same calculation) <a class="reference internal" href="#materials_io.base.BaseParser.citations" title="materials_io.base.BaseParser.citations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">citations()</span></code></a> can be used if there
+are papers that should be cited if the parser is used as part of a scientific publication.</p>
+<p>See the <a class="reference external" href="contributor-guide.html">MaterialsIO Contributor Guide</a> for further details.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.identify_files">
+<span class="sig-name descname"><span class="pre">identify_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.10)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.identify_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.identify_files" title="Permalink to this definition"></a></dt>
+<dd><p>Identify all groups of files likely to be compatible with this parser</p>
+<p>Uses the <a class="reference internal" href="#materials_io.base.BaseParser.group" title="materials_io.base.BaseParser.group"><code class="xref py py-meth docutils literal notranslate"><span class="pre">group()</span></code></a> function to determine groups of files that should be parsed together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Root of directory to parser</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Context about the files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p>([str]) Groups of eligible files</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.parse_directory">
+<span class="sig-name descname"><span class="pre">parse_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.10)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.parse_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.parse_directory" title="Permalink to this definition"></a></dt>
+<dd><p>Run a parser on all appropriate files in a directory</p>
+<p>Skips files that throw exceptions while parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Root of directory to parser</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Context about the files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>([str], dict)</em> – Tuple of the group identity and the metadata unit</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.parse">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.10)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.parse" title="Permalink to this definition"></a></dt>
+<dd><p>Extract metadata from a group of files</p>
+<p>A group of files is a set of 1 or more files that describe the same object, and will be
+be used together to create s single summary record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of one or more files that should be parsed together</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Context about the files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed results, in JSON-serializable format.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.group">
+<span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.10)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.group" title="Permalink to this definition"></a></dt>
+<dd><p>Identify a groups of files and directories that should be parsed together</p>
+<p>Will create groups using only the files and directories included as input.</p>
+<p>The files of files are _all_ files that could be read by this parser, which may include
+many false positives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of files to consider grouping</p></li>
+<li><p><strong>directories</strong> (<em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Any directories to consider group as well</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Context about the files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>((str))</em> – Groups of files</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.citations">
+<span class="sig-name descname"><span class="pre">citations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.citations" title="Permalink to this definition"></a></dt>
+<dd><p>Citation(s) and reference(s) for this parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>each element should be a string citation in BibTeX format</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>([<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.implementors">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">implementors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.implementors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.implementors" title="Permalink to this definition"></a></dt>
+<dd><p>List of implementors of the parser</p>
+<p>These people are the points-of-contact for addressing errors or modifying the parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of implementors in the form “FirstName LastName &lt;<a class="reference external" href="mailto:email&#37;&#52;&#48;provider">email<span>&#64;</span>provider</a>&gt;”</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>([<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.version">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.version" title="Permalink to this definition"></a></dt>
+<dd><p>Return the version of the parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Version of the parser</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)">str</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="materials_io.base.BaseParser.schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></em><a class="headerlink" href="#materials_io.base.BaseParser.schema" title="Permalink to this definition"></a></dt>
+<dd><p>Schema for the output of the parser</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="id1">
+<h2>Integrating MaterialsIO into Applications<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<p>MaterialsIO is designed to create a documented, JSON-format version of scientific files, but
+these files might not yet be in a form useful for your application. We recommend an “adapter”
+approach to post-process these “generic JSON” files that can actually be used for your application.</p>
+<section id="baseadapter">
+<h3>BaseAdapter<a class="headerlink" href="#baseadapter" title="Permalink to this headline"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">BaseAdapter</span></code> class defines the interface for all adapters.</p>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.adapters.base.</span></span><span class="sig-name descname"><span class="pre">BaseAdapter</span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Template for tools that transform metadata into a new form</p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Process metadata into a new form</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Metadata to transform</p></li>
+<li><p><strong>context</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Any context information used during transformation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Metadata in a new form, can be any type of object.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> corresponding</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">check_compatibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#materials_io.base.BaseParser" title="materials_io.base.BaseParser"><span class="pre">materials_io.base.BaseParser</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter.check_compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Evaluate whether an adapter is compatible with a certain parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parser</strong> (<a class="reference internal" href="#materials_io.base.BaseParser" title="materials_io.base.BaseParser"><em>BaseParser</em></a>) – Parser to evaluate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(bool) Whether this parser is compatible</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter.version"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Version of the parser that an adapter was created for</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>(str) Version of parser this adapter was designed for,</dt><dd><p>or <code class="docutils literal notranslate"><span class="pre">None</span></code> if not applicable</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p>Adapters must fulfill a single operation, <code class="docutils literal notranslate"><span class="pre">transform</span></code>, which renders metadata from one of the
+MaterialsIO parsers into a new form. There are no restrictions on the output for this function,
+except that <code class="docutils literal notranslate"><span class="pre">None</span></code> indicates that there is no valid transformation for an object.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">check_compatibility</span></code> and <code class="docutils literal notranslate"><span class="pre">version</span></code> method provide a route for marking which versions of
+a parser are compatible with an adapter. <code class="docutils literal notranslate"><span class="pre">materials_io</span></code> uses the version in utility operations
+to provide warnings to users about when an adapter is out-of-date.</p>
+</section>
+<section id="using-adapters">
+<h3>Using Adapters<a class="headerlink" href="#using-adapters" title="Permalink to this headline"></a></h3>
+<p>The same utility operations <a class="reference external" href="#simple-interface">described above</a> support using adapters. The
+<code class="docutils literal notranslate"><span class="pre">execute_parser</span></code> function has an argument, <code class="docutils literal notranslate"><span class="pre">adapter</span></code>, that takes the name of the adapter as
+an input and causes the parsing operation to run the adapter after parsing. The
+<code class="docutils literal notranslate"><span class="pre">run_all_parsers</span></code> function also has arguments (e.g., <code class="docutils literal notranslate"><span class="pre">adapter_map</span></code>) that associate each
+parser with the adapter needed to run after parsing.</p>
+<p>As an example, we will demonstrate an adapter that comes packaged with MaterialsIO:
+<a class="reference internal" href="api/materials_io.html#materials_io.adapters.base.SerializeAdapter" title="materials_io.adapters.base.SerializeAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">materials_io.adapters.base.SerializeAdapter</span></code></a>
+The serialize adapter is registered using <code class="docutils literal notranslate"><span class="pre">stevedore</span></code> as the name “serialize”. To use it after
+all parsers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">run_all_parsers</span>
+<span class="n">gen</span> <span class="o">=</span> <span class="n">run_all_parsers</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">default_adapter</span><span class="o">=</span><span class="s1">&#39;serialize&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="implementing-adapters">
+<h3>Implementing Adapters<a class="headerlink" href="#implementing-adapters" title="Permalink to this headline"></a></h3>
+<p>Any new adapters must inherit from the <code class="docutils literal notranslate"><span class="pre">BaseAdapter</span></code> class defined above. You only need
+implement the <code class="docutils literal notranslate"><span class="pre">transform</span></code> operation.</p>
+<p>Once the adapter is implemented, you need to put it in a project that is installable via pip. See
+[python docs](<a class="reference external" href="https://docs.python.org/3.7/distutils/setupscript.html">https://docs.python.org/3.7/distutils/setupscript.html</a>) for a detailed tutorial or
+copy the structure used by the
+<a class="reference external" href="https://github.com/materials-data-facility/mdf-materialsio-adapters">MDF’s adapter library</a>.</p>
+<p>Then, register the adapter with <code class="docutils literal notranslate"><span class="pre">stevedore</span></code> by adding it as an entry point in your project’s
+<code class="docutils literal notranslate"><span class="pre">setup.py</span></code> or <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file. See the
+<a class="reference external" href="https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins">stevedore documentation for more detail</a>.
+We recommend using the same name for a adapter as the parser it is designed for so that
+<code class="docutils literal notranslate"><span class="pre">materials_io</span></code> can auto-detect the adapters associated with each parser.</p>
+</section>
+<section id="examples-of-tools-using-materialsio">
+<h3>Examples of Tools Using MaterialsIO<a class="headerlink" href="#examples-of-tools-using-materialsio" title="Permalink to this headline"></a></h3>
+<p>Materials Data Facility:
+<a class="reference external" href="https://github.com/materials-data-facility/mdf-materialsio-adapters">https://github.com/materials-data-facility/mdf-materialsio-adapters</a></p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="goals.html" class="btn btn-neutral float-left" title="Project Goals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributor-guide.html" class="btn btn-neutral float-right" title="Contributor Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019 - 2022, Materials Data Facility Team, Citrine Informatics.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
