@@ -1,0 +1,18 @@
+name: Install with pip
+on: [push, pull_request]
+jobs:
+  install:
+    name: ${{ matrix.os }}-py${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.8", "3.9", "3.10" ]
+        poetry-version: [ "1.1.13" ]
+        os: [ ubuntu-latest, macos-latest ] #, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install .[all]

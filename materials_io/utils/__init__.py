@@ -1,5 +1,7 @@
-from typing import Dict, Union, Tuple, Any, Callable, Optional, List
-from typing_extensions import TypedDict
+from typing import Dict, Union, Tuple, Any, Callable, Optional, List, TypedDict
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def get_nested_dict_value_by_path(nest_dict: Dict,
@@ -14,7 +16,8 @@ def get_nested_dict_value_by_path(nest_dict: Dict,
             get to a value within `nest_dict`. If a string, the value will
             return just from the first level (mostly for convenience)
         cast: A function that (if provided) will be applied to the value. This
-            helps with serialization.
+            helps with serialization. If it returns an error, the value will be returned as is
+            without conversion
 
     Returns:
         The value at the path within the nested dictionary; if there's no
@@ -36,7 +39,13 @@ def get_nested_dict_value_by_path(nest_dict: Dict,
         return None
 
     if cast is not None:
-        return cast(sub_dict)
+        # noinspection PyBroadException
+        try:
+            return cast(sub_dict)
+        except Exception as e:
+            logger.warning(f"Exception encountered when casting value using {cast}: {e}; returning "
+                           f"value as is without casting")
+            return sub_dict
     else:
         return sub_dict
 
@@ -120,7 +129,7 @@ def map_dict_values(mapping: List[MappingElements]):
     Inspired by the implementation in :func:`hyperspy.io.dict2signal`
 
     For each mapping we need a source dict and destination dict, then for
-    eaqch term, the source path, the destination path, the cast function,
+    each term, the source path, the destination path, the cast function,
     the units to set, and potentially a conversion function
 
     Args:

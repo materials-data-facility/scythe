@@ -17,6 +17,7 @@ dist/
 .tox
 
 coverage_html/
+coverage.xml
 *.coverage*
 *.pytest_cache*
 .vscode

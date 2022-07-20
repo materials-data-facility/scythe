@@ -23,22 +23,29 @@ which will install all bundled parsers and their dependencies. For example::
 Poetry wil create a dedicated virtual environment for the project and the MaterialsIO code will
 be installed in "editable" mode, so any changes you make to the code will be reflected when
 running tests, importing parsers, etc. It will use the default version of python available.
-MaterialsIO is currently developed using 3.8.12 and tested against that version. We recommend
-using the `pyenv <https://github.com/pyenv/pyenv>`_ project to manage various python versions on
-your system if this does not match your system version of Python. It plays nicely with ``tox`` as
-well (see next paragraph).
+MaterialsIO is currently developed and tested against Python versions 3.8.12, 3.9.12, and 3.10.4.
+We recommend using the `pyenv <https://github.com/pyenv/pyenv>`_ project to manage
+various python versions on your system if this does not match your system version of Python. It
+is required to use ``tox`` as well (see next paragraph). Make sure you install the versions
+specified in the ``.python-version`` file by running commands such as ``pyenv install 3.8.12`` etc.
 
 Additionally, the project uses `tox <https://tox.wiki/en/latest/>`_ to simplify common tasks and
 to be able to run tests in isolated environments. This will be installed automatically as a
 development package when running the ``poetry install`` command above. It can be used to run the
 test suite with common settings, as well as building the documentation. For example, to
-run the full MaterialsIO test suite, just run::
+run the full MaterialsIO test suite on all three versions of Python targetd, just run::
 
     poetry run tox
 
 To build the HTML documentation (will be placed inside the ``./docs/_build/`` folder), run::
 
     poetry run tox -e docs
+
+For the sake of speed, if you would like to focus your testing on just one Python version, you can
+temporarily override the environment list from ``pyproject.toml`` with an enviornment variable.
+For example, to only run the test/coverage suite on Python 3.8.X, run::
+
+    TOXENV=py38 poetry run tox
 
 Check out the ``[tool.tox]`` section of the ``pyproject.toml`` file to view how these tasks are
 configured, and the `tox documentation <https://tox.wiki/en/latest/config.html>`_ on how to add your
