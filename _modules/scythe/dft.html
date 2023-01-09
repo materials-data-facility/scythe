@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>materials_io.dft &mdash; MaterialsIO 0.1.1 documentation</title>
+  <title>scythe.dft &mdash; Scythe 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -24,10 +24,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MaterialsIO
+            <a href="../../index.html" class="icon icon-home"> Scythe
           </a>
               <div class="version">
-                0.1.1
+                0.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -43,7 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/materials_io.html">materials_io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
         </div>
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">MaterialsIO</a>
+          <a href="../../index.html">Scythe</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -61,7 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>materials_io.dft</li>
+      <li>scythe.dft</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,10 +70,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for materials_io.dft</h1><div class="highlight"><pre>
+  <h1>Source code for scythe.dft</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">materials_io.utils.grouping</span> <span class="kn">import</span> <span class="n">preprocess_paths</span><span class="p">,</span> <span class="n">group_by_postfix</span>
-<span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">scythe.utils.grouping</span> <span class="kn">import</span> <span class="n">preprocess_paths</span><span class="p">,</span> <span class="n">group_by_postfix</span>
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
 <span class="kn">from</span> <span class="nn">dfttopif</span> <span class="kn">import</span> <span class="n">files_to_pif</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -85,7 +85,7 @@
                     <span class="s2">&quot;kpoints&quot;</span><span class="p">,</span> <span class="s2">&quot;doscar&quot;</span><span class="p">,</span> <span class="s2">&quot;poscar&quot;</span><span class="p">,</span> <span class="s2">&quot;contcar&quot;</span><span class="p">,</span> <span class="s2">&quot;vasp_run.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;xdatcar&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="DFTParser"><a class="viewcode-back" href="../../parsers.html#materials_io.dft.DFTParser">[docs]</a><span class="k">class</span> <span class="nc">DFTParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+<div class="viewcode-block" id="DFTParser"><a class="viewcode-back" href="../../parsers.html#scythe.dft.DFTParser">[docs]</a><span class="k">class</span> <span class="nc">DFTParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Extract data from Density Functional Theory calculation results</span>
 
 <span class="sd">    Uses the `dfttopif &lt;https://github.com/CitrineInformatics/pif-dft&gt;`_ parser to extract</span>
@@ -145,7 +145,7 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">file_and_dir</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
             <span class="k">yield</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">group</span><span class="p">]</span>
 
-<div class="viewcode-block" id="DFTParser.parse"><a class="viewcode-back" href="../../parsers.html#materials_io.dft.DFTParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="DFTParser.parse"><a class="viewcode-back" href="../../parsers.html#scythe.dft.DFTParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">files_to_pif</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">quality_report</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quality_report</span><span class="p">)</span><span class="o">.</span><span class="n">as_dictionary</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">implementors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

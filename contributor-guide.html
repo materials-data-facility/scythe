@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributor Guide &mdash; MaterialsIO 0.1.1 documentation</title>
+  <title>Contributor Guide &mdash; Scythe 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,10 +27,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> MaterialsIO
+            <a href="index.html" class="icon icon-home"> Scythe
           </a>
               <div class="version">
-                0.1.1
+                0.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -56,14 +56,14 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#step-2-document-the-parser">Step 2: Document the Parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#step-3-register-the-parser">Step 3: Register the Parser</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#preferred-route-adding-the-parser-to-materialsio">Preferred Route: Adding the Parser to MaterialsIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#preferred-route-adding-the-parser-to-scythe">Preferred Route: Adding the Parser to Scythe</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#alternative-route-including-parsers-from-other-libraries">Alternative Route: Including Parsers from Other Libraries</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/materials_io.html">materials_io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/scythe.html">scythe</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MaterialsIO</a>
+          <a href="index.html">Scythe</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -94,11 +94,11 @@
 <h1>Contributor Guide<a class="headerlink" href="#contributor-guide" title="Permalink to this headline"></a></h1>
 <section id="setting-up-development-environment">
 <h2>Setting up development environment<a class="headerlink" href="#setting-up-development-environment" title="Permalink to this headline"></a></h2>
-<p>MaterialsIO makes use of the <a class="reference external" href="https://python-poetry.org/docs/">Poetry</a> project to manage
-dependencies and packaging. To install the latest version of MaterialsIO, first install poetry
+<p>Scythe makes use of the <a class="reference external" href="https://python-poetry.org/docs/">Poetry</a> project to manage
+dependencies and packaging. To install the latest version of Scythe, first install poetry
 following <a class="reference external" href="https://python-poetry.org/docs/#installation">their documentation</a>. Once that’s
-done, clone/download the MaterialsIO repository locally from
-<a class="reference external" href="https://github.com/materials-data-facility/MaterialsIO/">Github</a>. Change into that directory
+done, clone/download the Scythe repository locally from
+<a class="reference external" href="https://github.com/materials-data-facility/Scythe/">Github</a>. Change into that directory
 and run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> (it would be a good idea to create a new virtual environment for your
 project first too, so as to not mix dependencies with your system environment).</p>
 <p>By default, only a small subset of parsers will be installed (this is done so that you do not
@@ -109,10 +109,10 @@ which will install all bundled parsers and their dependencies. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">install</span> <span class="o">-</span><span class="n">E</span> <span class="nb">all</span>
 </pre></div>
 </div>
-<p>Poetry wil create a dedicated virtual environment for the project and the MaterialsIO code will
+<p>Poetry wil create a dedicated virtual environment for the project and the Scythe code will
 be installed in “editable” mode, so any changes you make to the code will be reflected when
 running tests, importing parsers, etc. It will use the default version of python available.
-MaterialsIO is currently developed and tested against Python versions 3.8.12, 3.9.12, and 3.10.4.
+Scythe is currently developed and tested against Python versions 3.8.12, 3.9.12, and 3.10.4.
 We recommend using the <a class="reference external" href="https://github.com/pyenv/pyenv">pyenv</a> project to manage
 various python versions on your system if this does not match your system version of Python. It
 is required to use <code class="docutils literal notranslate"><span class="pre">tox</span></code> as well (see next paragraph). Make sure you install the versions
@@ -121,7 +121,7 @@ specified in the <code class="docutils literal notranslate"><span class="pre">.p
 to be able to run tests in isolated environments. This will be installed automatically as a
 development package when running the <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> command above. It can be used to run the
 test suite with common settings, as well as building the documentation. For example, to
-run the full MaterialsIO test suite on all three versions of Python targetd, just run:</p>
+run the full Scythe test suite on all three versions of Python targetd, just run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">poetry</span> <span class="n">run</span> <span class="n">tox</span>
 </pre></div>
 </div>
@@ -138,10 +138,10 @@ For example, to only run the test/coverage suite on Python 3.8.X, run:</p>
 <p>Check out the <code class="docutils literal notranslate"><span class="pre">[tool.tox]</span></code> section of the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file to view how these tasks are
 configured, and the <a class="reference external" href="https://tox.wiki/en/latest/config.html">tox documentation</a> on how to add your
 own custom tasks, if needed.</p>
-<p>Finally, MaterialsIO uses <code class="docutils literal notranslate"><span class="pre">flake8</span></code> to enforce code styles, which will be run for you
+<p>Finally, Scythe uses <code class="docutils literal notranslate"><span class="pre">flake8</span></code> to enforce code styles, which will be run for you
 automatically when using <code class="docutils literal notranslate"><span class="pre">tox</span></code> as defined above. Any code-style errors, such as lines longer
 than 100 characters, trailing whitespace, etc. will be flagged when running <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">tox</span></code>.</p>
-<p>The next part of the MaterialsIO guide details how to add a new parser to the ecosystem.</p>
+<p>The next part of the Scythe guide details how to add a new parser to the ecosystem.</p>
 </section>
 <section id="step-1-implement-the-parser">
 <h2>Step 1: Implement the Parser<a class="headerlink" href="#step-1-implement-the-parser" title="Permalink to this headline"></a></h2>
@@ -170,7 +170,7 @@ initialization and not during the parsing operation if the system in misconfigur
 </section>
 <section id="implementing-parse">
 <h3>Implementing <code class="docutils literal notranslate"><span class="pre">parse</span></code><a class="headerlink" href="#implementing-parse" title="Permalink to this headline"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">parse</span></code> method contains the core logic of a MaterialsIO parser: rendering a summary of a
+<p>The <code class="docutils literal notranslate"><span class="pre">parse</span></code> method contains the core logic of a Scythe parser: rendering a summary of a
 group of data files. We do not specify any particular schema for the output but we do recommend
 best practices:</p>
 <ol class="arabic simple">
@@ -266,28 +266,28 @@ summarize what types of metadata are generated.</p>
 <p class="admonition-title">Todo</p>
 <p>Actually write these descriptors for the available parsers</p>
 </div>
-<p>The MaterialsIO project uses JSON documents as the output for all parsers and
+<p>The Scythe project uses JSON documents as the output for all parsers and
 <a class="reference external" href="https://json-schema.org/">JSON Schema</a> to describe the content of the documents. The
 BaseParser class includes a property, <code class="docutils literal notranslate"><span class="pre">schema</span></code>, that stores a description of the output format.
 We recommend writing your description as a separate file and having the <code class="docutils literal notranslate"><span class="pre">schema</span></code> property read
 and output the contents of this file. See the
-<a class="reference external" href="https://github.com/materials-data-facility/MaterialsIO/blob/master/materials_io/file.py">GenericFileParser source code</a>
+<a class="reference external" href="https://github.com/materials-data-facility/Scythe/blob/master/scythe/file.py">GenericFileParser source code</a>
 for a example.</p>
 </section>
 <section id="step-3-register-the-parser">
 <h2>Step 3: Register the Parser<a class="headerlink" href="#step-3-register-the-parser" title="Permalink to this headline"></a></h2>
-<section id="preferred-route-adding-the-parser-to-materialsio">
-<h3>Preferred Route: Adding the Parser to MaterialsIO<a class="headerlink" href="#preferred-route-adding-the-parser-to-materialsio" title="Permalink to this headline"></a></h3>
+<section id="preferred-route-adding-the-parser-to-scythe">
+<h3>Preferred Route: Adding the Parser to Scythe<a class="headerlink" href="#preferred-route-adding-the-parser-to-scythe" title="Permalink to this headline"></a></h3>
 <p>If your parser has the same dependencies as existing parsers, add it to the existing module with
 the same dependencies.</p>
-<p>If your parser has new dependencies, create a new module for your parser in <code class="docutils literal notranslate"><span class="pre">materials_io</span></code>, and
+<p>If your parser has new dependencies, create a new module for your parser in <code class="docutils literal notranslate"><span class="pre">scythe</span></code>, and
 then add the requirements as a new key in the <code class="docutils literal notranslate"><span class="pre">[tool.poetry.extras]</span></code> section of <code class="docutils literal notranslate"><span class="pre">pyproject</span>
 <span class="pre">.toml</span></code>, following the other parser examples in that section. Next, add your parser to
 <code class="docutils literal notranslate"><span class="pre">docs/source/parsers.rst</span></code> by adding an <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">automodule::</span></code> statement that refers to your new
 module (again, following the existing pattern).</p>
-<p>MaterialsIO uses <code class="docutils literal notranslate"><span class="pre">stevedore</span></code> to simplify access to the parsers. After implementing and
-documenting the parser, add it to the <code class="docutils literal notranslate"><span class="pre">[tool.poetry.plugins.&quot;materialsio.parser&quot;]</span></code> section of the
-<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file for MaterialsIO. See
+<p>Scythe uses <code class="docutils literal notranslate"><span class="pre">stevedore</span></code> to simplify access to the parsers. After implementing and
+documenting the parser, add it to the <code class="docutils literal notranslate"><span class="pre">[tool.poetry.plugins.&quot;scythe.parser&quot;]</span></code> section of the
+<code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file for Scythe. See
 <a class="reference external" href="https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins">stevedore documentation for more information</a>
 (these docs reference <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, but the equivalent can be done via plugins in <code class="docutils literal notranslate"><span class="pre">pyproject</span>
 <span class="pre">.toml</span></code>; follow the existing structure if you’re unsure, and ask for help from the developers if
@@ -296,14 +296,14 @@ you run into issues).</p>
 <section id="alternative-route-including-parsers-from-other-libraries">
 <h3>Alternative Route: Including Parsers from Other Libraries<a class="headerlink" href="#alternative-route-including-parsers-from-other-libraries" title="Permalink to this headline"></a></h3>
 <p>If a parser would be better suited as part of a different library, you can still register it as a
-parser with MaterialsIO by altering your <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file. Add an entry point with the
-namespace <code class="docutils literal notranslate"><span class="pre">&quot;materialsio.parser&quot;</span></code> and point to the class object following the
+parser with Scythe by altering your <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file. Add an entry point with the
+namespace <code class="docutils literal notranslate"><span class="pre">&quot;scythe.parser&quot;</span></code> and point to the class object following the
 <a class="reference external" href="https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins">stevedore documentation</a>.
-Adding the entry point will let MaterialsIO use your parser if your library is installed in the
-same Python environment as MaterialsIO.</p>
+Adding the entry point will let Scythe use your parser if your library is installed in the
+same Python environment as Scythe.</p>
 <div class="admonition-todo admonition" id="id2">
 <p class="admonition-title">Todo</p>
-<p>Provide a public listing of materials_io-compatible software.</p>
+<p>Provide a public listing of scythe-compatible software.</p>
 <p>So that people know where to find these external libraries</p>
 </div>
 </section>

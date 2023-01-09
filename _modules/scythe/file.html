@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>materials_io.file &mdash; MaterialsIO 0.1.1 documentation</title>
+  <title>scythe.file &mdash; Scythe 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -24,10 +24,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MaterialsIO
+            <a href="../../index.html" class="icon icon-home"> Scythe
           </a>
               <div class="version">
-                0.1.1
+                0.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -43,7 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/materials_io.html">materials_io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
         </div>
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">MaterialsIO</a>
+          <a href="../../index.html">Scythe</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -61,7 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>materials_io.file</li>
+      <li>scythe.file</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,8 +70,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for materials_io.file</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+  <h1>Source code for scythe.file</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha512</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -90,7 +90,7 @@
     <span class="n">magic</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="GenericFileParser"><a class="viewcode-back" href="../../parsers.html#materials_io.file.GenericFileParser">[docs]</a><span class="k">class</span> <span class="nc">GenericFileParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
+<div class="viewcode-block" id="GenericFileParser"><a class="viewcode-back" href="../../parsers.html#scythe.file.GenericFileParser">[docs]</a><span class="k">class</span> <span class="nc">GenericFileParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Gathers basic file information&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compute_hash</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

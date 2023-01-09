@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Guide &mdash; MaterialsIO 0.1.1 documentation</title>
+  <title>User Guide &mdash; Scythe 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,10 +27,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> MaterialsIO
+            <a href="index.html" class="icon icon-home"> Scythe
           </a>
               <div class="version">
-                0.1.1
+                0.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -44,7 +44,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="goals.html">Project Goals</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installing-materialsio-for-users">Installing MaterialsIO (for users)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-scythe-for-users">Installing Scythe (for users)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#discovering-a-parser">Discovering a Parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#simple-interface">Simple Interface</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#advanced-usage-adding-context">Advanced Usage: Adding Context</a></li>
@@ -59,18 +59,18 @@
 <li class="toctree-l3"><a class="reference internal" href="#full-parser-api">Full Parser API</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Integrating MaterialsIO into Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Integrating Scythe into Applications</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#baseadapter">BaseAdapter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#using-adapters">Using Adapters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#implementing-adapters">Implementing Adapters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#examples-of-tools-using-materialsio">Examples of Tools Using MaterialsIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples-of-tools-using-scythe">Examples of Tools Using Scythe</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/materials_io.html">materials_io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/scythe.html">scythe</a></li>
 </ul>
 
         </div>
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">MaterialsIO</a>
+          <a href="index.html">Scythe</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -99,21 +99,21 @@
              
   <section id="user-guide">
 <h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline"></a></h1>
-<p>In this part of the guide, we show a simple example of using a MaterialsIO parser and discuss the
+<p>In this part of the guide, we show a simple example of using a Scythe parser and discuss the
 full functionality of a parser.</p>
-<section id="installing-materialsio-for-users">
-<h2>Installing MaterialsIO (for users)<a class="headerlink" href="#installing-materialsio-for-users" title="Permalink to this headline"></a></h2>
-<p>Installing MaterialsIO should be as easy as a single <code class="docutils literal notranslate"><span class="pre">pip</span></code> command. Assuming you have a
+<section id="installing-scythe-for-users">
+<h2>Installing Scythe (for users)<a class="headerlink" href="#installing-scythe-for-users" title="Permalink to this headline"></a></h2>
+<p>Installing Scythe should be as easy as a single <code class="docutils literal notranslate"><span class="pre">pip</span></code> command. Assuming you have a
 version of Python that is 3.8 or higher, running:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">materials</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">facility</span><span class="o">/</span><span class="n">MaterialsIO</span><span class="o">.</span><span class="n">git</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">materials</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">facility</span><span class="o">/</span><span class="n">Scythe</span><span class="o">.</span><span class="n">git</span>
 </pre></div>
 </div>
-<p>Should get the basics of MaterialsIO installed. By default however, only a small subset of
+<p>Should get the basics of Scythe installed. By default however, only a small subset of
 parsers will be installed (this is done so you do not need to install all the dependencies of
 parsers you may never use). To install additional parsers, you can specify “extras” at install time
 using the <code class="docutils literal notranslate"><span class="pre">[...]</span></code> syntax for <code class="docutils literal notranslate"><span class="pre">pip</span></code>. For example, if you want to install all the parsers
-bundled with MaterialsIO (and their dependencies), run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/materials-data-facility/MaterialsIO.git#egg=materials_io[all]&quot;</span>
+bundled with Scythe (and their dependencies), run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[all]&quot;</span>
 </pre></div>
 </div>
 <p>This will pull in many more packages, but also enable as many parsers as possible. Check the list
@@ -121,37 +121,37 @@ under <code class="docutils literal notranslate"><span class="pre">[tool.poetry.
 the brackets of the <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> command.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In the <em>hopefully</em> near future, MaterialsIO should be published on
+<p>In the <em>hopefully</em> near future, Scythe should be published on
 <a class="reference external" href="https://pypi.org">PyPI</a> (see
-<a class="reference external" href="https://github.com/materials-data-facility/MaterialsIO/issues/42">this Github issue</a> for
-updates), meaning install should be easier via a simple <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">materials_io</span></code> or
-<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">materials_io[all]</span></code>, rather than having to specify the Git URL as in the above
+<a class="reference external" href="https://github.com/materials-data-facility/Scythe/issues/42">this Github issue</a> for
+updates), meaning install should be easier via a simple <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">scythe</span></code> or
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">scythe[all]</span></code>, rather than having to specify the Git URL as in the above
 example</p>
 </div>
 </section>
 <section id="discovering-a-parser">
 <h2>Discovering a Parser<a class="headerlink" href="#discovering-a-parser" title="Permalink to this headline"></a></h2>
-<p>MaterialsIO uses <a class="reference external" href="https://docs.openstack.org/stevedore/latest/index.html">stevedore</a> to manage
+<p>Scythe uses <a class="reference external" href="https://docs.openstack.org/stevedore/latest/index.html">stevedore</a> to manage
 a collection of parsers, and has a utility function for listing available parsers:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">get_available_parsers</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scythe.utils.interface</span> <span class="kn">import</span> <span class="n">get_available_parsers</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">get_available_parsers</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>This snippet will print a dictionary of parsers installed on your system. Both parsers that are
-part of the MaterialsIO base package and those defined by other packages will be included in this
+part of the Scythe base package and those defined by other packages will be included in this
 list.</p>
 </section>
 <section id="simple-interface">
 <h2>Simple Interface<a class="headerlink" href="#simple-interface" title="Permalink to this headline"></a></h2>
-<p>The methods in <a class="reference internal" href="api/materials_io.html#module-materials_io.utils.interface" title="materials_io.utils.interface"><code class="xref py py-mod docutils literal notranslate"><span class="pre">materials_io.utils.interface</span></code></a> are useful for most applications. As an
-example, we illustrate the use of <a class="reference internal" href="parsers.html#materials_io.file.GenericFileParser" title="materials_io.file.GenericFileParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">materials_io.file.GenericFileParser</span></code></a>, which is
+<p>The methods in <a class="reference internal" href="api/scythe.html#module-scythe.utils.interface" title="scythe.utils.interface"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scythe.utils.interface</span></code></a> are useful for most applications. As an
+example, we illustrate the use of <a class="reference internal" href="parsers.html#scythe.file.GenericFileParser" title="scythe.file.GenericFileParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">scythe.file.GenericFileParser</span></code></a>, which is
 available through the <code class="docutils literal notranslate"><span class="pre">'generic'</span></code> parser plugin:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">execute_parser</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scythe.utils.interface</span> <span class="kn">import</span> <span class="n">execute_parser</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">execute_parser</span><span class="p">(</span><span class="s1">&#39;generic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;pyproject.toml&#39;</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p>The above snippet creates the parser object and runs it on a file named <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>. Run
-in the root directory of the MaterialsIO, it would produce output similar to the following,
+in the root directory of the Scythe, it would produce output similar to the following,
 likely with a different <code class="docutils literal notranslate"><span class="pre">sha512</span></code> value if the contents of that file have changed since this
 documentation was written:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="w"></span>
@@ -166,15 +166,15 @@ documentation was written:</p>
 </div>
 <p>The other pre-built parsing function provides the ability to run all parsers on all files in a
 directory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">run_all_parsers</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scythe.utils.interface</span> <span class="kn">import</span> <span class="n">run_all_parsers</span>
 <span class="n">gen</span> <span class="o">=</span> <span class="n">run_all_parsers</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A third route for using <code class="docutils literal notranslate"><span class="pre">materials_io</span></code> is to employ the <code class="docutils literal notranslate"><span class="pre">get_parser</span></code> operation to access a
+<p>A third route for using <code class="docutils literal notranslate"><span class="pre">scythe</span></code> is to employ the <code class="docutils literal notranslate"><span class="pre">get_parser</span></code> operation to access a
 specific parser, and then use its class interface (described below):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">get_parser</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scythe.utils.interface</span> <span class="kn">import</span> <span class="n">get_parser</span>
 <span class="n">parser</span> <span class="o">=</span> <span class="n">get_parser</span><span class="p">(</span><span class="s1">&#39;generic&#39;</span><span class="p">)</span>
 <span class="n">gen</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_directory</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">gen</span><span class="p">:</span>
@@ -183,9 +183,9 @@ specific parser, and then use its class interface (described below):</p>
 </div>
 <section id="advanced-usage-adding-context">
 <h3>Advanced Usage: Adding Context<a class="headerlink" href="#advanced-usage-adding-context" title="Permalink to this headline"></a></h3>
-<p>The function interface for MaterialsIO supports using “context” and “adapters” to provide
+<p>The function interface for Scythe supports using “context” and “adapters” to provide
 additional infomration to a parser or change the output format, respectively. Adapters are
-described in <a class="reference external" href="#id1">Integrating MaterialsIO into Applications</a>. Here, we describe the purpose
+described in <a class="reference external" href="#id1">Integrating Scythe into Applications</a>. Here, we describe the purpose
 of context and how to use it in our interface.</p>
 <p>Context is information about the data held in a file that is not contained within the file itself
 . Examples include human-friendly descriptions of columns names or which values actually
@@ -200,7 +200,7 @@ function:</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">run_all_parsers_on_directory</span></code> function has several options for providing context to the
 parsers. These options include specifying “global context” to be passed to every parser or
 adapter and ways of limiting the metadata to specific parsers. See
-<a class="reference internal" href="api/materials_io.html#materials_io.utils.interface.run_all_parsers_on_directory" title="materials_io.utils.interface.run_all_parsers_on_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">materials_io.utils.interface.run_all_parsers_on_directory()</span></code></a> for further details on the
+<a class="reference internal" href="api/scythe.html#scythe.utils.interface.run_all_parsers_on_directory" title="scythe.utils.interface.run_all_parsers_on_directory"><code class="xref py py-meth docutils literal notranslate"><span class="pre">scythe.utils.interface.run_all_parsers_on_directory()</span></code></a> for further details on the
 syntax for this command.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -255,7 +255,7 @@ a list of files that should be treated together when parsing:</p>
 </section>
 <section id="parsing-entire-directories">
 <h3>Parsing Entire Directories<a class="headerlink" href="#parsing-entire-directories" title="Permalink to this headline"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">materials_io</span></code> also provides a utility operation to parse all groups of valid files in a directory:</p>
+<p><code class="docutils literal notranslate"><span class="pre">scythe</span></code> also provides a utility operation to parse all groups of valid files in a directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_directory</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -273,20 +273,20 @@ describe the underlying methods and should be reference in scientific articles.<
 <h3>Full Parser API<a class="headerlink" href="#full-parser-api" title="Permalink to this headline"></a></h3>
 <p>The full API for the parsers are described as a Python abstract class:</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.base.</span></span><span class="sig-name descname"><span class="pre">BaseParser</span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scythe.base.</span></span><span class="sig-name descname"><span class="pre">BaseParser</span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract base class for a file parser</p>
-<p>This class defines the interface for all parsers in MaterialsIO. Each new parser must
-implement the <a class="reference internal" href="#materials_io.base.BaseParser.parse" title="materials_io.base.BaseParser.parse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse()</span></code></a>, <a class="reference internal" href="#materials_io.base.BaseParser.version" title="materials_io.base.BaseParser.version"><code class="xref py py-meth docutils literal notranslate"><span class="pre">version()</span></code></a>, and <a class="reference internal" href="#materials_io.base.BaseParser.implementors" title="materials_io.base.BaseParser.implementors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">implementors()</span></code></a> functions. The
-<a class="reference internal" href="#materials_io.base.BaseParser.group" title="materials_io.base.BaseParser.group"><code class="xref py py-meth docutils literal notranslate"><span class="pre">group()</span></code></a> method should be overridden to generate smart groups of file (e.g., associating
-the inputs and outputs to the same calculation) <a class="reference internal" href="#materials_io.base.BaseParser.citations" title="materials_io.base.BaseParser.citations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">citations()</span></code></a> can be used if there
+<p>This class defines the interface for all parsers in Scythe. Each new parser must
+implement the <a class="reference internal" href="#scythe.base.BaseParser.parse" title="scythe.base.BaseParser.parse"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse()</span></code></a>, <a class="reference internal" href="#scythe.base.BaseParser.version" title="scythe.base.BaseParser.version"><code class="xref py py-meth docutils literal notranslate"><span class="pre">version()</span></code></a>, and <a class="reference internal" href="#scythe.base.BaseParser.implementors" title="scythe.base.BaseParser.implementors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">implementors()</span></code></a> functions. The
+<a class="reference internal" href="#scythe.base.BaseParser.group" title="scythe.base.BaseParser.group"><code class="xref py py-meth docutils literal notranslate"><span class="pre">group()</span></code></a> method should be overridden to generate smart groups of file (e.g., associating
+the inputs and outputs to the same calculation) <a class="reference internal" href="#scythe.base.BaseParser.citations" title="scythe.base.BaseParser.citations"><code class="xref py py-meth docutils literal notranslate"><span class="pre">citations()</span></code></a> can be used if there
 are papers that should be cited if the parser is used as part of a scientific publication.</p>
-<p>See the <a class="reference external" href="contributor-guide.html">MaterialsIO Contributor Guide</a> for further details.</p>
+<p>See the <a class="reference external" href="contributor-guide.html">Scythe Contributor Guide</a> for further details.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.identify_files">
-<span class="sig-name descname"><span class="pre">identify_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.11)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.identify_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.identify_files" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.identify_files">
+<span class="sig-name descname"><span class="pre">identify_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.11)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.identify_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.identify_files" title="Permalink to this definition"></a></dt>
 <dd><p>Identify all groups of files likely to be compatible with this parser</p>
-<p>Uses the <a class="reference internal" href="#materials_io.base.BaseParser.group" title="materials_io.base.BaseParser.group"><code class="xref py py-meth docutils literal notranslate"><span class="pre">group()</span></code></a> function to determine groups of files that should be parsed together.</p>
+<p>Uses the <a class="reference internal" href="#scythe.base.BaseParser.group" title="scythe.base.BaseParser.group"><code class="xref py py-meth docutils literal notranslate"><span class="pre">group()</span></code></a> function to determine groups of files that should be parsed together.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -301,8 +301,8 @@ are papers that should be cited if the parser is used as part of a scientific pu
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.parse_directory">
-<span class="sig-name descname"><span class="pre">parse_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.11)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.parse_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.parse_directory" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.parse_directory">
+<span class="sig-name descname"><span class="pre">parse_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.11)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.parse_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.parse_directory" title="Permalink to this definition"></a></dt>
 <dd><p>Run a parser on all appropriate files in a directory</p>
 <p>Skips files that throw exceptions while parsing</p>
 <dl class="field-list simple">
@@ -319,8 +319,8 @@ are papers that should be cited if the parser is used as part of a scientific pu
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.parse">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.parse" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.parse">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.11)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.parse" title="Permalink to this definition"></a></dt>
 <dd><p>Extract metadata from a group of files</p>
 <p>A group of files is a set of 1 or more files that describe the same object, and will be
 be used together to create s single summary record.</p>
@@ -341,8 +341,8 @@ be used together to create s single summary record.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.group">
-<span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.11)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.group" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.group">
+<span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.11)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.11)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.group" title="Permalink to this definition"></a></dt>
 <dd><p>Identify a groups of files and directories that should be parsed together</p>
 <p>Will create groups using only the files and directories included as input.</p>
 <p>The files of files are _all_ files that could be read by this parser, which may include
@@ -362,8 +362,8 @@ many false positives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.citations">
-<span class="sig-name descname"><span class="pre">citations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.citations" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.citations">
+<span class="sig-name descname"><span class="pre">citations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.citations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.citations" title="Permalink to this definition"></a></dt>
 <dd><p>Citation(s) and reference(s) for this parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -376,8 +376,8 @@ many false positives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.implementors">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">implementors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.implementors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.implementors" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.implementors">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">implementors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.implementors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.implementors" title="Permalink to this definition"></a></dt>
 <dd><p>List of implementors of the parser</p>
 <p>These people are the points-of-contact for addressing errors or modifying the parser</p>
 <dl class="field-list simple">
@@ -391,8 +391,8 @@ many false positives.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.version">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/materials_io/base.html#BaseParser.version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#materials_io.base.BaseParser.version" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.version">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/scythe/base.html#BaseParser.version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scythe.base.BaseParser.version" title="Permalink to this definition"></a></dt>
 <dd><p>Return the version of the parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -405,8 +405,8 @@ many false positives.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="materials_io.base.BaseParser.schema">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></em><a class="headerlink" href="#materials_io.base.BaseParser.schema" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="scythe.base.BaseParser.schema">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></em><a class="headerlink" href="#scythe.base.BaseParser.schema" title="Permalink to this definition"></a></dt>
 <dd><p>Schema for the output of the parser</p>
 </dd></dl>
 
@@ -415,8 +415,8 @@ many false positives.</p>
 </section>
 </section>
 <section id="id1">
-<h2>Integrating MaterialsIO into Applications<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
-<p>MaterialsIO is designed to create a documented, JSON-format version of scientific files, but
+<h2>Integrating Scythe into Applications<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<p>Scythe is designed to create a documented, JSON-format version of scientific files, but
 these files might not yet be in a form useful for your application. We recommend an “adapter”
 approach to post-process these “generic JSON” files that can actually be used for your application.</p>
 <section id="baseadapter">
@@ -424,11 +424,11 @@ approach to post-process these “generic JSON” files that can actually be use
 <p>The <code class="docutils literal notranslate"><span class="pre">BaseAdapter</span></code> class defines the interface for all adapters.</p>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">materials_io.adapters.base.</span></span><span class="sig-name descname"><span class="pre">BaseAdapter</span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scythe.adapters.base.</span></span><span class="sig-name descname"><span class="pre">BaseAdapter</span></span><a class="reference internal" href="_modules/scythe/adapters/base.html#BaseAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Template for tools that transform metadata into a new form</p>
 <dl class="py method">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="_modules/scythe/adapters/base.html#BaseAdapter.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Process metadata into a new form</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -446,11 +446,11 @@ approach to post-process these “generic JSON” files that can actually be use
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">check_compatibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#materials_io.base.BaseParser" title="materials_io.base.BaseParser"><span class="pre">materials_io.base.BaseParser</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter.check_compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">check_compatibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#scythe.base.BaseParser" title="scythe.base.BaseParser"><span class="pre">scythe.base.BaseParser</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/scythe/adapters/base.html#BaseAdapter.check_compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Evaluate whether an adapter is compatible with a certain parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>parser</strong> (<a class="reference internal" href="#materials_io.base.BaseParser" title="materials_io.base.BaseParser"><em>BaseParser</em></a>) – Parser to evaluate</p>
+<dd class="field-odd"><p><strong>parser</strong> (<a class="reference internal" href="#scythe.base.BaseParser" title="scythe.base.BaseParser"><em>BaseParser</em></a>) – Parser to evaluate</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(bool) Whether this parser is compatible</p>
@@ -460,7 +460,7 @@ approach to post-process these “generic JSON” files that can actually be use
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/materials_io/adapters/base.html#BaseAdapter.version"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/scythe/adapters/base.html#BaseAdapter.version"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Version of the parser that an adapter was created for</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -476,10 +476,10 @@ approach to post-process these “generic JSON” files that can actually be use
 </dd></dl>
 
 <p>Adapters must fulfill a single operation, <code class="docutils literal notranslate"><span class="pre">transform</span></code>, which renders metadata from one of the
-MaterialsIO parsers into a new form. There are no restrictions on the output for this function,
+Scythe parsers into a new form. There are no restrictions on the output for this function,
 except that <code class="docutils literal notranslate"><span class="pre">None</span></code> indicates that there is no valid transformation for an object.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">check_compatibility</span></code> and <code class="docutils literal notranslate"><span class="pre">version</span></code> method provide a route for marking which versions of
-a parser are compatible with an adapter. <code class="docutils literal notranslate"><span class="pre">materials_io</span></code> uses the version in utility operations
+a parser are compatible with an adapter. <code class="docutils literal notranslate"><span class="pre">scythe</span></code> uses the version in utility operations
 to provide warnings to users about when an adapter is out-of-date.</p>
 </section>
 <section id="using-adapters">
@@ -489,11 +489,11 @@ to provide warnings to users about when an adapter is out-of-date.</p>
 an input and causes the parsing operation to run the adapter after parsing. The
 <code class="docutils literal notranslate"><span class="pre">run_all_parsers</span></code> function also has arguments (e.g., <code class="docutils literal notranslate"><span class="pre">adapter_map</span></code>) that associate each
 parser with the adapter needed to run after parsing.</p>
-<p>As an example, we will demonstrate an adapter that comes packaged with MaterialsIO:
-<a class="reference internal" href="api/materials_io.html#materials_io.adapters.base.SerializeAdapter" title="materials_io.adapters.base.SerializeAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">materials_io.adapters.base.SerializeAdapter</span></code></a>
+<p>As an example, we will demonstrate an adapter that comes packaged with Scythe:
+<a class="reference internal" href="api/scythe.html#scythe.adapters.base.SerializeAdapter" title="scythe.adapters.base.SerializeAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">scythe.adapters.base.SerializeAdapter</span></code></a>
 The serialize adapter is registered using <code class="docutils literal notranslate"><span class="pre">stevedore</span></code> as the name “serialize”. To use it after
 all parsers:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">materials_io.utils.interface</span> <span class="kn">import</span> <span class="n">run_all_parsers</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scythe.utils.interface</span> <span class="kn">import</span> <span class="n">run_all_parsers</span>
 <span class="n">gen</span> <span class="o">=</span> <span class="n">run_all_parsers</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">default_adapter</span><span class="o">=</span><span class="s1">&#39;serialize&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -510,10 +510,10 @@ copy the structure used by the
 <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> or <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> file. See the
 <a class="reference external" href="https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins">stevedore documentation for more detail</a>.
 We recommend using the same name for a adapter as the parser it is designed for so that
-<code class="docutils literal notranslate"><span class="pre">materials_io</span></code> can auto-detect the adapters associated with each parser.</p>
+<code class="docutils literal notranslate"><span class="pre">scythe</span></code> can auto-detect the adapters associated with each parser.</p>
 </section>
-<section id="examples-of-tools-using-materialsio">
-<h3>Examples of Tools Using MaterialsIO<a class="headerlink" href="#examples-of-tools-using-materialsio" title="Permalink to this headline"></a></h3>
+<section id="examples-of-tools-using-scythe">
+<h3>Examples of Tools Using Scythe<a class="headerlink" href="#examples-of-tools-using-scythe" title="Permalink to this headline"></a></h3>
 <p>Materials Data Facility:
 <a class="reference external" href="https://github.com/materials-data-facility/mdf-materialsio-adapters">https://github.com/materials-data-facility/mdf-materialsio-adapters</a></p>
 </section>

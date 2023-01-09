@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>materials_io.adapters.base &mdash; MaterialsIO 0.1.1 documentation</title>
+  <title>scythe.adapters.base &mdash; Scythe 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -24,10 +24,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> MaterialsIO
+            <a href="../../../index.html" class="icon icon-home"> Scythe
           </a>
               <div class="version">
-                0.1.1
+                0.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -43,7 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contributor-guide.html">Contributor Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../parsers.html">Available Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api/materials_io.html">materials_io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/scythe.html">scythe</a></li>
 </ul>
 
         </div>
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">MaterialsIO</a>
+          <a href="../../../index.html">Scythe</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -61,7 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>materials_io.adapters.base</li>
+      <li>scythe.adapters.base</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,7 +70,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for materials_io.adapters.base</h1><div class="highlight"><pre>
+  <h1>Source code for scythe.adapters.base</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Base classes for adapters&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
@@ -79,13 +79,13 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
 
 
-<div class="viewcode-block" id="BaseAdapter"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.BaseAdapter">[docs]</a><span class="k">class</span> <span class="nc">BaseAdapter</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseAdapter"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.BaseAdapter">[docs]</a><span class="k">class</span> <span class="nc">BaseAdapter</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Template for tools that transform metadata into a new form&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseAdapter.transform"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.BaseAdapter.transform">[docs]</a>    <span class="nd">@abstractmethod</span>
+<div class="viewcode-block" id="BaseAdapter.transform"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.BaseAdapter.transform">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Process metadata into a new form</span>
 
@@ -97,7 +97,7 @@
 <span class="sd">            ``None`` corresponding</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="BaseAdapter.check_compatibility"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.BaseAdapter.check_compatibility">[docs]</a>    <span class="k">def</span> <span class="nf">check_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">BaseParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseAdapter.check_compatibility"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.BaseAdapter.check_compatibility">[docs]</a>    <span class="k">def</span> <span class="nf">check_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">BaseParser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Evaluate whether an adapter is compatible with a certain parser</span>
 
 <span class="sd">        Args:</span>
@@ -113,7 +113,7 @@
             <span class="n">their_version</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">version</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">my_version</span> <span class="o">==</span> <span class="n">their_version</span></div>
 
-<div class="viewcode-block" id="BaseAdapter.version"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.BaseAdapter.version">[docs]</a>    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="BaseAdapter.version"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.BaseAdapter.version">[docs]</a>    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Version of the parser that an adapter was created for</span>
 
 <span class="sd">        Returns:</span>
@@ -123,23 +123,23 @@
         <span class="k">return</span> <span class="kc">None</span></div></div>
 
 
-<div class="viewcode-block" id="NOOPAdapter"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.NOOPAdapter">[docs]</a><span class="k">class</span> <span class="nc">NOOPAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
+<div class="viewcode-block" id="NOOPAdapter"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.NOOPAdapter">[docs]</a><span class="k">class</span> <span class="nc">NOOPAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Adapter that does not alter the output data</span>
 
 <span class="sd">    Used for testing purposes&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="NOOPAdapter.transform"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.NOOPAdapter.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="NOOPAdapter.transform"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.NOOPAdapter.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">metadata</span></div></div>
 
 
-<div class="viewcode-block" id="SerializeAdapter"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.SerializeAdapter">[docs]</a><span class="k">class</span> <span class="nc">SerializeAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
+<div class="viewcode-block" id="SerializeAdapter"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.SerializeAdapter">[docs]</a><span class="k">class</span> <span class="nc">SerializeAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts the metadata to a string by serializing with JSON&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="SerializeAdapter.transform"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.SerializeAdapter.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="SerializeAdapter.transform"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.SerializeAdapter.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="GreedySerializeAdapter"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.GreedySerializeAdapter">[docs]</a><span class="k">class</span> <span class="nc">GreedySerializeAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
+<div class="viewcode-block" id="GreedySerializeAdapter"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.GreedySerializeAdapter">[docs]</a><span class="k">class</span> <span class="nc">GreedySerializeAdapter</span><span class="p">(</span><span class="n">BaseAdapter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts the metadata to a string by serializing with JSON, making some (hopefully) informed</span>
 <span class="sd">    choices about what to do with various types commonly seen, and otherwise reporting that the</span>
 <span class="sd">    data type could not be serialized. May not work in all situations, but should cover a large</span>
@@ -161,7 +161,7 @@
             <span class="n">type_name</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;&lt;Unserializable type: </span><span class="si">{</span><span class="n">type_name</span><span class="si">}</span><span class="s2">&gt;&gt;&quot;</span>
 
-<div class="viewcode-block" id="GreedySerializeAdapter.transform"><a class="viewcode-back" href="../../../api/materials_io.html#materials_io.adapters.base.GreedySerializeAdapter.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GreedySerializeAdapter.transform"><a class="viewcode-back" href="../../../api/scythe.html#scythe.adapters.base.GreedySerializeAdapter.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">GreedySerializeAdapter</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span></div></div>
 </pre></div>

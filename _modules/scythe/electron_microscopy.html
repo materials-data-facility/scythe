@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>materials_io.electron_microscopy &mdash; MaterialsIO 0.1.1 documentation</title>
+  <title>scythe.electron_microscopy &mdash; Scythe 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -24,10 +24,10 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MaterialsIO
+            <a href="../../index.html" class="icon icon-home"> Scythe
           </a>
               <div class="version">
-                0.1.1
+                0.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -43,7 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../api/materials_io.html">materials_io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
         </div>
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">MaterialsIO</a>
+          <a href="../../index.html">Scythe</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -61,7 +61,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>materials_io.electron_microscopy</li>
+      <li>scythe.electron_microscopy</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,7 +70,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for materials_io.electron_microscopy</h1><div class="highlight"><pre>
+  <h1>Source code for scythe.electron_microscopy</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -80,16 +80,16 @@
 <span class="kn">from</span> <span class="nn">hyperspy.io</span> <span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">hs_load</span>
 <span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="kn">import</span> <span class="n">Undefined</span>
 
-<span class="kn">from</span> <span class="nn">materials_io.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
-<span class="kn">from</span> <span class="nn">materials_io.utils</span> <span class="kn">import</span> <span class="n">get_nested_dict_value_by_path</span> <span class="k">as</span> <span class="n">get_val</span>
-<span class="kn">from</span> <span class="nn">materials_io.utils</span> <span class="kn">import</span> \
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span class="kn">from</span> <span class="nn">scythe.utils</span> <span class="kn">import</span> <span class="n">get_nested_dict_value_by_path</span> <span class="k">as</span> <span class="n">get_val</span>
+<span class="kn">from</span> <span class="nn">scythe.utils</span> <span class="kn">import</span> \
     <span class="n">map_dict_values</span><span class="p">,</span> <span class="n">MappingElements</span><span class="p">,</span> <span class="n">standardize_unit</span>
-<span class="kn">from</span> <span class="nn">materials_io.utils</span> <span class="kn">import</span> <span class="n">set_nested_dict_value_with_units</span> <span class="k">as</span> <span class="n">set_val_units</span>
+<span class="kn">from</span> <span class="nn">scythe.utils</span> <span class="kn">import</span> <span class="n">set_nested_dict_value_with_units</span> <span class="k">as</span> <span class="n">set_val_units</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="ElectronMicroscopyParser"><a class="viewcode-back" href="../../parsers.html#materials_io.electron_microscopy.ElectronMicroscopyParser">[docs]</a><span class="k">class</span> <span class="nc">ElectronMicroscopyParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
+<div class="viewcode-block" id="ElectronMicroscopyParser"><a class="viewcode-back" href="../../parsers.html#scythe.electron_microscopy.ElectronMicroscopyParser">[docs]</a><span class="k">class</span> <span class="nc">ElectronMicroscopyParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse metadata specific to electron microscopy.</span>
 
 <span class="sd">    This parser handles any file supported by HyperSpy&#39;s I/O capabilities. Extract both the</span>
