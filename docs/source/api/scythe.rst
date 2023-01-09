@@ -1,5 +1,5 @@
 scythe
-============
+======
 
 Documentation for the non-parser functions in ``scythe``.
 

@@ -9,8 +9,6 @@ projects can write simple adaptors for their needs.
 
 Source Code: https://github.com/materials-data-facility/Scythe
 
-
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -20,12 +18,3 @@ Source Code: https://github.com/materials-data-facility/Scythe
    contributor-guide
    extractors
    api/scythe
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
