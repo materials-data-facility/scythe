@@ -42,7 +42,7 @@ def get_available_parsers():
         [dict]: Descriptions of available parsers
     """
     mgr = ExtensionManager(
-        namespace='materialsio.parser',
+        namespace='scythe.parser',
     )
 
     # Get information about each parser
@@ -56,7 +56,7 @@ def get_available_adapters() -> dict:
         (dict) Where keys are adapter names and values are descriptions
     """
 
-    return _output_plugin_info(ExtensionManager(namespace='materialsio.adapter'))
+    return _output_plugin_info(ExtensionManager(namespace='scythe.adapter'))
 
 
 def _get_adapter_map(adapter_map: str, parsers: list) -> dict:
@@ -148,7 +148,7 @@ def get_parser(name: str) -> BaseParser:
         (BaseParser) Requested parser
     """
     return DriverManager(
-        namespace='materialsio.parser',
+        namespace='scythe.parser',
         name=name,
         invoke_on_load=True
     ).driver
@@ -165,7 +165,7 @@ def get_adapter(name: str) -> BaseAdapter:
 
     # Load the adapter
     mgr = DriverManager(
-        namespace='materialsio.adapter',
+        namespace='scythe.adapter',
         name=name,
         invoke_on_load=True
     )
@@ -199,7 +199,7 @@ def run_all_parsers_on_directory(directory: str, global_context=None,
                                  exclude_parsers: Union[None, List] = None,
                                  adapter_map: Union[None, str, Dict[str, str]] = None,
                                  default_adapter: Union[None, str] = None) \
-                                                    -> Iterator[ParseResult]:
+        -> Iterator[ParseResult]:
     """Run all known files on a directory of files
 
     Args:
