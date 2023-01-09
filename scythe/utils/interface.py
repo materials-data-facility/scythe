@@ -6,8 +6,8 @@ from typing import Iterator, Union, Dict, List
 from collections import namedtuple
 from copy import deepcopy
 
-from materials_io.adapters.base import BaseAdapter
-from materials_io.base import BaseParser
+from scythe.adapters.base import BaseAdapter
+from scythe.base import BaseParser
 import logging
 
 logger = logging.getLogger(__name__)

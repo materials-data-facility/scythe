@@ -1,4 +1,4 @@
-from materials_io.base import BaseParser, BaseSingleFileParser
+from scythe.base import BaseParser, BaseSingleFileParser
 from glob import glob
 import pytest
 import os

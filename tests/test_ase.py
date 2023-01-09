@@ -1,4 +1,4 @@
-from materials_io.ase import AseParser
+from scythe.ase import AseParser
 from math import isclose
 import pytest
 import os

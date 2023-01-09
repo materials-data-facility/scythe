@@ -1,5 +1,5 @@
-from materials_io.adapters.base import NOOPAdapter, GreedySerializeAdapter
-from materials_io.testing import NOOPParser
+from scythe.adapters.base import NOOPAdapter, GreedySerializeAdapter
+from scythe.testing import NOOPParser
 
 
 def test_compatibility():

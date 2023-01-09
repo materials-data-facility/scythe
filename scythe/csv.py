@@ -1,4 +1,4 @@
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 from tableschema.exceptions import CastError
 from tableschema import Table
 from typing import List

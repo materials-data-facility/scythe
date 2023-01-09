@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from materials_io.filename import FilenameExtractor
+from scythe.filename import FilenameExtractor
 
 
 @pytest.fixture

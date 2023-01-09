@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "materials_io"
-version = "0.1.1"
+name = "scythe"
+version = "0.1.0"
 description = "A library of tools that generate summaries of the data contained in scientific data files"
 authors = ["Materials Data Facility <materialsdatafacility@uchicago.edu>"]
 license = "Apache"
@@ -58,31 +58,31 @@ all = ['ase',
 [tool.poetry.plugins]
 
 [tool.poetry.plugins."materialsio.parser"]
-"ase" = "materials_io.ase:AseParser"
-"crystal" = "materials_io.crystal_structure:CrystalStructureParser"
-"csv" = "materials_io.csv:CSVParser"
-"dft" = "materials_io.dft:DFTParser"
-"em" = "materials_io.electron_microscopy:ElectronMicroscopyParser"
-"filename" = "materials_io.filename:FilenameExtractor"
-"generic" = "materials_io.file:GenericFileParser"
-"image" = "materials_io.image:ImageParser"
-"json" = "materials_io.json:JSONExtractor"
-"noop" = "materials_io.testing:NOOPParser"
-"tdb" = "materials_io.tdb:TDBExtractor"
-"xml" = "materials_io.xml:XMLExtractor"
-"yaml" = "materials_io.yaml:YAMLExtractor"
+"ase" = "scythe.ase:AseParser"
+"crystal" = "scythe.crystal_structure:CrystalStructureParser"
+"csv" = "scythe.csv:CSVParser"
+"dft" = "scythe.dft:DFTParser"
+"em" = "scythe.electron_microscopy:ElectronMicroscopyParser"
+"filename" = "scythe.filename:FilenameExtractor"
+"generic" = "scythe.file:GenericFileParser"
+"image" = "scythe.image:ImageParser"
+"json" = "scythe.json:JSONExtractor"
+"noop" = "scythe.testing:NOOPParser"
+"tdb" = "scythe.tdb:TDBExtractor"
+"xml" = "scythe.xml:XMLExtractor"
+"yaml" = "scythe.yaml:YAMLExtractor"
 
-[tool.poetry.plugins."materialsio.adapter"]
-"noop" = "materials_io.adapters.base:NOOPAdapter"
-"serialize" = "materials_io.adapters.base:SerializeAdapter"
-"greedy_serialize" = "materials_io.adapters.base:GreedySerializeAdapter"
+[tool.poetry.plugins."scythe.adapter"]
+"noop" = "scythe.adapters.base:NOOPAdapter"
+"serialize" = "scythe.adapters.base:SerializeAdapter"
+"greedy_serialize" = "scythe.adapters.base:GreedySerializeAdapter"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-addopts = "--ignore=.venv --ignore=.tox --cov=materials_io --cov-report html --cov-report term-missing --cov-report=xml"
+addopts = "--ignore=.venv --ignore=.tox --cov=scythe --cov-report html --cov-report term-missing --cov-report=xml"
 testpaths = ['tests']
 
 [tool.coverage.run]

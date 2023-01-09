@@ -1,1 +1,1 @@
-recursive-include materials_io/schemas *.json
+recursive-include scythe/schemas *.json

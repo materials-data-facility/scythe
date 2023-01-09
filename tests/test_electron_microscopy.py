@@ -2,8 +2,8 @@ import pytest
 import pathlib
 import jsonschema
 
-from materials_io.electron_microscopy import ElectronMicroscopyParser
-from materials_io.adapters.base import GreedySerializeAdapter
+from scythe.electron_microscopy import ElectronMicroscopyParser
+from scythe.adapters.base import GreedySerializeAdapter
 
 
 def file_path(fname):

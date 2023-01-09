@@ -6,7 +6,7 @@ from typing import Any, Union
 
 import numpy as np
 
-from materials_io.base import BaseParser
+from scythe.base import BaseParser
 
 
 class BaseAdapter:

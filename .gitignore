@@ -9,7 +9,7 @@ Untitled*.ipynb
 
 */build/*
 docs/_build
-materials_io/schemas/doc/
+scythe/schemas/doc/
 */dist/*
 *.egg*
 src/*

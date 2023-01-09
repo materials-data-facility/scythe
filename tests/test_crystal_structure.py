@@ -1,4 +1,4 @@
-from materials_io.crystal_structure import CrystalStructureParser
+from scythe.crystal_structure import CrystalStructureParser
 from math import isclose
 import pytest
 import os

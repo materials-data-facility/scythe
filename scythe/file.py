@@ -1,4 +1,4 @@
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 from hashlib import sha512
 from warnings import warn
 import json

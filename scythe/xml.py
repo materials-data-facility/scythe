@@ -1,7 +1,7 @@
 from mdf_toolbox import translate_json
 import xmltodict
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 class XMLExtractor(BaseSingleFileParser):

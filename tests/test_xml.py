@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from materials_io.xml import XMLExtractor
+from scythe.xml import XMLExtractor
 
 
 @pytest.fixture

@@ -16,12 +16,12 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from materials_io import __version__
+from scythe import __version__
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'MaterialsIO'
+project = 'Scythe'
 copyright = '2019 - 2022, Materials Data Facility Team, Citrine Informatics'
 author = 'Materials Data Facility Team, Citrine Informatics'
 
@@ -111,7 +111,7 @@ html_theme = 'sphinx_rtd_theme'
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'MaterialsIOdoc'
+htmlhelp_basename = 'Scythedoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -138,7 +138,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'MaterialsIO.tex', 'MaterialsIO Documentation',
+    (master_doc, 'Scythe.tex', 'Scythe Documentation',
      'Materials Data Facility Team, Citrine Informatics', 'manual'),
 ]
 
@@ -148,7 +148,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'materialsio', 'MaterialsIO Documentation',
+    (master_doc, 'materialsio', 'Scythe Documentation',
      [author], 1)
 ]
 
@@ -159,8 +159,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'MaterialsIO', 'MaterialsIO Documentation',
-     author, 'MaterialsIO', 'One line description of project.',
+    (master_doc, 'Scythe', 'Scythe Documentation',
+     author, 'Scythe', 'One line description of project.',
      'Miscellaneous'),
 ]
 

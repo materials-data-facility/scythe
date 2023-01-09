@@ -81,7 +81,7 @@ def set_nested_dict_value_with_units(nest_dict: Dict, path: Tuple,
                                      value: Any, units: Optional[str] = None,
                                      override: bool = False,
                                      fn: Optional[Callable] = None):
-    """Same as :func:`~materials_io.utils.set_nested_dict_value`, but sets the
+    """Same as :func:`~scythe.utils.set_nested_dict_value`, but sets the
     value in the format of a dictionary with keys ``'value'`` and ``'units'``
     according to the specified units. If ``fn`` is supplied, it will be
     applied to the value prior to setting it.

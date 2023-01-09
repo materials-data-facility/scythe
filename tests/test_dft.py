@@ -1,4 +1,4 @@
-from materials_io.dft import DFTParser
+from scythe.dft import DFTParser
 from shutil import copy
 from glob import glob
 import tarfile

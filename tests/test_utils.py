@@ -1,8 +1,8 @@
-from materials_io.utils.interface import (get_available_parsers, execute_parser,
-                                          get_available_adapters, run_all_parsers_on_directory,
-                                          ParseResult)
-from materials_io.utils import set_nested_dict_value
-from materials_io.image import ImageParser
+from scythe.utils.interface import (get_available_parsers, execute_parser,
+                                    get_available_adapters, run_all_parsers_on_directory,
+                                    ParseResult)
+from scythe.utils import set_nested_dict_value
+from scythe.image import ImageParser
 import pytest
 import json
 import os

@@ -3,7 +3,7 @@ import re
 
 from mdf_toolbox import flatten_json
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 class FilenameExtractor(BaseSingleFileParser):

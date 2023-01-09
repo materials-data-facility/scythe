@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from materials_io.json import JSONExtractor
+from scythe.json import JSONExtractor
 
 
 @pytest.fixture

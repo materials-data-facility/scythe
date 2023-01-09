@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from materials_io.yaml import YAMLExtractor
+from scythe.yaml import YAMLExtractor
 
 
 @pytest.fixture

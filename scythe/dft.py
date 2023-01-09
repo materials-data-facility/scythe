@@ -1,6 +1,6 @@
 from typing import Union, Iterable, Tuple, List
-from materials_io.utils.grouping import preprocess_paths, group_by_postfix
-from materials_io.base import BaseParser
+from scythe.utils.grouping import preprocess_paths, group_by_postfix
+from scythe.base import BaseParser
 from dfttopif import files_to_pif
 from operator import itemgetter
 import itertools

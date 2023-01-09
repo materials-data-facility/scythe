@@ -3,7 +3,7 @@ import os
 from mdf_toolbox import insensitive_comparison as eqi
 import pytest
 
-from materials_io.tdb import TDBExtractor
+from scythe.tdb import TDBExtractor
 
 
 @pytest.fixture

@@ -2,7 +2,7 @@ import json
 
 from mdf_toolbox import translate_json
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 class JSONExtractor(BaseSingleFileParser):

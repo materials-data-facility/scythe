@@ -1,4 +1,4 @@
-from materials_io.csv import CSVParser
+from scythe.csv import CSVParser
 import os
 
 csv_file = os.path.join(os.path.dirname(__file__), 'data', 'test.csv')

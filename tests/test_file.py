@@ -1,4 +1,4 @@
-from materials_io.file import GenericFileParser
+from scythe.file import GenericFileParser
 import pytest
 import os
 

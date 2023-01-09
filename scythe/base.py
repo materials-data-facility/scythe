@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import logging
 import os
 
-from materials_io.utils.grouping import preprocess_paths
+from scythe.utils.grouping import preprocess_paths
 
 logger = logging.getLogger(__name__)
 
@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 class BaseParser(ABC):
     """Abstract base class for a file parser
 
-    This class defines the interface for all parsers in MaterialsIO. Each new parser must
+    This class defines the interface for all parsers in Scythe. Each new parser must
     implement the :meth:`parse`, :meth:`version`, and :meth:`implementors` functions. The
     :meth:`group` method should be overridden to generate smart groups of file (e.g., associating
     the inputs and outputs to the same calculation) :meth:`citations` can be used if there
     are papers that should be cited if the parser is used as part of a scientific publication.
 
-    See the `MaterialsIO Contributor Guide <contributor-guide.html>`_ for further details.
+    See the `Scythe Contributor Guide <contributor-guide.html>`_ for further details.
     """
 
     def identify_files(self, path: str, context: dict = None) -> \

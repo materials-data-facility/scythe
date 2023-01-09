@@ -4,11 +4,11 @@ Contributor Guide
 Setting up development environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MaterialsIO makes use of the `Poetry <https://python-poetry.org/docs/>`_ project to manage
-dependencies and packaging. To install the latest version of MaterialsIO, first install poetry
+Scythe makes use of the `Poetry <https://python-poetry.org/docs/>`_ project to manage
+dependencies and packaging. To install the latest version of Scythe, first install poetry
 following `their documentation <https://python-poetry.org/docs/#installation>`_. Once that's
-done, clone/download the MaterialsIO repository locally from
-`Github <https://github.com/materials-data-facility/MaterialsIO/>`_. Change into that directory
+done, clone/download the Scythe repository locally from
+`Github <https://github.com/materials-data-facility/Scythe/>`_. Change into that directory
 and run ``poetry install`` (it would be a good idea to create a new virtual environment for your
 project first too, so as to not mix dependencies with your system environment).
 
@@ -20,10 +20,10 @@ which will install all bundled parsers and their dependencies. For example::
 
     poetry install -E all
 
-Poetry wil create a dedicated virtual environment for the project and the MaterialsIO code will
+Poetry wil create a dedicated virtual environment for the project and the Scythe code will
 be installed in "editable" mode, so any changes you make to the code will be reflected when
 running tests, importing parsers, etc. It will use the default version of python available.
-MaterialsIO is currently developed and tested against Python versions 3.8.12, 3.9.12, and 3.10.4.
+Scythe is currently developed and tested against Python versions 3.8.12, 3.9.12, and 3.10.4.
 We recommend using the `pyenv <https://github.com/pyenv/pyenv>`_ project to manage
 various python versions on your system if this does not match your system version of Python. It
 is required to use ``tox`` as well (see next paragraph). Make sure you install the versions
@@ -33,7 +33,7 @@ Additionally, the project uses `tox <https://tox.wiki/en/latest/>`_ to simplify 
 to be able to run tests in isolated environments. This will be installed automatically as a
 development package when running the ``poetry install`` command above. It can be used to run the
 test suite with common settings, as well as building the documentation. For example, to
-run the full MaterialsIO test suite on all three versions of Python targetd, just run::
+run the full Scythe test suite on all three versions of Python targetd, just run::
 
     poetry run tox
 
@@ -51,11 +51,11 @@ Check out the ``[tool.tox]`` section of the ``pyproject.toml`` file to view how 
 configured, and the `tox documentation <https://tox.wiki/en/latest/config.html>`_ on how to add your
 own custom tasks, if needed.
 
-Finally, MaterialsIO uses ``flake8`` to enforce code styles, which will be run for you
+Finally, Scythe uses ``flake8`` to enforce code styles, which will be run for you
 automatically when using ``tox`` as defined above. Any code-style errors, such as lines longer
 than 100 characters, trailing whitespace, etc. will be flagged when running ``poetry run tox``.
 
-The next part of the MaterialsIO guide details how to add a new parser to the ecosystem.
+The next part of the Scythe guide details how to add a new parser to the ecosystem.
 
 Step 1: Implement the Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,7 +89,7 @@ initialization and not during the parsing operation if the system in misconfigur
 Implementing ``parse``
 ----------------------
 
-The ``parse`` method contains the core logic of a MaterialsIO parser: rendering a summary of a
+The ``parse`` method contains the core logic of a Scythe parser: rendering a summary of a
 group of data files. We do not specify any particular schema for the output but we do recommend
 best practices:
 
@@ -181,33 +181,33 @@ summarize what types of metadata are generated.
 
 .. todo:: Actually write these descriptors for the available parsers
 
-The MaterialsIO project uses JSON documents as the output for all parsers and
+The Scythe project uses JSON documents as the output for all parsers and
 `JSON Schema <https://json-schema.org/>`_ to describe the content of the documents. The
 BaseParser class includes a property, ``schema``, that stores a description of the output format.
 We recommend writing your description as a separate file and having the ``schema`` property read
 and output the contents of this file. See the
-`GenericFileParser source code <https://github.com/materials-data-facility/MaterialsIO/blob/master/materials_io/file.py>`_
+`GenericFileParser source code <https://github.com/materials-data-facility/Scythe/blob/master/scythe/file.py>`_
 for a example.
 
 
 Step 3: Register the Parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Preferred Route: Adding the Parser to MaterialsIO
+Preferred Route: Adding the Parser to Scythe
 -------------------------------------------------
 
 If your parser has the same dependencies as existing parsers, add it to the existing module with
 the same dependencies.
 
-If your parser has new dependencies, create a new module for your parser in ``materials_io``, and
+If your parser has new dependencies, create a new module for your parser in ``scythe``, and
 then add the requirements as a new key in the ``[tool.poetry.extras]`` section of ``pyproject
 .toml``, following the other parser examples in that section. Next, add your parser to
 ``docs/source/parsers.rst`` by adding an ``.. automodule::`` statement that refers to your new
 module (again, following the existing pattern).
 
-MaterialsIO uses ``stevedore`` to simplify access to the parsers. After implementing and
-documenting the parser, add it to the ``[tool.poetry.plugins."materialsio.parser"]`` section of the
-``pyproject.toml`` file for MaterialsIO. See
+Scythe uses ``stevedore`` to simplify access to the parsers. After implementing and
+documenting the parser, add it to the ``[tool.poetry.plugins."scythe.parser"]`` section of the
+``pyproject.toml`` file for Scythe. See
 `stevedore documentation for more information <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_
 (these docs reference ``setup.py``, but the equivalent can be done via plugins in ``pyproject
 .toml``; follow the existing structure if you're unsure, and ask for help from the developers if
@@ -218,12 +218,12 @@ Alternative Route: Including Parsers from Other Libraries
 ---------------------------------------------------------
 
 If a parser would be better suited as part of a different library, you can still register it as a
-parser with MaterialsIO by altering your ``pyproject.toml`` file. Add an entry point with the
-namespace ``"materialsio.parser"`` and point to the class object following the
+parser with Scythe by altering your ``pyproject.toml`` file. Add an entry point with the
+namespace ``"scythe.parser"`` and point to the class object following the
 `stevedore documentation <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
-Adding the entry point will let MaterialsIO use your parser if your library is installed in the
-same Python environment as MaterialsIO.
+Adding the entry point will let Scythe use your parser if your library is installed in the
+same Python environment as Scythe.
 
-.. todo:: Provide a public listing of materials_io-compatible software.
+.. todo:: Provide a public listing of scythe-compatible software.
 
     So that people know where to find these external libraries

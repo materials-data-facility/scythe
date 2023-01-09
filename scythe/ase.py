@@ -5,7 +5,7 @@ from ase.io import read, write
 from io import StringIO
 import numpy as np
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 def object_hook(dct):

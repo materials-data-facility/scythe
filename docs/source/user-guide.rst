@@ -1,62 +1,62 @@
 User Guide
 ==========
 
-In this part of the guide, we show a simple example of using a MaterialsIO parser and discuss the
+In this part of the guide, we show a simple example of using a Scythe parser and discuss the
 full functionality of a parser.
 
-Installing MaterialsIO (for users)
+Installing Scythe (for users)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Installing MaterialsIO should be as easy as a single ``pip`` command. Assuming you have a
+Installing Scythe should be as easy as a single ``pip`` command. Assuming you have a
 version of Python that is 3.8 or higher, running::
 
-    pip install git+https://github.com/materials-data-facility/MaterialsIO.git
+    pip install git+https://github.com/materials-data-facility/Scythe.git
 
-Should get the basics of MaterialsIO installed. By default however, only a small subset of
+Should get the basics of Scythe installed. By default however, only a small subset of
 parsers will be installed (this is done so you do not need to install all the dependencies of
 parsers you may never use). To install additional parsers, you can specify "extras" at install time
 using the ``[...]`` syntax for ``pip``. For example, if you want to install all the parsers
-bundled with MaterialsIO (and their dependencies), run::
+bundled with Scythe (and their dependencies), run::
 
-    pip install "git+https://github.com/materials-data-facility/MaterialsIO.git#egg=materials_io[all]"
+    pip install "git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[all]"
 
 This will pull in many more packages, but also enable as many parsers as possible. Check the list
 under ``[tool.poetry.extras]`` in ``pyproject.toml`` to see all the options you can specify in
 the brackets of the ``pip install`` command.
 
-.. note:: In the *hopefully* near future, MaterialsIO should be published on
+.. note:: In the *hopefully* near future, Scythe should be published on
     `PyPI <https://pypi.org>`_ (see
-    `this Github issue <https://github.com/materials-data-facility/MaterialsIO/issues/42>`_ for
-    updates), meaning install should be easier via a simple ``pip install materials_io`` or
-    ``pip install materials_io[all]``, rather than having to specify the Git URL as in the above
+    `this Github issue <https://github.com/materials-data-facility/Scythe/issues/42>`_ for
+    updates), meaning install should be easier via a simple ``pip install scythe`` or
+    ``pip install scythe[all]``, rather than having to specify the Git URL as in the above
     example
 
 Discovering a Parser
 ~~~~~~~~~~~~~~~~~~~~
 
-MaterialsIO uses `stevedore <https://docs.openstack.org/stevedore/latest/index.html>`_ to manage
+Scythe uses `stevedore <https://docs.openstack.org/stevedore/latest/index.html>`_ to manage
 a collection of parsers, and has a utility function for listing available parsers::
 
-    from materials_io.utils.interface import get_available_parsers
+    from scythe.utils.interface import get_available_parsers
     print(get_available_parsers())
 
 This snippet will print a dictionary of parsers installed on your system. Both parsers that are
-part of the MaterialsIO base package and those defined by other packages will be included in this
+part of the Scythe base package and those defined by other packages will be included in this
 list.
 
 Simple Interface
 ~~~~~~~~~~~~~~~~
 
-The methods in :mod:`materials_io.utils.interface` are useful for most applications. As an
-example, we illustrate the use of :class:`materials_io.file.GenericFileParser`, which is
+The methods in :mod:`scythe.utils.interface` are useful for most applications. As an
+example, we illustrate the use of :class:`scythe.file.GenericFileParser`, which is
 available through the ``'generic'`` parser plugin::
 
-    from materials_io.utils.interface import execute_parser
+    from scythe.utils.interface import execute_parser
     print(execute_parser('generic', ['pyproject.toml']))
 
 
 The above snippet creates the parser object and runs it on a file named ``pyproject.toml``. Run
-in the root directory of the MaterialsIO, it would produce output similar to the following,
+in the root directory of the Scythe, it would produce output similar to the following,
 likely with a different ``sha512`` value if the contents of that file have changed since this
 documentation was written:
 
@@ -74,15 +74,15 @@ documentation was written:
 The other pre-built parsing function provides the ability to run all parsers on all files in a
 directory::
 
-    from materials_io.utils.interface import run_all_parsers
+    from scythe.utils.interface import run_all_parsers
     gen = run_all_parsers('.')
     for record in gen:
         print(record)
 
-A third route for using ``materials_io`` is to employ the ``get_parser`` operation to access a
+A third route for using ``scythe`` is to employ the ``get_parser`` operation to access a
 specific parser, and then use its class interface (described below)::
 
-    from materials_io.utils.interface import get_parser
+    from scythe.utils.interface import get_parser
     parser = get_parser('generic')
     gen = parser.parse_directory('.')
     for record in gen:
@@ -92,9 +92,9 @@ specific parser, and then use its class interface (described below)::
 Advanced Usage: Adding Context
 ++++++++++++++++++++++++++++++
 
-The function interface for MaterialsIO supports using "context" and "adapters" to provide
+The function interface for Scythe supports using "context" and "adapters" to provide
 additional infomration to a parser or change the output format, respectively. Adapters are
-described in `Integrating MaterialsIO into Applications <#id1>`_. Here, we describe the purpose
+described in `Integrating Scythe into Applications <#id1>`_. Here, we describe the purpose
 of context and how to use it in our interface.
 
 Context is information about the data held in a file that is not contained within the file itself
@@ -112,7 +112,7 @@ The types of context information used by a parser, if any, is described in the
 The ``run_all_parsers_on_directory`` function has several options for providing context to the
 parsers. These options include specifying "global context" to be passed to every parser or
 adapter and ways of limiting the metadata to specific parsers. See
-:meth:`materials_io.utils.interface.run_all_parsers_on_directory` for further details on the
+:meth:`scythe.utils.interface.run_all_parsers_on_directory` for further details on the
 syntax for this command.
 
 .. note::
@@ -174,7 +174,7 @@ a list of files that should be treated together when parsing::
 Parsing Entire Directories
 ++++++++++++++++++++++++++
 
-``materials_io`` also provides a utility operation to parse all groups of valid files in a directory::
+``scythe`` also provides a utility operation to parse all groups of valid files in a directory::
 
     metadata = list(parser.parse_directory('.'))
 
@@ -194,14 +194,14 @@ Full Parser API
 
 The full API for the parsers are described as a Python abstract class:
 
-.. autoclass:: materials_io.base.BaseParser
+.. autoclass:: scythe.base.BaseParser
     :members:
     :member-order: bysource
 
-Integrating MaterialsIO into Applications
+Integrating Scythe into Applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MaterialsIO is designed to create a documented, JSON-format version of scientific files, but
+Scythe is designed to create a documented, JSON-format version of scientific files, but
 these files might not yet be in a form useful for your application. We recommend an "adapter"
 approach to post-process these "generic JSON" files that can actually be used for your application.
 
@@ -210,17 +210,17 @@ BaseAdapter
 
 The ``BaseAdapter`` class defines the interface for all adapters.
 
-.. autoclass:: materials_io.adapters.base.BaseAdapter
+.. autoclass:: scythe.adapters.base.BaseAdapter
     :member-order: bysource
     :noindex:
     :members:
 
 Adapters must fulfill a single operation, ``transform``, which renders metadata from one of the
-MaterialsIO parsers into a new form. There are no restrictions on the output for this function,
+Scythe parsers into a new form. There are no restrictions on the output for this function,
 except that ``None`` indicates that there is no valid transformation for an object.
 
 The ``check_compatibility`` and ``version`` method provide a route for marking which versions of
-a parser are compatible with an adapter. ``materials_io`` uses the version in utility operations
+a parser are compatible with an adapter. ``scythe`` uses the version in utility operations
 to provide warnings to users about when an adapter is out-of-date.
 
 Using Adapters
@@ -232,12 +232,12 @@ an input and causes the parsing operation to run the adapter after parsing. The
 ``run_all_parsers`` function also has arguments (e.g., ``adapter_map``) that associate each
 parser with the adapter needed to run after parsing.
 
-As an example, we will demonstrate an adapter that comes packaged with MaterialsIO:
-:class:`materials_io.adapters.base.SerializeAdapter`
+As an example, we will demonstrate an adapter that comes packaged with Scythe:
+:class:`scythe.adapters.base.SerializeAdapter`
 The serialize adapter is registered using ``stevedore`` as the name "serialize". To use it after
 all parsers::
 
-    from materials_io.utils.interface import run_all_parsers
+    from scythe.utils.interface import run_all_parsers
     gen = run_all_parsers('.', default_adapter='serialize')
 
 Implementing Adapters
@@ -255,9 +255,9 @@ Then, register the adapter with ``stevedore`` by adding it as an entry point in 
 ``setup.py`` or ``pyproject.toml`` file. See the
 `stevedore documentation for more detail <https://docs.openstack.org/stevedore/latest/user/tutorial/creating_plugins.html#registering-the-plugins>`_.
 We recommend using the same name for a adapter as the parser it is designed for so that
-``materials_io`` can auto-detect the adapters associated with each parser.
+``scythe`` can auto-detect the adapters associated with each parser.
 
-Examples of Tools Using MaterialsIO
+Examples of Tools Using Scythe
 +++++++++++++++++++++++++++++++++++
 
 Materials Data Facility:

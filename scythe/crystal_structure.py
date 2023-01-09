@@ -2,7 +2,7 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.core import Structure
 from ase.io import read
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 class CrystalStructureParser(BaseSingleFileParser):

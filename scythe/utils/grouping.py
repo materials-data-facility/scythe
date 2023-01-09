@@ -37,7 +37,7 @@ def group_by_postfix(files: Iterable[str], vocabulary: List[str]) -> Iterable[Tu
     If a user provides a vocabulary of ['A', 'B', 'C'], the parser will
     return groups (A.1, B.1), (A.2, B.2), and (C.1)
 
-    See :class:`materials_io.dft.DFTParser` for an example usage.
+    See :class:`scythe.dft.DFTParser` for an example usage.
 
     Args:
         files ([str]): List of files to be grouped

@@ -1,7 +1,7 @@
 from mdf_toolbox import translate_json
 import yaml
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 class YAMLExtractor(BaseSingleFileParser):

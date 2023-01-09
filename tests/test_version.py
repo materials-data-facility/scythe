@@ -1,4 +1,4 @@
-from materials_io import version
+from scythe import version
 
 
 def test_version():

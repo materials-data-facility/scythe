@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from materials_io.image import ImageParser
+from scythe.image import ImageParser
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "description": "Output from the MaterialsIO File Parser",
+  "description": "Output from the Scythe File Parser",
   "type": "object",
   "properties": {
     "mime_type": {

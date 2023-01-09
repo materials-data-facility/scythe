@@ -1,6 +1,6 @@
 """Parsers used for testing purposes"""
 
-from materials_io.base import BaseParser
+from scythe.base import BaseParser
 from typing import Iterable
 import os
 

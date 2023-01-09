@@ -7,11 +7,11 @@ from typing import Tuple, Dict, Optional
 from hyperspy.io import load as hs_load
 from traits.trait_base import Undefined
 
-from materials_io.base import BaseSingleFileParser
-from materials_io.utils import get_nested_dict_value_by_path as get_val
-from materials_io.utils import \
+from scythe.base import BaseSingleFileParser
+from scythe.utils import get_nested_dict_value_by_path as get_val
+from scythe.utils import \
     map_dict_values, MappingElements, standardize_unit
-from materials_io.utils import set_nested_dict_value_with_units as set_val_units
+from scythe.utils import set_nested_dict_value_with_units as set_val_units
 
 logger = logging.getLogger(__name__)
 

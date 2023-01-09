@@ -4,7 +4,7 @@ import os
 os.environ["MPLBACKEND"] = "agg"
 import pycalphad  # noqa: E402
 
-from materials_io.base import BaseSingleFileParser  # noqa: E402
+from scythe.base import BaseSingleFileParser  # noqa: E402
 
 
 class TDBExtractor(BaseSingleFileParser):

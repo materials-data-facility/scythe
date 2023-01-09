@@ -1,6 +1,6 @@
 from PIL import Image
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileParser
 
 
 class ImageParser(BaseSingleFileParser):
