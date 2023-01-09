@@ -6,7 +6,7 @@ from typing import Any, Union
 
 import numpy as np
 
-from scythe.base import BaseParser
+from scythe.base import BaseExtractor
 
 
 class BaseAdapter:
@@ -24,11 +24,11 @@ class BaseAdapter:
             ``None`` corresponding
         """
 
-    def check_compatibility(self, parser: BaseParser) -> bool:
+    def check_compatibility(self, parser: BaseExtractor) -> bool:
         """Evaluate whether an adapter is compatible with a certain parser
 
         Args:
-            parser (BaseParser): Parser to evaluate
+            parser (BaseExtractor): Parser to evaluate
         Returns:
             (bool) Whether this parser is compatible
         """

@@ -53,11 +53,11 @@ def test_filename(extractor, test_files, mappings):
         }
     }]
 
-    assert extractor.parse(test_files[0], context={"mapping": mappings[0]}) == outputs[0]
-    assert extractor.parse(test_files[1], context={"mapping": mappings[0]}) == outputs[1]
-    assert extractor.parse(test_files[2], context={"mapping": mappings[0]}) == outputs[2]
+    assert extractor.extract(test_files[0], context={"mapping": mappings[0]}) == outputs[0]
+    assert extractor.extract(test_files[1], context={"mapping": mappings[0]}) == outputs[1]
+    assert extractor.extract(test_files[2], context={"mapping": mappings[0]}) == outputs[2]
 
     # Test failure modes
     # No mapping provided
     with pytest.raises(Exception):
-        extractor.parse(test_files[0])
+        extractor.extract(test_files[0])

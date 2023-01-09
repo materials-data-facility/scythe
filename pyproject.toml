@@ -57,17 +57,17 @@ all = ['ase',
 
 [tool.poetry.plugins]
 
-[tool.poetry.plugins."scythe.parser"]
-"ase" = "scythe.ase:AseParser"
-"crystal" = "scythe.crystal_structure:CrystalStructureParser"
-"csv" = "scythe.csv:CSVParser"
-"dft" = "scythe.dft:DFTParser"
-"em" = "scythe.electron_microscopy:ElectronMicroscopyParser"
+[tool.poetry.plugins."scythe.extractor"]
+"ase" = "scythe.ase:ASEExtractor"
+"crystal" = "scythe.crystal_structure:CrystalStructureExtractor"
+"csv" = "scythe.csv:CSVExtractor"
+"dft" = "scythe.dft:DFTExtractor"
+"em" = "scythe.electron_microscopy:ElectronMicroscopyExtractor"
 "filename" = "scythe.filename:FilenameExtractor"
-"generic" = "scythe.file:GenericFileParser"
-"image" = "scythe.image:ImageParser"
+"generic" = "scythe.file:GenericFileExtractor"
+"image" = "scythe.image:ImageExtractor"
 "json" = "scythe.json:JSONExtractor"
-"noop" = "scythe.testing:NOOPParser"
+"noop" = "scythe.testing:NOOPExtractor"
 "tdb" = "scythe.tdb:TDBExtractor"
 "xml" = "scythe.xml:XMLExtractor"
 "yaml" = "scythe.yaml:YAMLExtractor"

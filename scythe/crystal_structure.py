@@ -2,13 +2,15 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.core import Structure
 from ase.io import read
 
-from scythe.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
-class CrystalStructureParser(BaseSingleFileParser):
-    """Parse information about a crystal structure"""
+class CrystalStructureExtractor(BaseSingleFileExtractor):
+    """Extract information about a crystal structure from many types of files.
 
-    def _parse_file(self, path, context=None):
+     Uses either ASE or Pymatgen on the back end"""
+
+    def _extract_file(self, path, context=None):
         material = {}
         crystal_structure = {}
         # Attempt to read the file

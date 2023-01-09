@@ -3,13 +3,13 @@ import re
 
 from mdf_toolbox import flatten_json
 
-from scythe.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
-class FilenameExtractor(BaseSingleFileParser):
+class FilenameExtractor(BaseSingleFileExtractor):
     """Extracts metadata in a filename, according to user-supplied patterns."""
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         """Context used:
             mapping (dict): Required. The mapping of desired_fields: regex_pattern,
                     using dot notation. For example:

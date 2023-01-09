@@ -1,11 +1,11 @@
 """Parsers used for testing purposes"""
 
-from scythe.base import BaseParser
+from scythe.base import BaseExtractor
 from typing import Iterable
 import os
 
 
-class NOOPParser(BaseParser):
+class NOOPExtractor(BaseExtractor):
     """Determine whether files exist, used for debugging
 
     Is not truly a "noop" parser, as it does perform a check as to whether the parser
@@ -13,7 +13,7 @@ class NOOPParser(BaseParser):
     nothing" parser.
     """
 
-    def parse(self, group: Iterable[str], context: dict = None):
+    def extract(self, group: Iterable[str], context: dict = None):
         return dict((f, os.path.exists(f)) for f in group)
 
     def version(self):

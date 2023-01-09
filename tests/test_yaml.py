@@ -61,16 +61,16 @@ def test_yaml(extractor, test_files, fail_file, mappings):
         }
     }
 
-    assert extractor.parse(test_files[0], context={"mapping": mappings[0]}) == output_na_unset
-    assert extractor.parse(test_files[0], context={"mapping": mappings[1]}) == output_na_unset
-    assert extractor.parse(test_files[0], context={"mapping": mappings[0],
+    assert extractor.extract(test_files[0], context={"mapping": mappings[0]}) == output_na_unset
+    assert extractor.extract(test_files[0], context={"mapping": mappings[1]}) == output_na_unset
+    assert extractor.extract(test_files[0], context={"mapping": mappings[0],
                                                    "na_values": ["na"]}) == output_na_set
-    assert extractor.parse(test_files[0], context={"mapping": mappings[1],
+    assert extractor.extract(test_files[0], context={"mapping": mappings[1],
                                                    "na_values": "na"}) == output_na_set
 
     # Test failure modes
     with pytest.raises(Exception):
-        extractor.parse(fail_file)
+        extractor.extract(fail_file)
     # No mapping provided
     with pytest.raises(Exception):
-        extractor.parse(test_files[0])
+        extractor.extract(test_files[0])

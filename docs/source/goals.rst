@@ -1,21 +1,21 @@
 Project Goals
 =============
 
-The goal of Scythe is to minimize the amount of code duplication between data-driven
-materials software codes. Many materials databases at present rely on custom software to extract
-information from scientific files and transform that data into a standardized format. Further,
-automation or analysis software requires extracting information from files. While the data
-needs of application vary, they all rely on similar algorithms to extract information from the
-same types of files. *Scythe is designed to be a shared repository for these algorithms*.
+The goal of Scythe is to minimize the amount of code duplication between scientific databases.
+Many databases rely on custom software to extract information from scientific files and transform that data into a standardized format.
+Automation or analysis software also require extracting information from files. 
+While the data needs of application vary, they all rely on similar algorithms to extract information from the
+same types of files.
+*Scythe is designed to be a shared repository for these algorithms*.
 
-The core of Scythe is a collection of "parsers" which each generate simplified, standardized
+The core of Scythe is a collection of "extractors" which each generate simplified, standardized
 data from a certain class of files. For example, the
-:class:`~scythe.electron_microscopy.ElectronMicroscopyParser` produces structured data from
+:class:`~scythe.electron_microscopy.ElectronMicroscopyExtractor` produces structured data from
 file types specific to brands of electron microscopes.
 
-The parsers do not necessarily generate data in a format needed by any tool. Rather, the parsers
+Each extractor does not necessarily generate data in a format needed by any tool. Rather, the extractors
 are designed to produce *all* of the information needed by all projects that utilize the
-libraries. In this way, the parsers can service every user without modification.
+libraries. In this way, the extractors can service every user without modification.
 
 What Does Scythe *Do*?
 ---------------------------

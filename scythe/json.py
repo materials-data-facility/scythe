@@ -2,13 +2,13 @@ import json
 
 from mdf_toolbox import translate_json
 
-from scythe.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
-class JSONExtractor(BaseSingleFileParser):
+class JSONExtractor(BaseSingleFileExtractor):
     """Extracts fields in JSON into a user-defined new schema."""
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         """Context used:
             mapping (dict): Required. The mapping of desired_fields: existing_fields,
                     using dot notation. For example:

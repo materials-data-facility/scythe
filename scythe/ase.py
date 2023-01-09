@@ -5,7 +5,7 @@ from ase.io import read, write
 from io import StringIO
 import numpy as np
 
-from scythe.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
 def object_hook(dct):
@@ -36,17 +36,15 @@ def object_hook(dct):
     return dct
 
 
-class AseParser(BaseSingleFileParser):
+class ASEExtractor(BaseSingleFileExtractor):
     """Parse information from atomistic simulation input files using ASE.
 
-       ASE can read many file types. These can be found at
-       https://wiki.fysik.dtu.dk/ase/ase/io/io.html
+    ASE can read many file types. These can be found at https://wiki.fysik.dtu.dk/ase/ase/io/io.html
 
-       Metadata are generated as ASE JSON DB format
-       https://wiki.fysik.dtu.dk/ase/ase/db/db.html
+    Metadata are generated as ASE JSON DB format: https://wiki.fysik.dtu.dk/ase/ase/db/db.html
     """
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         # Attempt to read the file with ASE
         # To return ASE JSON DB requires writing to file.
         # Here we use StringIO instead of a file on disk.

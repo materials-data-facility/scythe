@@ -1,10 +1,10 @@
 from scythe.adapters.base import NOOPAdapter, GreedySerializeAdapter
-from scythe.testing import NOOPParser
+from scythe.testing import NOOPExtractor
 
 
 def test_compatibility():
     adapter = NOOPAdapter()
-    parser = NOOPParser()
+    parser = NOOPExtractor()
 
     # Make sure `None` is always compatible
     assert adapter.version() is None
