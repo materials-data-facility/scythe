@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
@@ -71,7 +71,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for scythe.csv</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span></span><span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileExtractor</span>
 <span class="kn">from</span> <span class="nn">tableschema.exceptions</span> <span class="kn">import</span> <span class="n">CastError</span>
 <span class="kn">from</span> <span class="nn">tableschema</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
@@ -80,14 +80,13 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CSVParser"><a class="viewcode-back" href="../../parsers.html#scythe.csv.CSVParser">[docs]</a><span class="k">class</span> <span class="nc">CSVParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Reads comma-separated value (CSV) files</span>
+<div class="viewcode-block" id="CSVExtractor"><a class="viewcode-back" href="../../extractors.html#scythe.csv.CSVExtractor">[docs]</a><span class="k">class</span> <span class="nc">CSVExtractor</span><span class="p">(</span><span class="n">BaseSingleFileExtractor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Describe the contents of a comma-separated value (CSV) file</span>
 
 <span class="sd">    The context dictionary for the CSV parser includes several fields:</span>
 <span class="sd">        - ``schema``: Dictionary defining the schema for this dataset, following that of</span>
 <span class="sd">          FrictionlessIO</span>
 <span class="sd">        - ``na_values``: Any values that should be interpreted as missing</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_records</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -95,13 +94,12 @@
 <span class="sd">        Args:</span>
 <span class="sd">             return_records (bool): Whether to return each row in the CSV file</span>
 <span class="sd">        Keyword:</span>
-<span class="sd">            All kwargs as passed to</span>
-<span class="sd">            `TableSchema&#39;s infer &lt;https://github.com/frictionlessdata/tableschema-py#infer&gt;`_ method</span>
+<span class="sd">            All kwargs as passed to `TableSchema&#39;s infer &lt;https://github.com/frictionlessdata/tableschema-py#infer&gt;`_ method</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_records</span> <span class="o">=</span> <span class="n">return_records</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">infer_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 
-    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Set the default value</span>
         <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">context</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -145,7 +143,7 @@
     <span class="k">def</span> <span class="nf">implementors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Logan Ward&#39;</span><span class="p">]</span>
 
-<div class="viewcode-block" id="CSVParser.citations"><a class="viewcode-back" href="../../parsers.html#scythe.csv.CSVParser.citations">[docs]</a>    <span class="k">def</span> <span class="nf">citations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="CSVExtractor.citations"><a class="viewcode-back" href="../../extractors.html#scythe.csv.CSVExtractor.citations">[docs]</a>    <span class="k">def</span> <span class="nf">citations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;https://github.com/frictionlessdata/tableschema-py&quot;</span><span class="p">]</span></div>
 
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

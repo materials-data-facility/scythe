@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
@@ -73,13 +73,13 @@
   <h1>Source code for scythe.image</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 
-<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileExtractor</span>
 
 
-<div class="viewcode-block" id="ImageParser"><a class="viewcode-back" href="../../parsers.html#scythe.image.ImageParser">[docs]</a><span class="k">class</span> <span class="nc">ImageParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
+<div class="viewcode-block" id="ImageExtractor"><a class="viewcode-back" href="../../extractors.html#scythe.image.ImageExtractor">[docs]</a><span class="k">class</span> <span class="nc">ImageExtractor</span><span class="p">(</span><span class="n">BaseSingleFileExtractor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Retrieves basic information about an image&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;image&quot;</span><span class="p">:</span> <span class="p">{</span>

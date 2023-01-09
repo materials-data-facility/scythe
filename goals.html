@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
@@ -49,7 +49,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/scythe.html">scythe</a></li>
 </ul>
 
@@ -79,19 +79,19 @@
              
   <section id="project-goals">
 <h1>Project Goals<a class="headerlink" href="#project-goals" title="Permalink to this headline"></a></h1>
-<p>The goal of Scythe is to minimize the amount of code duplication between data-driven
-materials software codes. Many materials databases at present rely on custom software to extract
-information from scientific files and transform that data into a standardized format. Further,
-automation or analysis software requires extracting information from files. While the data
-needs of application vary, they all rely on similar algorithms to extract information from the
-same types of files. <em>Scythe is designed to be a shared repository for these algorithms</em>.</p>
-<p>The core of Scythe is a collection of “parsers” which each generate simplified, standardized
+<p>The goal of Scythe is to minimize the amount of code duplication between scientific databases.
+Many databases rely on custom software to extract information from scientific files and transform that data into a standardized format.
+Automation or analysis software also require extracting information from files.
+While the data needs of application vary, they all rely on similar algorithms to extract information from the
+same types of files.
+<em>Scythe is designed to be a shared repository for these algorithms</em>.</p>
+<p>The core of Scythe is a collection of “extractors” which each generate simplified, standardized
 data from a certain class of files. For example, the
-<a class="reference internal" href="parsers.html#scythe.electron_microscopy.ElectronMicroscopyParser" title="scythe.electron_microscopy.ElectronMicroscopyParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectronMicroscopyParser</span></code></a> produces structured data from
+<a class="reference internal" href="extractors.html#scythe.electron_microscopy.ElectronMicroscopyExtractor" title="scythe.electron_microscopy.ElectronMicroscopyExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectronMicroscopyExtractor</span></code></a> produces structured data from
 file types specific to brands of electron microscopes.</p>
-<p>The parsers do not necessarily generate data in a format needed by any tool. Rather, the parsers
+<p>Each extractor does not necessarily generate data in a format needed by any tool. Rather, the extractors
 are designed to produce <em>all</em> of the information needed by all projects that utilize the
-libraries. In this way, the parsers can service every user without modification.</p>
+libraries. In this way, the extractors can service every user without modification.</p>
 <section id="what-does-scythe-do">
 <h2>What Does Scythe <em>Do</em>?<a class="headerlink" href="#what-does-scythe-do" title="Permalink to this headline"></a></h2>
 <p>Scythe is designed to provide the answer to two limited questions:</p>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
@@ -78,10 +78,10 @@
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileExtractor</span>
 
 
-<div class="viewcode-block" id="object_hook"><a class="viewcode-back" href="../../parsers.html#scythe.ase.object_hook">[docs]</a><span class="k">def</span> <span class="nf">object_hook</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
+<div class="viewcode-block" id="object_hook"><a class="viewcode-back" href="../../extractors.html#scythe.ase.object_hook">[docs]</a><span class="k">def</span> <span class="nf">object_hook</span><span class="p">(</span><span class="n">dct</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Custom decoder for ASE JSON objects</span>
 
 <span class="sd">    Does everything *except* reconstitute the JSON object and</span>
@@ -109,17 +109,15 @@
     <span class="k">return</span> <span class="n">dct</span></div>
 
 
-<div class="viewcode-block" id="AseParser"><a class="viewcode-back" href="../../parsers.html#scythe.ase.AseParser">[docs]</a><span class="k">class</span> <span class="nc">AseParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
+<div class="viewcode-block" id="ASEExtractor"><a class="viewcode-back" href="../../extractors.html#scythe.ase.ASEExtractor">[docs]</a><span class="k">class</span> <span class="nc">ASEExtractor</span><span class="p">(</span><span class="n">BaseSingleFileExtractor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parse information from atomistic simulation input files using ASE.</span>
 
-<span class="sd">       ASE can read many file types. These can be found at</span>
-<span class="sd">       https://wiki.fysik.dtu.dk/ase/ase/io/io.html</span>
+<span class="sd">    ASE can read many file types. These can be found at https://wiki.fysik.dtu.dk/ase/ase/io/io.html</span>
 
-<span class="sd">       Metadata are generated as ASE JSON DB format</span>
-<span class="sd">       https://wiki.fysik.dtu.dk/ase/ase/db/db.html</span>
+<span class="sd">    Metadata are generated as ASE JSON DB format: https://wiki.fysik.dtu.dk/ase/ase/db/db.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># Attempt to read the file with ASE</span>
         <span class="c1"># To return ASE JSON DB requires writing to file.</span>
         <span class="c1"># Here we use StringIO instead of a file on disk.</span>

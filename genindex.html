@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/scythe.html">scythe</a></li>
 </ul>
 
@@ -95,7 +95,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="user-guide.html#scythe.base.BaseParser">BaseParser (class in scythe.base)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor">BaseExtractor (class in scythe.base)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -105,17 +105,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/scythe.html#scythe.adapters.base.BaseAdapter.check_compatibility">check_compatibility() (scythe.adapters.base.BaseAdapter method)</a>
 </li>
-      <li><a href="user-guide.html#scythe.base.BaseParser.citations">citations() (scythe.base.BaseParser method)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.citations">citations() (scythe.base.BaseExtractor method)</a>
 
       <ul>
-        <li><a href="parsers.html#scythe.csv.CSVParser.citations">(scythe.csv.CSVParser method)</a>
+        <li><a href="extractors.html#scythe.csv.CSVExtractor.citations">(scythe.csv.CSVExtractor method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parsers.html#scythe.crystal_structure.CrystalStructureParser">CrystalStructureParser (class in scythe.crystal_structure)</a>
+      <li><a href="extractors.html#scythe.crystal_structure.CrystalStructureExtractor">CrystalStructureExtractor (class in scythe.crystal_structure)</a>
 </li>
-      <li><a href="parsers.html#scythe.csv.CSVParser">CSVParser (class in scythe.csv)</a>
+      <li><a href="extractors.html#scythe.csv.CSVExtractor">CSVExtractor (class in scythe.csv)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -123,7 +123,7 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parsers.html#scythe.dft.DFTParser">DFTParser (class in scythe.dft)</a>
+      <li><a href="extractors.html#scythe.dft.DFTExtractor">DFTExtractor (class in scythe.dft)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -131,11 +131,21 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parsers.html#scythe.electron_microscopy.ElectronMicroscopyParser">ElectronMicroscopyParser (class in scythe.electron_microscopy)</a>
+      <li><a href="extractors.html#scythe.electron_microscopy.ElectronMicroscopyExtractor">ElectronMicroscopyExtractor (class in scythe.electron_microscopy)</a>
 </li>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.extract">extract() (scythe.base.BaseExtractor method)</a>
+
+      <ul>
+        <li><a href="extractors.html#scythe.dft.DFTExtractor.extract">(scythe.dft.DFTExtractor method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/scythe.html#scythe.utils.interface.execute_parser">execute_parser() (in module scythe.utils.interface)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.extract_directory">extract_directory() (scythe.base.BaseExtractor method)</a>
+</li>
+      <li><a href="api/scythe.html#scythe.utils.interface.ExtractResult.extractor">extractor (scythe.utils.interface.ExtractResult attribute)</a>
+</li>
+      <li><a href="api/scythe.html#scythe.utils.interface.ExtractResult">ExtractResult (class in scythe.utils.interface)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -143,23 +153,25 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parsers.html#scythe.file.GenericFileParser">GenericFileParser (class in scythe.file)</a>
+      <li><a href="extractors.html#scythe.file.GenericFileExtractor">GenericFileExtractor (class in scythe.file)</a>
 </li>
       <li><a href="api/scythe.html#scythe.utils.interface.get_adapter">get_adapter() (in module scythe.utils.interface)</a>
 </li>
       <li><a href="api/scythe.html#scythe.utils.interface.get_available_adapters">get_available_adapters() (in module scythe.utils.interface)</a>
 </li>
-      <li><a href="api/scythe.html#scythe.utils.interface.get_available_parsers">get_available_parsers() (in module scythe.utils.interface)</a>
+      <li><a href="api/scythe.html#scythe.utils.interface.get_available_extractors">get_available_extractors() (in module scythe.utils.interface)</a>
+</li>
+      <li><a href="api/scythe.html#scythe.utils.interface.get_extractor">get_extractor() (in module scythe.utils.interface)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/scythe.html#scythe.utils.interface.get_parser">get_parser() (in module scythe.utils.interface)</a>
+      <li><a href="api/scythe.html#scythe.utils.interface.get_extractor_and_adapter_contexts">get_extractor_and_adapter_contexts() (in module scythe.utils.interface)</a>
 </li>
       <li><a href="api/scythe.html#scythe.adapters.base.GreedySerializeAdapter">GreedySerializeAdapter (class in scythe.adapters.base)</a>
 </li>
-      <li><a href="api/scythe.html#scythe.utils.interface.ParseResult.group">group (scythe.utils.interface.ParseResult attribute)</a>
+      <li><a href="api/scythe.html#scythe.utils.interface.ExtractResult.group">group (scythe.utils.interface.ExtractResult attribute)</a>
 </li>
-      <li><a href="user-guide.html#scythe.base.BaseParser.group">group() (scythe.base.BaseParser method)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.group">group() (scythe.base.BaseExtractor method)</a>
 </li>
       <li><a href="api/scythe.html#scythe.utils.grouping.group_by_postfix">group_by_postfix() (in module scythe.utils.grouping)</a>
 </li>
@@ -169,13 +181,13 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="user-guide.html#scythe.base.BaseParser.identify_files">identify_files() (scythe.base.BaseParser method)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.identify_files">identify_files() (scythe.base.BaseExtractor method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="parsers.html#scythe.image.ImageParser">ImageParser (class in scythe.image)</a>
+      <li><a href="extractors.html#scythe.image.ImageExtractor">ImageExtractor (class in scythe.image)</a>
 </li>
-      <li><a href="user-guide.html#scythe.base.BaseParser.implementors">implementors() (scythe.base.BaseParser method)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.implementors">implementors() (scythe.base.BaseExtractor method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -183,7 +195,7 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/scythe.html#scythe.utils.interface.ParseResult.metadata">metadata (scythe.utils.interface.ParseResult attribute)</a>
+      <li><a href="api/scythe.html#scythe.utils.interface.ExtractResult.metadata">metadata (scythe.utils.interface.ExtractResult attribute)</a>
 </li>
       <li>
     module
@@ -191,17 +203,17 @@
       <ul>
         <li><a href="api/scythe.html#module-scythe.adapters.base">scythe.adapters.base</a>
 </li>
-        <li><a href="parsers.html#module-scythe.crystal_structure">scythe.crystal_structure</a>
+        <li><a href="extractors.html#module-scythe.crystal_structure">scythe.crystal_structure</a>
 </li>
-        <li><a href="parsers.html#module-scythe.csv">scythe.csv</a>
+        <li><a href="extractors.html#module-scythe.csv">scythe.csv</a>
 </li>
-        <li><a href="parsers.html#module-scythe.dft">scythe.dft</a>
+        <li><a href="extractors.html#module-scythe.dft">scythe.dft</a>
 </li>
-        <li><a href="parsers.html#module-scythe.electron_microscopy">scythe.electron_microscopy</a>
+        <li><a href="extractors.html#module-scythe.electron_microscopy">scythe.electron_microscopy</a>
 </li>
-        <li><a href="parsers.html#module-scythe.file">scythe.file</a>
+        <li><a href="extractors.html#module-scythe.file">scythe.file</a>
 </li>
-        <li><a href="parsers.html#module-scythe.image">scythe.image</a>
+        <li><a href="extractors.html#module-scythe.image">scythe.image</a>
 </li>
         <li><a href="api/scythe.html#module-scythe.utils.grouping">scythe.utils.grouping</a>
 </li>
@@ -222,20 +234,6 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="user-guide.html#scythe.base.BaseParser.parse">parse() (scythe.base.BaseParser method)</a>
-
-      <ul>
-        <li><a href="parsers.html#scythe.dft.DFTParser.parse">(scythe.dft.DFTParser method)</a>
-</li>
-      </ul></li>
-      <li><a href="user-guide.html#scythe.base.BaseParser.parse_directory">parse_directory() (scythe.base.BaseParser method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/scythe.html#scythe.utils.interface.ParseResult.parser">parser (scythe.utils.interface.ParseResult attribute)</a>
-</li>
-      <li><a href="api/scythe.html#scythe.utils.interface.ParseResult">ParseResult (class in scythe.utils.interface)</a>
-</li>
       <li><a href="api/scythe.html#scythe.utils.grouping.preprocess_paths">preprocess_paths() (in module scythe.utils.grouping)</a>
 </li>
   </ul></td>
@@ -244,11 +242,13 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/scythe.html#scythe.utils.interface.run_all_parsers_on_directory">run_all_parsers_on_directory() (in module scythe.utils.interface)</a>
+      <li><a href="api/scythe.html#scythe.utils.interface.run_all_extractors_on_directory">run_all_extractors_on_directory() (in module scythe.utils.interface)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/scythe.html#scythe.utils.interface.run_all_parsers_on_group">run_all_parsers_on_group() (in module scythe.utils.interface)</a>
+      <li><a href="api/scythe.html#scythe.utils.interface.run_all_extractors_on_group">run_all_extractors_on_group() (in module scythe.utils.interface)</a>
+</li>
+      <li><a href="api/scythe.html#scythe.utils.interface.run_extractor">run_extractor() (in module scythe.utils.interface)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -256,7 +256,7 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="user-guide.html#scythe.base.BaseParser.schema">schema (scythe.base.BaseParser property)</a>
+      <li><a href="user-guide.html#scythe.base.BaseExtractor.schema">schema (scythe.base.BaseExtractor property)</a>
 </li>
       <li>
     scythe.adapters.base
@@ -269,28 +269,28 @@
     scythe.crystal_structure
 
       <ul>
-        <li><a href="parsers.html#module-scythe.crystal_structure">module</a>
+        <li><a href="extractors.html#module-scythe.crystal_structure">module</a>
 </li>
       </ul></li>
       <li>
     scythe.csv
 
       <ul>
-        <li><a href="parsers.html#module-scythe.csv">module</a>
+        <li><a href="extractors.html#module-scythe.csv">module</a>
 </li>
       </ul></li>
       <li>
     scythe.dft
 
       <ul>
-        <li><a href="parsers.html#module-scythe.dft">module</a>
+        <li><a href="extractors.html#module-scythe.dft">module</a>
 </li>
       </ul></li>
       <li>
     scythe.electron_microscopy
 
       <ul>
-        <li><a href="parsers.html#module-scythe.electron_microscopy">module</a>
+        <li><a href="extractors.html#module-scythe.electron_microscopy">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -299,14 +299,14 @@
     scythe.file
 
       <ul>
-        <li><a href="parsers.html#module-scythe.file">module</a>
+        <li><a href="extractors.html#module-scythe.file">module</a>
 </li>
       </ul></li>
       <li>
     scythe.image
 
       <ul>
-        <li><a href="parsers.html#module-scythe.image">module</a>
+        <li><a href="extractors.html#module-scythe.image">module</a>
 </li>
       </ul></li>
       <li>
@@ -350,7 +350,7 @@
       <li><a href="api/scythe.html#scythe.adapters.base.BaseAdapter.version">version() (scythe.adapters.base.BaseAdapter method)</a>
 
       <ul>
-        <li><a href="user-guide.html#scythe.base.BaseParser.version">(scythe.base.BaseParser method)</a>
+        <li><a href="user-guide.html#scythe.base.BaseExtractor.version">(scythe.base.BaseExtractor method)</a>
 </li>
       </ul></li>
   </ul></td>

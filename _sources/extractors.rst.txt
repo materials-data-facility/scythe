@@ -1,51 +1,51 @@
-Available Parsers
-=================
+Available Extractors
+====================
 
-These pages detail all of the parsers currently available in Scythe.
+These pages detail all of the extractors currently available in Scythe.
 
 Quick Summary
 ~~~~~~~~~~~~~
 
-The parsers that are configured to work with the stevedore plugin are:
+The extractors that are configured to work with the stevedore plugin are:
 
-.. list-plugins:: materialsio.parser
+.. list-plugins:: scythe.extractor
 
 
 Detailed Listing
 ~~~~~~~~~~~~~~~~
 
-Generic File Parsers
---------------------
+Generic File Extractors
+-----------------------
 
-Parsers that work for any kind of file
+Extractors that work for any kind of file
 
 .. automodule:: scythe.file
     :members:
     :exclude-members: implementors, schema, version, group
 
-Image Parsers
--------------
+Image Extractors
+----------------
 
-Parsers that read image data
+Extractors that read image data
 
 .. automodule:: scythe.image
     :members:
     :exclude-members: implementors, schema, version, group
 
-Electron Microscopy Parsers
----------------------------
+Electron Microscopy Extractors
+------------------------------
 
-Parsers that read electron microscopy data of various sorts (images, spectra, spectrum images,
+Extractors that read electron microscopy data of various sorts (images, spectra, spectrum images,
 etc.) using the `HyperSpy <https://hyperspy.org>`_ package.
 
 .. automodule:: scythe.electron_microscopy
     :members:
     :exclude-members: implementors, schema, version, group
 
-Atomistic Data Parsers
-----------------------
+Atomistic Data Extractors
+-------------------------
 
-Parsers related to data files that encode atom-level structure
+Extractors related to data files that encode atom-level structure
 
 .. automodule:: scythe.crystal_structure
     :members:
@@ -56,10 +56,10 @@ Parsers related to data files that encode atom-level structure
     :noindex:
     :exclude-members: implementors, schema, version, group
 
-Calculation Parsers
--------------------
+Calculation Extractors
+----------------------
 
-Parsers that retrieve results from calculations
+Extractors that retrieve results from calculations
 
 .. automodule:: scythe.dft
     :members:
@@ -73,7 +73,7 @@ Parsers that retrieve results from calculations
 Structured Data Files
 ---------------------
 
-Parsers that read data from structured files
+Extractors that read data from structured files
 
 .. automodule:: scythe.csv
     :members:

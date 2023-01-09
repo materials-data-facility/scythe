@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
@@ -75,13 +75,15 @@
 <span class="kn">from</span> <span class="nn">pymatgen.core</span> <span class="kn">import</span> <span class="n">Structure</span>
 <span class="kn">from</span> <span class="nn">ase.io</span> <span class="kn">import</span> <span class="n">read</span>
 
-<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileExtractor</span>
 
 
-<div class="viewcode-block" id="CrystalStructureParser"><a class="viewcode-back" href="../../parsers.html#scythe.crystal_structure.CrystalStructureParser">[docs]</a><span class="k">class</span> <span class="nc">CrystalStructureParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Parse information about a crystal structure&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CrystalStructureExtractor"><a class="viewcode-back" href="../../extractors.html#scythe.crystal_structure.CrystalStructureExtractor">[docs]</a><span class="k">class</span> <span class="nc">CrystalStructureExtractor</span><span class="p">(</span><span class="n">BaseSingleFileExtractor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract information about a crystal structure from many types of files.</span>
 
-    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="sd">     Uses either ASE or Pymatgen on the back end&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_extract_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">material</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">crystal_structure</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Attempt to read the file</span>

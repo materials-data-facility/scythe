@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
@@ -71,7 +71,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for scythe.file</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span></span><span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileExtractor</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha512</span>
 <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -90,8 +90,8 @@
     <span class="n">magic</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="GenericFileParser"><a class="viewcode-back" href="../../parsers.html#scythe.file.GenericFileParser">[docs]</a><span class="k">class</span> <span class="nc">GenericFileParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Gathers basic file information&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GenericFileExtractor"><a class="viewcode-back" href="../../extractors.html#scythe.file.GenericFileExtractor">[docs]</a><span class="k">class</span> <span class="nc">GenericFileExtractor</span><span class="p">(</span><span class="n">BaseSingleFileExtractor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gather basic file information&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">compute_hash</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -103,7 +103,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">store_path</span> <span class="o">=</span> <span class="n">store_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">compute_hash</span> <span class="o">=</span> <span class="n">compute_hash</span>
 
-    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
             <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>

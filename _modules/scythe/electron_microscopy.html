@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="EN-US" >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../goals.html">Project Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user-guide.html">User Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../parsers.html">Available Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extractors.html">Available Extractors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/scythe.html">scythe</a></li>
 </ul>
 
@@ -80,7 +80,7 @@
 <span class="kn">from</span> <span class="nn">hyperspy.io</span> <span class="kn">import</span> <span class="n">load</span> <span class="k">as</span> <span class="n">hs_load</span>
 <span class="kn">from</span> <span class="nn">traits.trait_base</span> <span class="kn">import</span> <span class="n">Undefined</span>
 
-<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileParser</span>
+<span class="kn">from</span> <span class="nn">scythe.base</span> <span class="kn">import</span> <span class="n">BaseSingleFileExtractor</span>
 <span class="kn">from</span> <span class="nn">scythe.utils</span> <span class="kn">import</span> <span class="n">get_nested_dict_value_by_path</span> <span class="k">as</span> <span class="n">get_val</span>
 <span class="kn">from</span> <span class="nn">scythe.utils</span> <span class="kn">import</span> \
     <span class="n">map_dict_values</span><span class="p">,</span> <span class="n">MappingElements</span><span class="p">,</span> <span class="n">standardize_unit</span>
@@ -89,8 +89,8 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="ElectronMicroscopyParser"><a class="viewcode-back" href="../../parsers.html#scythe.electron_microscopy.ElectronMicroscopyParser">[docs]</a><span class="k">class</span> <span class="nc">ElectronMicroscopyParser</span><span class="p">(</span><span class="n">BaseSingleFileParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Parse metadata specific to electron microscopy.</span>
+<div class="viewcode-block" id="ElectronMicroscopyExtractor"><a class="viewcode-back" href="../../extractors.html#scythe.electron_microscopy.ElectronMicroscopyExtractor">[docs]</a><span class="k">class</span> <span class="nc">ElectronMicroscopyExtractor</span><span class="p">(</span><span class="n">BaseSingleFileExtractor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extract metadata specific to electron microscopy.</span>
 
 <span class="sd">    This parser handles any file supported by HyperSpy&#39;s I/O capabilities. Extract both the</span>
 <span class="sd">    metadata interpreted by HyperSpy directly, but also any important values we can pick out</span>
@@ -105,7 +105,7 @@
 <span class="sd">    ``schemas/electron_microscopy.json`` file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_extract_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">em</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inst_data</span> <span class="o">=</span> <span class="kc">None</span>
 
