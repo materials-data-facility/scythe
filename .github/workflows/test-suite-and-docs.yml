@@ -9,14 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-        poetry-version: ["1.1.13"]
         os: [ubuntu-latest, macos-latest] #, windows-latest]
-        include:
-          # add upload coverage report to the highest version of ubuntu for codecov
-          - os: ubuntu-latest
-            python-version: "3.10"
-            upload-coverage: true
-            build-docs: true
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out the repo at master branch (for diff-cover)
@@ -30,128 +23,25 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install poetry
-        run: pip install poetry==${{ matrix.poetry-version }}
-        shell: bash
-
-      - name: View Python version
-        run: poetry run python --version
-
       - name: Install package
-        run: poetry install -E all
+        run: |
+          pip install -e.[all]
+          pip install -r test-requirements.txt
 
       - name: Flake8
-        run: poetry run flake8
-
-      - name: Echo args
-        run: echo ${{ matrix.upload-coverage }} and ${{ matrix.build-docs }}
+        run: flake8
 
       - name: Run tests
-        run: poetry run pytest
+        run: pytest
 
       - name: Run diff-cover
-        run: poetry run diff-cover coverage.xml --compare-branch=origin/master --diff-range-notation '..'
+        run: diff-cover coverage.xml --compare-branch=origin/master --diff-range-notation '..'
 
       - name: Upload coverage to Codecov
-        if: ${{ matrix.upload-coverage }}
         uses: codecov/codecov-action@v2
 
       - name: Build documentation
-        if: ${{ matrix.build-docs }}
-        run: poetry run python -m sphinx.cmd.build ./docs/source ${{ env.target_dir }} -n -E -a -j auto -b html
-
-      - name: Upload built documentation
-        if: ${{ matrix.build-docs }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: doc-build
-          path: ${{ env.target_dir }}
-
-  publish_docs_to_pages:
-    name: Publish pages
-    needs: run_test_suite
-    runs-on: ubuntu-latest
-    env:
-      target_dir: './docs/_build'
-    steps:
-      # create git repository so we can later push to gh-pages branch
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.workflow_run.head_branch }}
-      - run: git branch
-      # restore docs built in last step
-      - name: Restore documentation build from artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: doc-build
-          path: ${{ env.target_dir }}
-      # publish documentation to Github pages (mostly cribbed from
-      #  https://github.com/sphinx-notes/pages)
-      - name: Publish sphinx documentation to Github Pages
-        env:
-          INPUT_TARGET_BRANCH: gh-pages
-          INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INPUT_TARGET_PATH: '.'
         run: |
-          echo ::group:: Creating temp directory
-          tmp_dir=$(mktemp -d -t pages-XXXXXXXXXX)
-          echo Temp directory \"$tmp_dir\" is created
-          echo ::endgroup::
-          
-          echo ::group:: Copying built docs to tmp_dir
-          cp -vr ${{ env.target_dir }}/. ${tmp_dir}
-          echo ::endgroup::
-
-          repo_dir=${GITHUB_WORKSPACE}/${INPUT_REPOSITORY_PATH}
-          doc_dir=$repo_dir/${INPUT_DOCUMENTATION_PATH}
-          
-          echo ::group:: Initialize various paths
-          echo Workspace: ${GITHUB_WORKSPACE}
-          echo Repository: ${repo_dir}
-          echo Documentation: ${doc_dir}
-          echo ::endgroup::
-
-          echo ::group:: Setting up git repository
-          echo Setting up git configure
-          cd ${repo_dir}
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Sphinx-to-Pages Action"
-          git stash
-          branch_exist=$(git ls-remote --heads origin refs/heads/${INPUT_TARGET_BRANCH})
-          if [ -z "${branch_exist}" ]; then
-              echo Branch doesn\'t exist, create an empty branch
-              git checkout --force --orphan ${INPUT_TARGET_BRANCH}
-          else
-              echo Branch exists, checkout to it
-              git fetch
-              git checkout --force --track origin/${INPUT_TARGET_BRANCH}
-          fi
-          git clean -fd
-          echo ::endgroup::
-
-          echo ::group:: Committing HTML documentation
-          cd $repo_dir
-          echo Deleting all file in repository
-          rm -vrf *
-          echo Copying HTML documentation to repository
-          # Remove unused doctree
-          rm -rf ${tmp_dir}/.doctrees
-          cp -vr ${tmp_dir}/. $INPUT_TARGET_PATH
-          echo Adding HTML documentation to repository index
-          git add ${INPUT_TARGET_PATH}
-          echo Committing changes to repository
-          git commit --allow-empty -m "Add changes for ${GITHUB_SHA}"
-          echo ::endgroup::
-          
-          echo "Push to branch INPUT_TARGET_BRANCH (${INPUT_TARGET_BRANCH})";
-          [ -z "${INPUT_GITHUB_TOKEN}" ] && {
-              echo 'Missing input "github_token: ${{ secrets.GITHUB_TOKEN }}".';
-              exit 1;
-          };
-          remote_repo="https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
-          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
-          echo "remote_repo is ${remote_repo}"
-          git push "${remote_repo}" HEAD:${INPUT_TARGET_BRANCH} --follow-tags;
-          REPO_NAME=$()
-          echo "Pages should be viewable at https://${GITHUB_ACTOR}.github.io/${GITHUB_REPOSITORY//$GITHUB_ACTOR\//}"
+          pip install sphinx sphinx-rtd-theme
+          cd docs 
+          make html 
