@@ -7,17 +7,17 @@ from typing import Tuple, Dict, Optional
 from hyperspy.io import load as hs_load
 from traits.trait_base import Undefined
 
-from materials_io.base import BaseSingleFileParser
-from materials_io.utils import get_nested_dict_value_by_path as get_val
-from materials_io.utils import \
+from scythe.base import BaseSingleFileExtractor
+from scythe.utils import get_nested_dict_value_by_path as get_val
+from scythe.utils import \
     map_dict_values, MappingElements, standardize_unit
-from materials_io.utils import set_nested_dict_value_with_units as set_val_units
+from scythe.utils import set_nested_dict_value_with_units as set_val_units
 
 logger = logging.getLogger(__name__)
 
 
-class ElectronMicroscopyParser(BaseSingleFileParser):
-    """Parse metadata specific to electron microscopy.
+class ElectronMicroscopyExtractor(BaseSingleFileExtractor):
+    """Extract metadata specific to electron microscopy.
 
     This parser handles any file supported by HyperSpy's I/O capabilities. Extract both the
     metadata interpreted by HyperSpy directly, but also any important values we can pick out
@@ -32,7 +32,7 @@ class ElectronMicroscopyParser(BaseSingleFileParser):
     ``schemas/electron_microscopy.json`` file.
     """
 
-    def _parse_file(self, file_path: str, context: Dict = None) -> Dict:
+    def _extract_file(self, file_path: str, context: Dict = None) -> Dict:
         self.em = {}
         self.inst_data = None
 

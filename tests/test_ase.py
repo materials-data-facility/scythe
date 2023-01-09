@@ -1,4 +1,4 @@
-from materials_io.ase import AseParser
+from scythe.ase import ASEExtractor
 from math import isclose
 import pytest
 import os
@@ -11,11 +11,11 @@ def ase():
 
 @pytest.fixture
 def parser():
-    return AseParser()
+    return ASEExtractor()
 
 
 def test_ase(parser, ase):
-    output = parser.parse(ase)
+    output = parser.extract(ase)
 
     # Check the chemical formula
     assert output['chemical_formula'] == "C38H14N8O12"

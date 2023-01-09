@@ -2,8 +2,8 @@ import pytest
 import pathlib
 import jsonschema
 
-from materials_io.electron_microscopy import ElectronMicroscopyParser
-from materials_io.adapters.base import GreedySerializeAdapter
+from scythe.electron_microscopy import ElectronMicroscopyExtractor
+from scythe.adapters.base import GreedySerializeAdapter
 
 
 def file_path(fname):
@@ -12,7 +12,7 @@ def file_path(fname):
 
 @pytest.fixture
 def parser():
-    return ElectronMicroscopyParser()
+    return ElectronMicroscopyExtractor()
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def adapter():
 
 
 def test_dm3(parser, adapter):
-    res = parser.parse([file_path('test-1.dm3')])
+    res = parser.extract([file_path('test-1.dm3')])
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': 'test-1.dm3'},
         'title': {'value': 'test'},
@@ -35,7 +35,7 @@ def test_dm3(parser, adapter):
 
 
 def test_dm4(parser, adapter):
-    res = parser.parse([file_path('test-1.dm4')])
+    res = parser.extract([file_path('test-1.dm4')])
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': 'test-1.dm4'},
         'title': {'value': 'test'},
@@ -50,7 +50,7 @@ def test_dm4(parser, adapter):
 
 
 def test_eds(parser, adapter):
-    res = parser.parse([file_path('01_test-EDS_spectrum.dm3')])
+    res = parser.extract([file_path('01_test-EDS_spectrum.dm3')])
 
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2016-08-08'},
@@ -102,7 +102,7 @@ def test_eds(parser, adapter):
     assert jsonschema.validate(res, parser.schema) is None
     assert adapter.transform(res)
 
-    res = parser.parse([file_path('02_EDS_SI_Titan.dm4')])
+    res = parser.extract([file_path('02_EDS_SI_Titan.dm4')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-05-21'},
         'original_filename': {'value': '02_EDS_SI_Titan.dm4'},
@@ -158,7 +158,7 @@ def test_eds(parser, adapter):
 
 
 def test_edax_eds(parser, adapter):
-    res = parser.parse([file_path('03_edax_sem_eds_map_dataZeroed.spd')])
+    res = parser.extract([file_path('03_edax_sem_eds_map_dataZeroed.spd')])
 
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': '03_edax_sem_eds_map_dataZeroed.spd'},
@@ -190,7 +190,7 @@ def test_edax_eds(parser, adapter):
 
 
 def test_eels(parser, adapter):
-    res = parser.parse([file_path('04_Titan_EELS_SI_dataZeroed.dm3')])
+    res = parser.extract([file_path('04_Titan_EELS_SI_dataZeroed.dm3')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2016-04-22'},
         'original_filename': {'value': '04_Titan_EELS_SI_dataZeroed.dm3'},
@@ -252,7 +252,7 @@ def test_eels(parser, adapter):
 
 
 def test_non_titan_dm3(parser, adapter):
-    res = parser.parse([file_path('05_nonTitan_diffraction.dm3')])
+    res = parser.extract([file_path('05_nonTitan_diffraction.dm3')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-07-01'},
         'original_filename': {'value': '05_nonTitan_diffraction.dm3'},
@@ -284,7 +284,7 @@ def test_dm3_tecnai(parser, adapter):
     }
 
     # parse imaging mode tecnai file
-    res = parser.parse([file_path('06_Titan_Tecnai_image.dm3')])
+    res = parser.extract([file_path('06_Titan_Tecnai_image.dm3')])
 
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-03-13'},
@@ -331,7 +331,7 @@ def test_dm3_tecnai(parser, adapter):
     assert adapter.transform(res)
 
     # parse diffraction mode tecnai dm3
-    res = parser.parse([file_path('07_Titan_Tecnai_diffraction.dm3')])
+    res = parser.extract([file_path('07_Titan_Tecnai_diffraction.dm3')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-09-19'},
         'original_filename': {'value': '07_Titan_Tecnai_diffraction.dm3'},
@@ -379,7 +379,7 @@ def test_dm3_tecnai(parser, adapter):
     assert adapter.transform(res)
 
     # parse diffraction mode tecnai with no spectrometer info
-    res = parser.parse([file_path(
+    res = parser.extract([file_path(
         '08_Titan_diffraction_Tecnai_no_spectrometer.dm3')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-03-22'}, 'original_filename': {
@@ -427,7 +427,7 @@ def test_dm3_tecnai(parser, adapter):
 
 
 def test_dm3_stack(parser, adapter):
-    res = parser.parse([file_path('09_Titan_STEM_stack.dm3')])
+    res = parser.extract([file_path('09_Titan_STEM_stack.dm3')])
     # note that the axis_calibration values are bogus, but they're not read
     # correctly my DigitalMicrograph, so we cannot expect to do better than
     # the proprietary software. The proper calibration appears to be present
@@ -471,7 +471,7 @@ def test_dm3_stack(parser, adapter):
 
 
 def test_eels_acquisition_spectrometer(parser, adapter):
-    res = parser.parse([file_path('10_Titan_EELS_proc.dm3')])
+    res = parser.extract([file_path('10_Titan_EELS_proc.dm3')])
     assert res['electron_microscopy']['General'] == {
         'original_filename': {'value': '10_Titan_EELS_proc.dm3'},
         'title': {'value': 'SI24 Extracted Spectrum total'},
@@ -517,7 +517,7 @@ def test_eels_acquisition_spectrometer(parser, adapter):
 
 
 def test_hs_signal_no_units(parser, adapter):
-    res = parser.parse([file_path('11_hs_signal_no_axis_units.hspy')])
+    res = parser.extract([file_path('11_hs_signal_no_axis_units.hspy')])
     assert res['electron_microscopy']['General'] == {
         'axis_calibration': {
             'axis-0': {'name': None, 'scale': 1.0,
@@ -532,7 +532,7 @@ def test_hs_signal_no_units(parser, adapter):
 
 
 def test_tia_haadf(parser, adapter):
-    res = parser.parse([file_path('12_TIA_HAADF.emi')])
+    res = parser.extract([file_path('12_TIA_HAADF.emi')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2019-06-28'},
         'original_filename': {'value': '12_TIA_HAADF_1.ser'},
@@ -577,7 +577,7 @@ def test_tia_haadf(parser, adapter):
 
 
 def test_quanta_sem_tif(parser, adapter):
-    res = parser.parse([file_path('20_quanta_sem.tif')])
+    res = parser.extract([file_path('20_quanta_sem.tif')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2022-03-03'},
         'original_filename': {'value': '20_quanta_sem.tif'},
@@ -613,7 +613,7 @@ def test_quanta_sem_tif(parser, adapter):
 
 
 def test_zeiss_sem_tif(parser, adapter):
-    res = parser.parse([file_path('21_zeiss_sem.tif')])
+    res = parser.extract([file_path('21_zeiss_sem.tif')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2017-12-15'},
         'original_filename': {'value': '21_zeiss_sem.tif'},
@@ -640,7 +640,7 @@ def test_zeiss_sem_tif(parser, adapter):
 
 
 def test_zeiss_sem_bad_mag_tif(parser, adapter):
-    res = parser.parse([file_path('22_zeiss_sem_bad_mag.tif')])
+    res = parser.extract([file_path('22_zeiss_sem_bad_mag.tif')])
     assert res['electron_microscopy']['General'] == {
         'date': {'value': '2017-12-15'},
         'original_filename': {'value': '22_zeiss_sem_bad_mag.tif'},

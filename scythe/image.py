@@ -1,12 +1,12 @@
 from PIL import Image
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
-class ImageParser(BaseSingleFileParser):
+class ImageExtractor(BaseSingleFileExtractor):
     """Retrieves basic information about an image"""
 
-    def _parse_file(self, file_path, context=None):
+    def _extract_file(self, file_path, context=None):
         im = Image.open(file_path)
         return {
             "image": {

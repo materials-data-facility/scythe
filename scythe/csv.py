@@ -1,4 +1,4 @@
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 from tableschema.exceptions import CastError
 from tableschema import Table
 from typing import List
@@ -7,14 +7,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CSVParser(BaseSingleFileParser):
-    """Reads comma-separated value (CSV) files
+class CSVExtractor(BaseSingleFileExtractor):
+    """Describe the contents of a comma-separated value (CSV) file
 
     The context dictionary for the CSV parser includes several fields:
         - ``schema``: Dictionary defining the schema for this dataset, following that of
           FrictionlessIO
         - ``na_values``: Any values that should be interpreted as missing
-
     """
 
     def __init__(self, return_records=True, **kwargs):
@@ -22,13 +21,12 @@ class CSVParser(BaseSingleFileParser):
         Args:
              return_records (bool): Whether to return each row in the CSV file
         Keyword:
-            All kwargs as passed to
-            `TableSchema's infer <https://github.com/frictionlessdata/tableschema-py#infer>`_ method
+            All kwargs as passed to `TableSchema's infer <https://github.com/frictionlessdata/tableschema-py#infer>`_ method
         """
         self.return_records = return_records
         self.infer_kwargs = kwargs
 
-    def _parse_file(self, path: str, context=None):
+    def _extract_file(self, path: str, context=None):
         # Set the default value
         if context is None:
             context = dict()

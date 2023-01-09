@@ -1,13 +1,13 @@
 from mdf_toolbox import translate_json
 import yaml
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
-class YAMLExtractor(BaseSingleFileParser):
+class YAMLExtractor(BaseSingleFileExtractor):
     """Extracts fields in YAML into a user-defined new schema in JSON."""
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         """Context used:
             mapping (dict): Required. The mapping of desired_fields: existing_fields,
                     using dot notation. For example:

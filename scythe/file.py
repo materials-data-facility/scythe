@@ -1,4 +1,4 @@
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 from hashlib import sha512
 from warnings import warn
 import json
@@ -17,8 +17,8 @@ except ImportError as e:
     magic = None
 
 
-class GenericFileParser(BaseSingleFileParser):
-    """Gathers basic file information"""
+class GenericFileExtractor(BaseSingleFileExtractor):
+    """Gather basic file information"""
 
     def __init__(self, store_path=True, compute_hash=True):
         """
@@ -30,7 +30,7 @@ class GenericFileParser(BaseSingleFileParser):
         self.store_path = store_path
         self.compute_hash = compute_hash
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         output = {
             "length": os.path.getsize(path),
             "filename": os.path.basename(path),

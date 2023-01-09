@@ -1,12 +1,12 @@
-from materials_io.base import BaseParser, BaseSingleFileParser
+from scythe.base import BaseExtractor, BaseSingleFileExtractor
 from glob import glob
 import pytest
 import os
 
 
-class FakeParser(BaseParser):
+class FakeParser(BaseExtractor):
 
-    def parse(self, group, context=None):
+    def extract(self, group, context=None):
         return {'group': list(group)}
 
     def implementors(self):
@@ -16,9 +16,9 @@ class FakeParser(BaseParser):
         return '0.0.0'
 
 
-class FakeSingleParser(BaseSingleFileParser):
+class FakeSingleParser(BaseSingleFileExtractor):
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         return {'dirname': os.path.dirname(path)}
 
     def implementors(self):
@@ -50,7 +50,7 @@ def test_group(parser, directory, my_files):
 
 
 def test_parse_dir(caplog, parser, directory, my_files):
-    assert len(list(parser.parse_directory(directory))) == len(my_files)
+    assert len(list(parser.extract_directory(directory))) == len(my_files)
 
 
 def test_citations(parser):
@@ -59,7 +59,7 @@ def test_citations(parser):
 
 def test_single_file(directory):
     parser = FakeSingleParser()
-    assert parser.parse(__file__) == {'dirname': directory}  # Handle sensibly incorrect inputs
-    assert parser.parse([__file__]) == {'dirname': directory}
+    assert parser.extract(__file__) == {'dirname': directory}  # Handle sensibly incorrect inputs
+    assert parser.extract([__file__]) == {'dirname': directory}
     with pytest.raises(ValueError):
-        parser.parse(['/fake/file.in', '/fake/file.out'])
+        parser.extract(['/fake/file.in', '/fake/file.out'])

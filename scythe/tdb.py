@@ -4,13 +4,16 @@ import os
 os.environ["MPLBACKEND"] = "agg"
 import pycalphad  # noqa: E402
 
-from materials_io.base import BaseSingleFileParser  # noqa: E402
+from scythe.base import BaseSingleFileExtractor  # noqa: E402
 
 
-class TDBExtractor(BaseSingleFileParser):
-    """Extract information from a TDB file."""
+class TDBExtractor(BaseSingleFileExtractor):
+    """Extract metadata from a Thermodynamic Database (TBD) file.
 
-    def _parse_file(self, path, context=None):
+    Built atop `PyCALPHAD <https://pycalphad.org/docs/latest/>`_.
+    """
+
+    def _extract_file(self, path, context=None):
         material = {}
         calphad = {}
         # Attempt to read the file

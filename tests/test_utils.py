@@ -1,8 +1,8 @@
-from materials_io.utils.interface import (get_available_parsers, execute_parser,
-                                          get_available_adapters, run_all_parsers_on_directory,
-                                          ParseResult)
-from materials_io.utils import set_nested_dict_value
-from materials_io.image import ImageParser
+from scythe.utils.interface import (get_available_extractors, run_extractor,
+                                    get_available_adapters, run_all_extractors_on_directory,
+                                    ExtractResult)
+from scythe.utils import set_nested_dict_value
+from scythe.image import ImageExtractor
 import pytest
 import json
 import os
@@ -12,18 +12,18 @@ cwd = os.path.dirname(__file__)
 
 
 def test_list_parsers():
-    assert 'image' in get_available_parsers()
+    assert 'image' in get_available_extractors()
 
 
 def test_execute_parser():
     image = os.path.join(cwd, 'data', 'image', 'dog2.jpeg')
-    assert ImageParser().parse([image]) == execute_parser('image', [image])
-    assert execute_parser('image', [image], adapter='noop') == execute_parser('image', [image])
+    assert ImageExtractor().extract([image]) == run_extractor('image', [image])
+    assert run_extractor('image', [image], adapter='noop') == run_extractor('image', [image])
 
 
 def test_run_all_parsers():
     path = os.path.join(cwd, 'data', 'image')
-    output = list(run_all_parsers_on_directory(path))
+    output = list(run_all_extractors_on_directory(path))
     assert len(output) > 0
     assert len(output[0]) == 3
     assert isinstance(output[0][0], tuple)
@@ -31,44 +31,44 @@ def test_run_all_parsers():
     assert isinstance(output[0][2], dict)
 
     # Re-run parsers with adapters
-    output_noop = list(run_all_parsers_on_directory(path, default_adapter='noop'))
+    output_noop = list(run_all_extractors_on_directory(path, default_adapter='noop'))
     assert output == output_noop
-    output_json = list(run_all_parsers_on_directory(path, default_adapter='serialize'))
-    assert output == [ParseResult(x.group, x.parser, json.loads(x.metadata)) for x in output_json]
+    output_json = list(run_all_extractors_on_directory(path, default_adapter='serialize'))
+    assert output == [ExtractResult(x.group, x.extractor, json.loads(x.metadata)) for x in output_json]
 
     # Test the matching
-    output_matching = list(run_all_parsers_on_directory(path, adapter_map={'file': 'serialize'}))
-    assert all(isinstance(x.metadata, str if x.parser == 'file' else dict)
+    output_matching = list(run_all_extractors_on_directory(path, adapter_map={'file': 'serialize'}))
+    assert all(isinstance(x.metadata, str if x.extractor == 'file' else dict)
                for x in output_matching)
-    output_matching = list(run_all_parsers_on_directory(path, adapter_map={'file': 'noop'},
-                                                        default_adapter='serialize'))
-    assert all(isinstance(x.metadata, str if x.parser != 'file' else dict)
+    output_matching = list(run_all_extractors_on_directory(path, adapter_map={'file': 'noop'},
+                                                           default_adapter='serialize'))
+    assert all(isinstance(x.metadata, str if x.extractor != 'file' else dict)
                for x in output_matching)
 
     # This matching test fails if we have other packages with adapters on the system
     adapters = set(get_available_adapters().keys())
     if adapters == {'noop', 'serialize'}:
-        output_matching = list(run_all_parsers_on_directory(path, adapter_map='match',
-                                                            default_adapter='serialize'))
-        assert all(isinstance(x.metadata, str if x.parser != 'noop' else dict)
+        output_matching = list(run_all_extractors_on_directory(path, adapter_map='match',
+                                                               default_adapter='serialize'))
+        assert all(isinstance(x.metadata, str if x.extractor != 'noop' else dict)
                    for x in output_matching)
 
     # Test the error case
     with pytest.raises(ValueError):
-        list(run_all_parsers_on_directory(path, adapter_map='matching',
-                                          default_adapter='serialize'))
+        list(run_all_extractors_on_directory(path, adapter_map='matching',
+                                             default_adapter='serialize'))
 
     # Test specifying parsers
-    assert set([x.parser for x in output]).issuperset(['image', 'generic'])
-    output_limit = list(run_all_parsers_on_directory(path, exclude_parsers=['image']))
-    assert 'image' not in [x.parser for x in output_limit]
-    output_limit = list(run_all_parsers_on_directory(path, include_parsers=['image']))
-    assert set([x.parser for x in output_limit]) == {'image'}
+    assert set([x.extractor for x in output]).issuperset(['image', 'generic'])
+    output_limit = list(run_all_extractors_on_directory(path, exclude_extractors=['image']))
+    assert 'image' not in [x.extractor for x in output_limit]
+    output_limit = list(run_all_extractors_on_directory(path, include_extractors=['image']))
+    assert set([x.extractor for x in output_limit]) == {'image'}
     with pytest.raises(ValueError):
-        list(run_all_parsers_on_directory(path, include_parsers=['image'],
-                                          exclude_parsers=['image']))
+        list(run_all_extractors_on_directory(path, include_extractors=['image'],
+                                             exclude_extractors=['image']))
     with pytest.raises(ValueError):
-        list(run_all_parsers_on_directory(path, include_parsers=['totally-not-a-parser']))
+        list(run_all_extractors_on_directory(path, include_extractors=['totally-not-a-parser']))
 
 
 def test_list_adapters():

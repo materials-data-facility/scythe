@@ -1,4 +1,4 @@
-from materials_io.crystal_structure import CrystalStructureParser
+from scythe.crystal_structure import CrystalStructureExtractor
 from math import isclose
 import pytest
 import os
@@ -11,11 +11,11 @@ def cif():
 
 @pytest.fixture
 def parser():
-    return CrystalStructureParser()
+    return CrystalStructureExtractor()
 
 
 def test_cif(parser, cif):
-    output = parser.parse(cif)
+    output = parser.extract(cif)
 
     # Check the volume and number of atoms, which is a float
     assert isclose(output['crystal_structure']['volume'], 101836.44086588411)

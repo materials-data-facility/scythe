@@ -1,14 +1,13 @@
-import json
-
 from mdf_toolbox import translate_json
+import xmltodict
 
-from materials_io.base import BaseSingleFileParser
+from scythe.base import BaseSingleFileExtractor
 
 
-class JSONExtractor(BaseSingleFileParser):
-    """Extracts fields in JSON into a user-defined new schema."""
+class XMLExtractor(BaseSingleFileExtractor):
+    """Extracts fields in XML into a user-defined new schema in JSON."""
 
-    def _parse_file(self, path, context=None):
+    def _extract_file(self, path, context=None):
         """Context used:
             mapping (dict): Required. The mapping of desired_fields: existing_fields,
                     using dot notation. For example:
@@ -16,9 +15,9 @@ class JSONExtractor(BaseSingleFileParser):
             na_values (list of str): Values to treat as N/A. Default None.
         """
         if not context.get("mapping"):
-            raise ValueError("Mapping is required for the JSONExtractor.")
+            raise ValueError("Mapping is required for the XMLExtractor.")
         with open(path) as f:
-            file_json = json.load(f)
+            file_json = xmltodict.parse(f.read())
         return translate_json(file_json, context["mapping"],
                               na_values=context.get("na_values", None))
 

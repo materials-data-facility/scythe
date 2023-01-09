@@ -1,12 +1,12 @@
-from materials_io.file import GenericFileParser
+from scythe.file import GenericFileExtractor
 import pytest
 import os
 
 
 def test_file():
     my_file = os.path.join(os.path.dirname(__file__), 'data', 'image', 'dog2.jpeg')
-    parser = GenericFileParser(store_path=True, compute_hash=True)
-    output = parser.parse([my_file])
+    parser = GenericFileExtractor(store_path=True, compute_hash=True)
+    output = parser.extract([my_file])
     expected = {
         'mime_type': 'image/jpeg',
         'length': 269360,

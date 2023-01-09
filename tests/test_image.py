@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from materials_io.image import ImageParser
+from scythe.image import ImageExtractor
 
 
 @pytest.fixture
@@ -10,7 +10,7 @@ def test_image():
 
 
 def test_parse(test_image):
-    p = ImageParser()
-    assert (p.parse([test_image]) == {'image': {'format': 'JPEG', 'height': 1000,
-                                                'megapixels': 1.91, 'width': 1910,
-                                                'shape': [1000, 1910, 3]}})
+    p = ImageExtractor()
+    assert (p.extract([test_image]) == {'image': {'format': 'JPEG', 'height': 1000,
+                                                  'megapixels': 1.91, 'width': 1910,
+                                                  'shape': [1000, 1910, 3]}})

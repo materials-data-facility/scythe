@@ -1,6 +1,6 @@
 from typing import Union, Iterable, Tuple, List
-from materials_io.utils.grouping import preprocess_paths, group_by_postfix
-from materials_io.base import BaseParser
+from scythe.utils.grouping import preprocess_paths, group_by_postfix
+from scythe.base import BaseExtractor
 from dfttopif import files_to_pif
 from operator import itemgetter
 import itertools
@@ -12,15 +12,14 @@ _vasp_file_names = ["outcar", "incar", "chgcar", "wavecar", "wavcar", "oszicar",
                     "kpoints", "doscar", "poscar", "contcar", "vasp_run.xml", "xdatcar"]
 
 
-class DFTParser(BaseParser):
-    """Extract data from Density Functional Theory calculation results
+class DFTExtractor(BaseExtractor):
+    """Extract metadata from Density Functional Theory calculation results
 
-    Uses the `dfttopif <https://github.com/CitrineInformatics/pif-dft>`_ parser to extract
-    metadata from each file
+    Uses the `dfttopif <https://github.com/CitrineInformatics/pif-dft>`_ parser to extract metadata from each file
     """
 
     def __init__(self, quality_report=False):
-        """Initialize a featurizer
+        """Initialize the extractor
 
         Args:
             quality_report (bool): Whether to generate a quality report
@@ -32,7 +31,7 @@ class DFTParser(BaseParser):
         # Convert paths into standardized form
         files = set(preprocess_paths(files))
 
-        # Find all of the files, and attempt to group them
+        # Find all files, and attempt to group them
         for group in self._group_vasp(files):  # VASP grouping logic
             # Remove all files matched as VASP from the matchable files
             files.difference_update(group)
@@ -72,11 +71,11 @@ class DFTParser(BaseParser):
         for k, group in itertools.groupby(sorted(file_and_dir), key=itemgetter(0)):
             yield [x[1] for x in group]
 
-    def parse(self, group: Iterable[str], context: dict = None):
+    def extract(self, group: Iterable[str], context: dict = None):
         return files_to_pif(group, quality_report=self.quality_report).as_dictionary()
 
     def implementors(self):
-        return ['Logan Ward']
+        return ['Logan Ward <lward@anl.gov>']
 
     def version(self):
         return '0.0.1'

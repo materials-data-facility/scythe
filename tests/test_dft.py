@@ -1,4 +1,4 @@
-from materials_io.dft import DFTParser
+from scythe.dft import DFTExtractor
 from shutil import copy
 from glob import glob
 import tarfile
@@ -21,7 +21,7 @@ def vasp_dir(tmpdir):
 
 @pytest.fixture
 def parser():
-    return DFTParser(quality_report=False)
+    return DFTExtractor(quality_report=False)
 
 
 @pytest.fixture
@@ -41,20 +41,20 @@ def pwscf_dir(tmpdir):
 
 
 def test_single_vasp_calc(parser, vasp_dir):
-    metadata = list(parser.parse_directory(vasp_dir))
+    metadata = list(parser.extract_directory(vasp_dir))
     assert len(metadata) == 1
     assert isinstance(metadata[0], tuple)
     assert isinstance(metadata[0][0], list)
     assert isinstance(metadata[0][1], dict)
 
 
-def test_multivasp_calc(parser: DFTParser, multi_vasp_dir):
-    metadata = list(parser.parse_directory(multi_vasp_dir))
+def test_multivasp_calc(parser: DFTExtractor, multi_vasp_dir):
+    metadata = list(parser.extract_directory(multi_vasp_dir))
     assert len(metadata) == 2
     assert isinstance(metadata[0][0], list)
     assert isinstance(metadata[0][1], dict)
 
 
-def test_pwscf(parser: DFTParser, pwscf_dir):
-    metadata = list(parser.parse_directory(pwscf_dir))
+def test_pwscf(parser: DFTExtractor, pwscf_dir):
+    metadata = list(parser.extract_directory(pwscf_dir))
     assert len(metadata) == 1
