@@ -57,7 +57,7 @@ all = ['ase',
 
 [tool.poetry.plugins]
 
-[tool.poetry.plugins."materialsio.parser"]
+[tool.poetry.plugins."scythe.parser"]
 "ase" = "scythe.ase:AseParser"
 "crystal" = "scythe.crystal_structure:CrystalStructureParser"
 "csv" = "scythe.csv:CSVParser"
