@@ -3,8 +3,8 @@
 [![Build Status](https://github.com/materials-data-facility/Scythe/workflows/Build%20Status/badge.svg)](https://github.com/materials-data-facility/Scythe/actions/workflows/test-suite-and-docs.yml)
 [![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat&logo=bookstack&labelColor=grey&logoColor=white)](https://materials-data-facility.github.io/Scythe)
 [![Coverage Status](https://codecov.io/gh/materials-data-facility/Scythe/branch/master/graph/badge.svg)](https://codecov.io/gh/materials-data-facility/Scythe)
-[![GitHub tag checks state](https://img.shields.io/github/checks-status/materials-data-facility/Scythe/master)](https://github.com/materials-data-facility/Scythe/actions)
 [![GitHub last commit](https://img.shields.io/github/last-commit/materials-data-facility/Scythe)](https://github.com/materials-data-facility/Scythe/commits/master)
+[![PyPI version](https://badge.fury.io/py/scythe-extractors.svg)](https://badge.fury.io/py/scythe-extractors)
 [![GitHub contributors](https://img.shields.io/github/contributors/materials-data-facility/Scythe)](https://github.com/materials-data-facility/Scythe/graphs/contributors)
 
 Scythe is a library of tools that generate summaries of the data contained in scientific data files.
@@ -13,20 +13,18 @@ Each extractor is designed to generate the sum of all data needed by each of the
 
 ## Installation
 
-Scythe is still under early stages of development. 
-To use it (as a user, rather than a developer), install the library from Github
-with an up-to-date version of `pip` on version 3.8 or higher of Python:
+Install using an up-to-date version of `pip` on version 3.8 or higher of Python:
 
 ```bash
-pip install git+https://github.com/materials-data-facility/Scythe.git
+pip install scythe-extractors
 ```
 
 Each specific extractor module has its own set of required libraries.
 Given that some modules have extensive dependencies, we do not install all of them automatically.
 You can install them either module-by-module using the pip "extras" installation (e.g., 
-`pip install "git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[image]"`),
+`pip install scythe-extractors[image]"`),
 or install all extractors with 
-`pip install "git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[all]"`.
+`pip install scythe-extractors[all]"`.
 
 ## Development/Contribution
 
