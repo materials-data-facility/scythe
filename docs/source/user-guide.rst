@@ -10,7 +10,7 @@ Installing Scythe (for users)
 Installing Scythe should be as easy as a single ``pip`` command. Assuming you have a
 version of Python that is 3.8 or higher, running::
 
-    pip install git+https://github.com/materials-data-facility/Scythe.git
+    pip install scythe-extractors
 
 Should get the basics of Scythe installed. By default however, only a small subset of
 extractors will be installed (this is done so you do not need to install all the dependencies of
@@ -18,18 +18,12 @@ extractors you may never use). To install additional extractors, you can specify
 using the ``[...]`` syntax for ``pip``. For example, if you want to install all the extractors
 bundled with Scythe (and their dependencies), run::
 
-    pip install "git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[all]"
+    pip install pip install scythe-extractors[all]
 
 This will pull in many more packages, but also enable as many extractors as possible. Check the list
 under ``[tool.poetry.extras]`` in ``pyproject.toml`` to see all the options you can specify in
 the brackets of the ``pip install`` command.
 
-.. note:: In the *hopefully* near future, Scythe should be published on
-    `PyPI <https://pypi.org>`_ (see
-    `this Github issue <https://github.com/materials-data-facility/Scythe/issues/42>`_ for
-    updates), meaning install should be easier via a simple ``pip install scythe`` or
-    ``pip install scythe[all]``, rather than having to specify the Git URL as in the above
-    example
 
 Discovering an extractor
 ~~~~~~~~~~~~~~~~~~~~~~~~
