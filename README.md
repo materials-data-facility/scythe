@@ -21,11 +21,11 @@ with an up-to-date version of `pip` on version 3.8 or higher of Python:
 pip install git+https://github.com/materials-data-facility/Scythe.git
 ```
 
-Each specific exctractor module has its own set of required libraries.
+Each specific extractor module has its own set of required libraries.
 Given that some modules have extensive dependencies, we do not install all of them automatically.
 You can install them either module-by-module using the pip "extras" installation (e.g., 
 `pip install "git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[image]"`),
-or install all exctractors with 
+or install all extractors with 
 `pip install "git+https://github.com/materials-data-facility/Scythe.git#egg=scythe[all]"`.
 
 ## Development/Contribution
@@ -37,7 +37,7 @@ walk you through installing [Poetry](https://python-poetry.org/) and the Scythe 
 ## Documentation
 
 * Complete documentation for Scythe is on [Read the Docs](https://materialsio.readthedocs.io/en/latest/).
-* [List of Available Exctractors](https://materialsio.readthedocs.io/en/latest/exctractors.html)
+* [List of Available Extractors](https://materialsio.readthedocs.io/en/latest/extractors.html)
 
 ## Support 
 
