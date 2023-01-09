@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scythe-extractors"
-version = "0.1.0a"
+version = "0.1.1"
 description = "A library of tools that generate summaries of the data contained in scientific data files"
 authors = ["Materials Data Facility <materialsdatafacility@uchicago.edu>"]
 license = "Apache"
