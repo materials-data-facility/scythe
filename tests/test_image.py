@@ -12,5 +12,5 @@ def test_image():
 def test_parse(test_image):
     p = ImageExtractor()
     assert (p.extract([test_image]) == {'image': {'format': 'JPEG', 'height': 1000,
-                                                'megapixels': 1.91, 'width': 1910,
-                                                'shape': [1000, 1910, 3]}})
+                                                  'megapixels': 1.91, 'width': 1910,
+                                                  'shape': [1000, 1910, 3]}})

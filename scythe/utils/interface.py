@@ -174,7 +174,7 @@ def get_adapter(name: str) -> BaseAdapter:
 
 def run_extractor(name, group, context=None, adapter=None):
     """Invoke a extractor on a certain group of files
-    
+
     Args:
         name (str): Name of the extractor
         group ([str]): Paths to group of files to be parsed

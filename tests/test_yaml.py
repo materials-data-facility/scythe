@@ -64,9 +64,9 @@ def test_yaml(extractor, test_files, fail_file, mappings):
     assert extractor.extract(test_files[0], context={"mapping": mappings[0]}) == output_na_unset
     assert extractor.extract(test_files[0], context={"mapping": mappings[1]}) == output_na_unset
     assert extractor.extract(test_files[0], context={"mapping": mappings[0],
-                                                   "na_values": ["na"]}) == output_na_set
+                                                     "na_values": ["na"]}) == output_na_set
     assert extractor.extract(test_files[0], context={"mapping": mappings[1],
-                                                   "na_values": "na"}) == output_na_set
+                                                     "na_values": "na"}) == output_na_set
 
     # Test failure modes
     with pytest.raises(Exception):
